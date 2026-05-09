@@ -1,0 +1,172 @@
+{
+  "products": [
+    {
+      "id": "berbere",
+      "price": 158,
+      "image": "assets/images/spice-berbero.png",
+      "featured": true,
+      "bestSeller": true,
+      "names": { "en": "Berbere", "am": "በርበሬ" },
+      "shortDescription": {
+        "en": "The foundation of Ethiopian cuisine — sun-dried red chilies, garlic, ginger, and warming spices.",
+        "am": "የኢትዮጵያ ምግብ መሠረት — በፀሐይ የደረቁ ቀይ ቃሪያ፣ ሽንኩርት፣ ዝንጅብል እና ሞቅ ባሉ ቅመሞች።"
+      },
+      "description": {
+        "en": "A robust, complex, and fiery blend of sun-dried red chilies, garlic, ginger, basil, korarima, rue, ajwain or radhuni, nigella, and fenugreek.",
+        "am": "ኃይለኛ፣ ውስብስብ እና ትኩስ የፀሐይ ደረቅ ቀይ ቃሪያ፣ ነጭ ሽንኩርት፣ ዝንጅብል፣ ባሲል፣ ኮረሪማ እና ሌሎችም ቅልቅል።"
+      },
+      "ingredients": {
+        "en": "Chili peppers, garlic, ginger, basil, korarima, rue, ajwain, nigella, and fenugreek. All 100% natural and sun-dried.",
+        "am": "ቀይ ቃሪያ፣ ነጭ ሽንኩርት፣ ዝንጅብል፣ ባሲል፣ ኮረሪማ፣ ጤና አዳም፣ ጥቁር አዝሙድ፣ እና አብሽ። ሁሉም 100% ተፈጥሯዊ።"
+      },
+      "culinary": {
+        "en": "Essential for Doro Wat (chicken stew), Misir Wat (lentil stew), and as a dry rub for roasted meats.",
+        "am": "ለዶሮ ወጥ፣ ምስር ወጥ፣ እና ለተጠበሰ ስጋ።"
+      },
+      "shipping": {
+        "en": "Ships securely packaged to preserve freshness. Deliveries within Addis Ababa take 1–2 days. International shipping available via DHL.",
+        "am": "ትኩስነቱን ለመጠበቅ ደህንነቱ በተጠበቀ ሁኔታ። በአዲስ አበባ 1–2 ቀን።"
+      }
+    },
+    {
+      "id": "shiro",
+      "price": 120,
+      "image": "assets/images/spice-shiro.png",
+      "featured": true,
+      "bestSeller": true,
+      "names": { "en": "Shiro", "am": "ሽሮ" },
+      "shortDescription": {
+        "en": "Chickpea and spice blend for silky shiro wat — a comforting staple.",
+        "am": "ለልዩ ሽሮ ወጥ የአክሊል እና ቅመም ቅልቅል።"
+      },
+      "description": {
+        "en": "Ground chickpeas with garlic, ginger, and berbere-forward spice notes — perfect for quick, nourishing meals.",
+        "am": "የተፈጨ አክሊል ከነጭ ሽንኩርት፣ ዝንጅብል እና በርበሬ ጣዕም ጋር።"
+      },
+      "ingredients": {
+        "en": "Chickpea flour, spices, garlic, ginger. Natural ingredients.",
+        "am": "የአክሊል ዱቄት፣ ቅመሞች፣ ሽንኩርት፣ ዝንጅብል።"
+      },
+      "culinary": {
+        "en": "Prepare shiro wat with onions and oil; serve with injera.",
+        "am": "ከሽንኩርት እና ዘይት ሽሮ ወጥ ያዘጋጁ፤ ከእንጀራ ጋር ያገልግሉ።"
+      },
+      "shipping": {
+        "en": "Ships securely packaged. Local delivery 1–2 days.",
+        "am": "ደህንነቱ በተጠበቀ ሁኔታ።"
+      }
+    },
+    {
+      "id": "korarima",
+      "price": 250,
+      "image": "assets/images/spice-korarima.png",
+      "featured": true,
+      "bestSeller": false,
+      "names": { "en": "Korarima", "am": "ኮረሪማ" },
+      "shortDescription": {
+        "en": "Ethiopian cardamom — fragrant seeds for coffee, stews, and baking.",
+        "am": "የኢትዮጵያ ኮረሪማ — ለቡና፣ ወጥ እና ምግብ።"
+      },
+      "description": {
+        "en": "Whole korarima pods with a citrus-floral aroma prized in Ethiopian kitchens.",
+        "am": "ሙሉ የኮረሪማ ማዕዘን ከልዩ መዓዛ።"
+      },
+      "ingredients": {
+        "en": "100% korarima (false cardamom).",
+        "am": "100% ኮረሪማ።"
+      },
+      "culinary": {
+        "en": "Crush into coffee; add to doro wat and spiced butter.",
+        "am": "ለቡና፣ ለዶሮ ወጥ እና ለተቀመመ ቅቤ።"
+      },
+      "shipping": {
+        "en": "Ships securely packaged. Local delivery 1–2 days.",
+        "am": "ደህንነቱ በተጠበቀ ሁኔታ።"
+      }
+    },
+    {
+      "id": "berwa-blend",
+      "price": 300,
+      "image": "assets/images/product-jar.png",
+      "featured": false,
+      "bestSeller": true,
+      "names": { "en": "Berwa Blend", "am": "በርዋ ቅልቅል" },
+      "shortDescription": {
+        "en": "House blend of warm spices for everyday Ethiopian cooking.",
+        "am": "ለዕለታዊ የኢትዮጵያ ምግብ የቤት ቅልቅል።"
+      },
+      "description": {
+        "en": "A balanced jarred blend crafted for depth and aroma in soups and sautés.",
+        "am": "ለወጥ እና ለጥብስ የተመጣጠነ ቅልቅል።"
+      },
+      "ingredients": {
+        "en": "Proprietary blend of sun-dried spices. All natural.",
+        "am": "በፀሐይ የደረቁ ቅመሞች ቅልቅል።"
+      },
+      "culinary": {
+        "en": "Season lentils, vegetables, and slow-cooked dishes.",
+        "am": "ለምስር፣ አትክልት እና ለቀስ ብለው የሚበስሉ ምግቦች።"
+      },
+      "shipping": {
+        "en": "Ships securely packaged. Local delivery 1–2 days.",
+        "am": "ደህንነቱ በተጠበቀ ሁኔታ።"
+      }
+    },
+    {
+      "id": "brsttra",
+      "price": 280,
+      "image": "assets/images/product-jar.png",
+      "featured": false,
+      "bestSeller": false,
+      "names": { "en": "Brsttra", "am": "ብርስትራ" },
+      "shortDescription": {
+        "en": "Traditional blend for rich, aromatic sauces.",
+        "am": "ለጠንካራ እና ሽታ ባላቸው ምርጫዎች።"
+      },
+      "description": {
+        "en": "Signature blend honoring regional recipes — warmth without overpowering heat.",
+        "am": "የክልል አዘገጃጀትን የሚያከብር ቅልቅል።"
+      },
+      "ingredients": {
+        "en": "Natural spice blend. Details on jar label.",
+        "am": "ተፈጥሯዊ ቅመሞች። ዝርዝር በማሰሮ።"
+      },
+      "culinary": {
+        "en": "Stir into stews and marinades.",
+        "am": "ወደ ወጥ እና ማረሚያ ይጨምሩ።"
+      },
+      "shipping": {
+        "en": "Ships securely packaged. Local delivery 1–2 days.",
+        "am": "ደህንነቱ በተጠበቀ ሁኔታ።"
+      }
+    },
+    {
+      "id": "kitchen-tools",
+      "price": 450,
+      "image": "assets/images/kitchen-tools.png",
+      "featured": false,
+      "bestSeller": false,
+      "names": { "en": "Kitchen Tools", "am": "የማድቤት እቃዎች" },
+      "shortDescription": {
+        "en": "Handy tools for prepping injera, spices, and everyday cooking.",
+        "am": "ለእንጀራ፣ ቅመም እና ምግብ የሚያገለግሉ እቃዎች።"
+      },
+      "description": {
+        "en": "Curated kitchen essentials selected for durability and daily use.",
+        "am": "ለዕለት ተዕለት አጠቃቀም የተመረጡ እቃዎች።"
+      },
+      "ingredients": {
+        "en": "Kitchen utensils and accessories (see product images).",
+        "am": "የማድቤት ዕቃዎች።"
+      },
+      "culinary": {
+        "en": "Use alongside Shegye spices for a complete table.",
+        "am": "ከሸግዬ ቅመሞች ጋር ይጠቀሙ።"
+      },
+      "shipping": {
+        "en": "Ships securely packaged. Local delivery 1–2 days.",
+        "am": "ደህንነቱ በተጠበቀ ሁኔታ።"
+      }
+    }
+  ]
+}

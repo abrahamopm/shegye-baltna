@@ -1,12 +1,14 @@
 let currentLang = localStorage.getItem('shegye_lang') || 'en';
 
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
+  if (window.Catalog) await Catalog.load();
   init();
 });
 
 function init() {
   setupSkipLink();
   setupLanguage();
+  setupCatalogPages();
   setupCursor();
   setupNav();
   setupMobileNav();
@@ -21,6 +23,21 @@ function init() {
   setupContactForm();
   setupNewsletter();
   setupPageTransitions();
+}
+
+function setupCatalogPages() {
+  if (!window.Catalog) return;
+  const shopGrid = document.getElementById('catalog-grid');
+  const featured = document.getElementById('catalog-featured');
+  const bestStrip = document.getElementById('catalog-best-sellers');
+  const productRoot = document.getElementById('product-root');
+
+  if (shopGrid) Catalog.renderAll(shopGrid);
+  if (featured) Catalog.renderFeatured(featured);
+  if (bestStrip) Catalog.renderBestSellers(bestStrip);
+  if (productRoot) Catalog.hydrateProductPage(productRoot);
+
+  if (shopGrid || featured || bestStrip || productRoot) applyLanguage();
 }
 
 function escapeHtml(str) {
@@ -220,6 +237,7 @@ function revealHero() {
 }
 
 function setupCursor() {
+  if (document.body.classList.contains('admin-page')) return;
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
   if (window.matchMedia("(max-width: 768px)").matches) return;
   const dot = document.createElement('div'); dot.className = 'cursor-dot';
@@ -313,16 +331,18 @@ let cart = JSON.parse(localStorage.getItem('shegye_cart')) || [];
 function extractProductFromCard(btn) {
   const card = btn.closest('.product-card');
   if (!card) return null;
+  const slug = card.getAttribute('data-product-id');
   const titleEl = card.querySelector('h3[data-en]') || card.querySelector('h1[data-en]');
   const priceEl = card.querySelector('.product-price');
   const imgEl = card.querySelector('.product-img');
   if (!titleEl || !priceEl || !imgEl) return null;
   const name = titleEl.getAttribute('data-en');
+  const id = slug || name;
   const price = parseFloat(priceEl.textContent.replace(/[^0-9.]/g, ''));
-  if (!name || Number.isNaN(price)) return null;
+  if (!id || !name || Number.isNaN(price)) return null;
   const qtyInput = card.querySelector('.product-qty-input');
   const qty = qtyInput ? Math.max(1, parseInt(qtyInput.value, 10) || 1) : 1;
-  return { id: name, name, price, img: imgEl.src, qty };
+  return { id, name, price, img: imgEl.src, qty };
 }
 
 function flyToCart(imgEl) {
@@ -727,23 +747,26 @@ function setupNewsletter() {
 
 /* --- ACCORDION MODULE --- */
 function setupAccordions() {
-  document.querySelectorAll('.accordion-header').forEach(header => {
-    header.addEventListener('click', () => {
-      const item = header.parentElement;
-      const content = header.nextElementSibling;
-      const isActive = item.classList.contains('active');
-      
-      // Close all
-      document.querySelectorAll('.accordion-item').forEach(i => {
-        i.classList.remove('active');
-        i.querySelector('.accordion-content').style.maxHeight = null;
-      });
-      
-      if (!isActive) {
-        item.classList.add('active');
-        content.style.maxHeight = content.scrollHeight + "px";
-      }
+  if (document.body.dataset.accordionsDelegated) return;
+  document.body.dataset.accordionsDelegated = '1';
+  document.body.addEventListener('click', (e) => {
+    const header = e.target.closest('.accordion-header');
+    if (!header) return;
+    const accordionRoot = header.closest('.accordion');
+    if (!accordionRoot) return;
+    const item = header.parentElement;
+    const content = header.nextElementSibling;
+    if (!content || !content.classList.contains('accordion-content')) return;
+    const isActive = item.classList.contains('active');
+    accordionRoot.querySelectorAll('.accordion-item').forEach((i) => {
+      i.classList.remove('active');
+      const c = i.querySelector('.accordion-content');
+      if (c) c.style.maxHeight = null;
     });
+    if (!isActive) {
+      item.classList.add('active');
+      content.style.maxHeight = content.scrollHeight + 'px';
+    }
   });
 }
 

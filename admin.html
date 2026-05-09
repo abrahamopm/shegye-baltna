@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Catalog admin | Shegye Baltna</title>
+  <link rel="stylesheet" href="index.css">
+  <style>
+    body.admin-page { cursor: auto; }
+    .admin-wrap { max-width: 920px; margin: 0 auto; padding: 110px 1.5rem 4rem; }
+    .admin-panel { background: var(--clr-parchment); border: 1px solid var(--clr-gold-light); border-radius: 12px; padding: 1.75rem; margin-top: 1rem; box-shadow: 0 8px 30px rgba(44,24,16,0.06); }
+    textarea.admin-json { width: 100%; min-height: 460px; font-family: ui-monospace, Consolas, monospace; font-size: 13px; line-height: 1.45; padding: 1rem; border-radius: 8px; border: 1px solid rgba(44,24,16,0.2); background: #fff; color: var(--clr-espresso); }
+    .admin-actions { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 1.25rem; align-items: center; }
+    .admin-hint { color: #555; line-height: 1.65; margin: 0.75rem 0 1.25rem; font-size: 0.95rem; }
+    #admin-gate { display: flex; flex-wrap: wrap; gap: 1rem; align-items: flex-end; margin-top: 1rem; }
+    #admin-gate label { display: flex; flex-direction: column; gap: 0.35rem; font-weight: 600; font-size: 0.9rem; }
+    #admin-gate input { padding: 0.65rem 0.85rem; border-radius: 8px; border: 1px solid rgba(44,24,16,0.25); min-width: 200px; }
+  </style>
+  <!-- Default PIN: shegye-admin — change ADMIN_PIN below before publishing if this file is public. -->
+</head>
+<body class="admin-page">
+
+  <nav class="nav">
+    <a href="index.html" class="nav-logo">
+      <img src="logo.jpg" alt="Shegye Baltna Logo">
+      <span data-en="Shegye Baltna" data-am="ሸግዬ ባልትና">Shegye Baltna</span>
+    </a>
+    <div class="nav-links">
+      <a href="shop.html" class="nav-link" data-en="Spices Shop" data-am="የቅመማ ሱቅ">Spices Shop</a>
+      <a href="index.html" class="nav-link" data-en="Home" data-am="ዋና ገፅ">Home</a>
+    </div>
+  </nav>
+
+  <main class="admin-wrap" id="main-content" tabindex="-1">
+    <h1 class="display" style="font-size: 2rem; color: var(--clr-espresso);">Catalog admin</h1>
+    <p class="admin-hint">
+      Edit the product list as JSON. <strong>Save to browser</strong> stores an override in this device only and merges with <code>data/products.json</code> on the shop and product pages.
+      Use <strong>Download JSON</strong> to replace the file in your project, then deploy — that is how changes go live for all visitors.
+    </p>
+
+    <div id="admin-gate">
+      <label>PIN
+        <input type="password" id="admin-pin" autocomplete="current-password" placeholder="Enter PIN">
+      </label>
+      <button type="button" class="btn-primary" id="admin-unlock">Unlock</button>
+    </div>
+
+    <div id="admin-editor" hidden class="admin-panel">
+      <textarea class="admin-json" id="admin-json" aria-label="Products JSON"></textarea>
+      <div class="admin-actions">
+        <button type="button" class="btn-primary" id="admin-save">Save to browser</button>
+        <button type="button" class="btn-secondary" id="admin-reset">Clear browser override</button>
+        <button type="button" class="btn-secondary" id="admin-download">Download JSON</button>
+        <label class="btn-secondary" style="cursor: pointer; margin: 0;">
+          Import file
+          <input type="file" id="admin-import" accept="application/json,.json" hidden>
+        </label>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <img src="logo.jpg" alt="Logo">
+    <p>&copy; 2026 Shegye Baltna. All rights reserved.</p>
+  </footer>
+
+  <script src="catalog.js"></script>
+  <script>
+    (function () {
+      var ADMIN_PIN = 'shegye-admin';
+      var STORAGE_KEY = 'shegye_products_catalog';
+      var SESSION_KEY = 'shegye_admin_ok';
+
+      function showEditor(show) {
+        document.getElementById('admin-editor').hidden = !show;
+        document.getElementById('admin-gate').style.display = show ? 'none' : 'flex';
+      }
+
+      async function loadIntoTextarea() {
+        if (!window.Catalog) return;
+        await Catalog.load();
+        document.getElementById('admin-json').value = JSON.stringify({ products: Catalog.products }, null, 2);
+      }
+
+      document.getElementById('admin-unlock').addEventListener('click', async function () {
+        var pin = document.getElementById('admin-pin').value.trim();
+        if (pin !== ADMIN_PIN) {
+          alert('Incorrect PIN.');
+          return;
+        }
+        sessionStorage.setItem(SESSION_KEY, '1');
+        await loadIntoTextarea();
+        showEditor(true);
+      });
+
+      document.getElementById('admin-save').addEventListener('click', function () {
+        var raw = document.getElementById('admin-json').value;
+        try {
+          var data = JSON.parse(raw);
+          if (!data || !Array.isArray(data.products)) throw new Error('JSON must contain a "products" array.');
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+          alert('Saved to this browser. Shop pages will use this until you clear the override.');
+        } catch (e) {
+          alert('Invalid JSON: ' + e.message);
+        }
+      });
+
+      document.getElementById('admin-reset').addEventListener('click', function () {
+        localStorage.removeItem(STORAGE_KEY);
+        loadIntoTextarea();
+        alert('Browser override cleared. Reload the shop to pull from data/products.json only.');
+      });
+
+      document.getElementById('admin-download').addEventListener('click', function () {
+        var raw = document.getElementById('admin-json').value;
+        try {
+          JSON.parse(raw);
+        } catch (e) {
+          alert('Fix JSON errors before download.');
+          return;
+        }
+        var blob = new Blob([raw], { type: 'application/json' });
+        var a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = 'products.json';
+        a.click();
+        URL.revokeObjectURL(a.href);
+      });
+
+      document.getElementById('admin-import').addEventListener('change', function (e) {
+        var f = e.target.files[0];
+        if (!f) return;
+        var r = new FileReader();
+        r.onload = function () {
+          document.getElementById('admin-json').value = r.result;
+        };
+        r.readAsText(f);
+        e.target.value = '';
+      });
+
+      if (sessionStorage.getItem(SESSION_KEY) === '1') {
+        loadIntoTextarea().then(function () { showEditor(true); });
+      }
+    })();
+  </script>
+</body>
+</html>

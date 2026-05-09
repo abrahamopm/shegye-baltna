@@ -22,7 +22,7 @@
     <div class="nav-links">
       <a href="index.html" class="nav-link" data-en="Home" data-am="ዋና ገፅ">Home</a>
       <a href="story.html" class="nav-link" data-en="Story" data-am="ታሪካችን">Story</a>
-      <a href="shop.html" class="nav-link" style="color:var(--clr-gold)" data-en="Spices Shop" data-am="የቅመማ ሱቅ">Spices Shop</a>
+      <a href="shop.html" class="nav-link nav-link--current" data-en="Spices Shop" data-am="የቅመማ ሱቅ">Spices Shop</a>
       <a href="contact.html" class="nav-link" data-en="Contact" data-am="ያግኙን">Contact</a>
     </div>
     <div style="display: flex; align-items: center; gap: 2rem;">
@@ -59,77 +59,11 @@
       </div>
     </div>
 
-    <div class="product-grid reveal-stagger">
-      
-      <div class="product-card reveal-up card-tilt">
-        <div class="product-img-wrapper"><a href="product.html"><img src="assets/images/spice-berbero.png" alt="Berbere" class="product-img"></a></div>
-        <div class="product-info">
-          <h3 data-en="Berbere" data-am="በርበሬ">Berbere</h3>
-          <p class="product-price">158 ETB</p>
-          <a href="product.html" style="text-decoration:underline" data-en="Details" data-am="ዝርዝሮች">Details</a>
-        </div>
-        <button class="btn-quick-add">+</button>
-      </div>
-
-      <div class="product-card reveal-up card-tilt">
-        <div class="product-img-wrapper"><a href="product.html"><img src="assets/images/spice-shiro.png" alt="Shiro" class="product-img"></a></div>
-        <div class="product-info">
-          <h3 data-en="Shiro" data-am="ሽሮ">Shiro</h3>
-          <p class="product-price">120 ETB</p>
-          <a href="product.html" style="text-decoration:underline" data-en="Details" data-am="ዝርዝሮች">Details</a>
-        </div>
-        <button class="btn-quick-add">+</button>
-      </div>
-
-      <div class="product-card reveal-up card-tilt">
-        <div class="product-img-wrapper"><a href="product.html"><img src="assets/images/spice-korarima.png" alt="Korarima" class="product-img"></a></div>
-        <div class="product-info">
-          <h3 data-en="Korarima" data-am="ኮረሪማ">Korarima</h3>
-          <p class="product-price">250 ETB</p>
-          <a href="product.html" style="text-decoration:underline" data-en="Details" data-am="ዝርዝሮች">Details</a>
-        </div>
-        <button class="btn-quick-add">+</button>
-      </div>
-
-      <div class="product-card reveal-up card-tilt">
-        <div class="product-img-wrapper"><a href="product.html"><img src="assets/images/product-jar.png" alt="Berwa Blend" class="product-img"></a></div>
-        <div class="product-info">
-          <h3 data-en="Berwa Blend" data-am="በርዋ ቅልቅል">Berwa Blend</h3>
-          <p class="product-price">300 ETB</p>
-          <a href="product.html" style="text-decoration:underline" data-en="Details" data-am="ዝርዝሮች">Details</a>
-        </div>
-        <button class="btn-quick-add">+</button>
-      </div>
-
-      <div class="product-card reveal-up card-tilt">
-        <div class="product-img-wrapper"><a href="product.html"><img src="assets/images/product-jar.png" alt="Brsttra" class="product-img"></a></div>
-        <div class="product-info">
-          <h3 data-en="Brsttra" data-am="ብርስትራ">Brsttra</h3>
-          <p class="product-price">280 ETB</p>
-          <a href="product.html" style="text-decoration:underline" data-en="Details" data-am="ዝርዝሮች">Details</a>
-        </div>
-        <button class="btn-quick-add">+</button>
-      </div>
-
-      <div class="product-card reveal-up card-tilt">
-        <div class="product-img-wrapper"><a href="product.html"><img src="assets/images/kitchen-tools.png" alt="Kachen Tools" class="product-img"></a></div>
-        <div class="product-info">
-          <h3 data-en="Kachen Tools" data-am="የማድቤት እቃዎች">Kachen Tools</h3>
-          <p class="product-price">450 ETB</p>
-          <a href="product.html" style="text-decoration:underline" data-en="Details" data-am="ዝርዝሮች">Details</a>
-        </div>
-        <button class="btn-quick-add">+</button>
-      </div>
-
-    </div>
+    <div class="product-grid reveal-stagger" id="catalog-grid"></div>
 
     <!-- Expanded Carousel Section -->
     <h2 style="margin-top: 6rem" class="display reveal-up" data-en="Best Sellers" data-am="ከፍተኛ ሽያጭ ያላቸው">Best Sellers</h2>
-    <div class="h-scroll-strip reveal-up" aria-label="Best sellers">
-      <a href="product.html" class="h-scroll-item"><img src="assets/images/spice-berbero.png" alt="" style="width:100%; height:200px; object-fit:cover; border-radius:8px"></a>
-      <a href="product.html" class="h-scroll-item"><img src="assets/images/spice-shiro.png" alt="" style="width:100%; height:200px; object-fit:cover; border-radius:8px"></a>
-      <a href="product.html" class="h-scroll-item"><img src="assets/images/product-jar.png" alt="" style="width:100%; height:200px; object-fit:cover; border-radius:8px"></a>
-    </div>
+    <div class="h-scroll-strip reveal-up" id="catalog-best-sellers" aria-label="Best sellers"></div>
   </section>
 
   <footer>
@@ -137,6 +71,7 @@
     <p>&copy; 2026 Shegye Baltna. All rights reserved.</p>
   </footer>
 
+  <script src="catalog.js"></script>
   <script src="app.js"></script>
 </body>
 </html>

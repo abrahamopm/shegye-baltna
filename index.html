@@ -6,7 +6,7 @@
   <title>Shegye Baltna | Her Legacy, Your Table</title>
   <link rel="stylesheet" href="index.css">
 </head>
-<body>
+<body class="nav-over-media">
 
   <div class="loading-screen">
     <img src="logo.jpg" alt="Logo" class="loading-logo">
@@ -25,7 +25,7 @@
       <span data-en="Shegye Baltna" data-am="ሸግዬ ባልትና">Shegye Baltna</span>
     </a>
     <div class="nav-links">
-      <a href="index.html" class="nav-link" data-en="Home" data-am="ዋና ገፅ">Home</a>
+      <a href="index.html" class="nav-link nav-link--current" data-en="Home" data-am="ዋና ገፅ">Home</a>
       <a href="story.html" class="nav-link" data-en="Story" data-am="ታሪካችን">Story</a>
       <a href="shop.html" class="nav-link" data-en="Spices Shop" data-am="የቅመማ ሱቅ">Spices Shop</a>
       <a href="contact.html" class="nav-link" data-en="Contact" data-am="ያግኙን">Contact</a>
@@ -57,35 +57,7 @@
   </section>
 
   <section class="section-padding container" style="margin-top:-60px; position:relative; z-index:10;">
-    <div class="product-grid reveal-stagger">
-      <div class="product-card reveal-up card-tilt">
-        <div class="product-img-wrapper"><a href="product.html"><img src="assets/images/spice-berbero.png" alt="Berbere" class="product-img"></a></div>
-        <div class="product-info">
-          <h3 data-en="Berbere" data-am="በርበሬ">Berbere</h3>
-          <p class="product-price">158 ETB</p>
-          <a href="product.html" style="text-decoration:underline" data-en="Details" data-am="ዝርዝሮች">Details</a>
-        </div>
-        <button class="btn-quick-add">+</button>
-      </div>
-      <div class="product-card reveal-up card-tilt">
-        <div class="product-img-wrapper"><a href="product.html"><img src="assets/images/spice-shiro.png" alt="Shiro" class="product-img"></a></div>
-        <div class="product-info">
-          <h3 data-en="Shiro" data-am="ሽሮ">Shiro</h3>
-          <p class="product-price">120 ETB</p>
-          <a href="product.html" style="text-decoration:underline" data-en="Details" data-am="ዝርዝሮች">Details</a>
-        </div>
-        <button class="btn-quick-add">+</button>
-      </div>
-      <div class="product-card reveal-up card-tilt">
-        <div class="product-img-wrapper"><a href="product.html"><img src="assets/images/spice-korarima.png" alt="Korarima" class="product-img"></a></div>
-        <div class="product-info">
-          <h3 data-en="Korarima" data-am="ኮረሪማ">Korarima</h3>
-          <p class="product-price">250 ETB</p>
-          <a href="product.html" style="text-decoration:underline" data-en="Details" data-am="ዝርዝሮች">Details</a>
-        </div>
-        <button class="btn-quick-add">+</button>
-      </div>
-    </div>
+    <div class="product-grid reveal-stagger" id="catalog-featured"></div>
   </section>
 
   <section class="section-padding container">
@@ -137,6 +109,7 @@
     <p>&copy; 2026 Shegye Baltna. All rights reserved.</p>
   </footer>
 
+  <script src="catalog.js"></script>
   <script src="app.js"></script>
 </body>
 </html>
