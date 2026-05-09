@@ -3,20 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Product Details | Shegye Baltna</title>
+  <title>Berbere | Shegye Baltna</title>
   <link rel="stylesheet" href="index.css">
   <style>
-    .nav { background: rgba(44, 24, 16, 0.95); backdrop-filter: blur(20px); }
-    body { padding-top: 120px; }
-    .product-detail { display: flex; gap: 4rem; flex-wrap: wrap; margin-bottom: 4rem; }
-    .product-detail-img { flex: 1; min-width: 300px; border-radius: 8px; overflow: hidden; position: relative; }
-    .product-detail-img img { width: 100%; display: block; transition: transform 0.5s; }
-    .product-detail-img:hover img { transform: scale(1.2); cursor: zoom-in; }
+    .product-detail-layout { display: flex; gap: 4rem; flex-wrap: wrap; margin-top: 150px; }
+    .product-detail-img { flex: 1; min-width: 300px; border-radius: 12px; overflow: hidden; background: var(--clr-cream); }
+    .product-detail-img img { width: 100%; height: auto; display: block; }
     .product-detail-info { flex: 1; min-width: 300px; }
-    .product-detail-info h1 { font-size: 3rem; margin-bottom: 1rem; }
-    .price-large { font-size: 2rem; color: var(--clr-berbere); font-weight: bold; margin-bottom: 2rem; }
-    .qty-controls { display: flex; align-items: center; gap: 1rem; margin-bottom: 2rem; }
-    .qty-btn { width: 40px; height: 40px; border: 1px solid var(--clr-gold); background: transparent; font-size: 1.5rem; cursor: none; }
   </style>
 </head>
 <body>
@@ -31,7 +24,7 @@
     <div class="nav-links">
       <a href="index.html" class="nav-link" data-en="Home" data-am="ዋና ገፅ">Home</a>
       <a href="story.html" class="nav-link" data-en="Story" data-am="ታሪካችን">Story</a>
-      <a href="shop.html" class="nav-link" data-en="Spices Shop" data-am="የቅመማ ሱቅ">Spices Shop</a>
+      <a href="shop.html" class="nav-link" style="color:var(--clr-gold)" data-en="Spices Shop" data-am="የቅመማ ሱቅ">Spices Shop</a>
       <a href="contact.html" class="nav-link" data-en="Contact" data-am="ያግኙን">Contact</a>
     </div>
     <div style="display: flex; align-items: center; gap: 2rem;">
@@ -40,30 +33,87 @@
         <span class="lang-label lang-en">EN</span>
         <span class="lang-label lang-am">አማ</span>
       </div>
-      <a href="cart.html" class="cart-icon">
+      <a href="#" class="cart-icon">
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
         <div class="cart-badge" style="display:none">0</div>
       </a>
     </div>
   </nav>
 
-  <section class="container">
-    <div class="product-detail">
-      <div class="product-detail-img reveal-right">
-        <img src="assets/images/spice-berbero.png" alt="Berbere" id="detail-img">
+  <section class="container section-padding">
+    <div class="product-detail-layout product-card">
+      <div class="product-detail-img reveal-left">
+        <img src="assets/images/spice-berbero.png" alt="Berbere" class="product-img">
       </div>
-      <div class="product-detail-info reveal-left">
-        <h1 data-en="Premium Berbere" data-am="ልዩ በርበሬ">Premium Berbere</h1>
-        <div class="price-large">158 ETB</div>
-        <p style="margin-bottom: 2rem; line-height: 1.6;" data-en="Our signature Berbere blend, sun-dried and perfectly balanced. Essential for any Ethiopian stew." data-am="ልዩ የበርበሬ ቅልቅላችን፣ በፀሐይ የደረቀ እና የተመጣጠነ። ለማንኛውም የኢትዮጵያ ወጥ አስፈላጊ ነው።">Our signature Berbere blend, sun-dried and perfectly balanced. Essential for any Ethiopian stew.</p>
-        
-        <div class="qty-controls">
-          <button class="qty-btn" onclick="document.getElementById('p-qty').innerText = Math.max(1, parseInt(document.getElementById('p-qty').innerText)-1)">-</button>
-          <span id="p-qty" style="font-size:1.5rem; font-weight:bold; width: 30px; text-align:center;">1</span>
-          <button class="qty-btn" onclick="document.getElementById('p-qty').innerText = parseInt(document.getElementById('p-qty').innerText)+1">+</button>
+      
+      <div class="product-detail-info reveal-right">
+        <div style="display:flex; align-items:center; gap:0.5rem; color:var(--clr-gold); margin-bottom:1rem">
+          <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+          <span style="color:#888; font-size:0.9rem">(124 Reviews)</span>
         </div>
         
-        <button class="btn-primary btn-magnetic" id="btn-add-detail" data-en="ADD TO BASKET" data-am="ወደ ቅርጫት ጨምር">ADD TO BASKET</button>
+        <h1 class="display" style="font-size: 3rem; color: var(--clr-espresso);" data-en="Berbere" data-am="በርበሬ">Berbere</h1>
+        <p style="font-size: 1.5rem; color: var(--clr-berbere); margin: 1rem 0; font-weight: bold;" class="product-price">158 ETB</p>
+        
+        <p style="font-size: 1.1rem; line-height: 1.6; color: #555; margin-bottom: 2rem;" data-en="The foundation of Ethiopian cuisine. A robust, complex, and fiery blend of sun-dried red chilies, garlic, ginger, basil, korarima, rue, ajwain or radhuni, nigella, and fenugreek." data-am="የኢትዮጵያ ምግብ መሠረት። ኃይለኛ፣ ውስብስብ እና ትኩስ የፀሐይ ደረቅ ቀይ ቃሪያ፣ ነጭ ሽንኩርት፣ ዝንጅብል፣ ባሲል፣ ኮረሪማ እና ሌሎችም ቅልቅል።">The foundation of Ethiopian cuisine. A robust, complex, and fiery blend of sun-dried red chilies, garlic, ginger, basil, korarima, rue, ajwain or radhuni, nigella, and fenugreek.</p>
+        
+        <div style="display:flex; gap:1rem; margin-bottom: 3rem;">
+          <input type="number" value="1" min="1" style="width: 80px; padding: 1rem; border: 1px solid #ccc; border-radius: 4px; font-size: 1.2rem; text-align: center; outline:none">
+          <button class="btn-primary btn-magnetic btn-quick-add" style="flex:1" data-en="Add to Basket" data-am="ወደ ቅርጫት አክል">Add to Basket</button>
+        </div>
+
+        <!-- Accordions -->
+        <div class="accordion">
+          <div class="accordion-item">
+            <button class="accordion-header">
+              <span data-en="Ingredients" data-am="ንጥረ ነገሮች">Ingredients</span>
+              <span class="accordion-icon">+</span>
+            </button>
+            <div class="accordion-content">
+              <p data-en="Chili peppers, garlic, ginger, basil, korarima, rue, ajwain, nigella, and fenugreek. All 100% natural and sun-dried." data-am="ቀይ ቃሪያ፣ ነጭ ሽንኩርት፣ ዝንጅብል፣ ባሲል፣ ኮረሪማ፣ ጤና አዳም፣ ጥቁር አዝሙድ፣ እና አብሽ። ሁሉም 100% ተፈጥሯዊ እና በፀሐይ የደረቁ።">Chili peppers, garlic, ginger, basil, korarima, rue, ajwain, nigella, and fenugreek. All 100% natural and sun-dried.</p>
+            </div>
+          </div>
+          <div class="accordion-item">
+            <button class="accordion-header">
+              <span data-en="Culinary Uses" data-am="የምግብ አጠቃቀም">Culinary Uses</span>
+              <span class="accordion-icon">+</span>
+            </button>
+            <div class="accordion-content">
+              <p data-en="Essential for Doro Wat (chicken stew), Misir Wat (lentil stew), and as a dry rub for roasted meats." data-am="ለዶሮ ወጥ፣ ምስር ወጥ፣ እና ለተጠበሰ ስጋ እንደ ደረቅ ቅመም አስፈላጊ ነው።">Essential for Doro Wat (chicken stew), Misir Wat (lentil stew), and as a dry rub for roasted meats.</p>
+            </div>
+          </div>
+          <div class="accordion-item">
+            <button class="accordion-header">
+              <span data-en="Shipping Information" data-am="የማጓጓዣ መረጃ">Shipping Information</span>
+              <span class="accordion-icon">+</span>
+            </button>
+            <div class="accordion-content">
+              <p data-en="Ships securely packaged to preserve freshness. Deliveries within Addis Ababa take 1-2 days. International shipping available via DHL." data-am="ትኩስነቱን ለመጠበቅ ደህንነቱ በተጠበቀ ሁኔታ ታሽጎ ይላካል። በአዲስ አበባ ውስጥ ማድረስ ከ1-2 ቀናት ይወስዳል።">Ships securely packaged to preserve freshness. Deliveries within Addis Ababa take 1-2 days. International shipping available via DHL.</p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Expanded Content: Reviews Mockup -->
+  <section class="section-padding container">
+    <h2 class="display reveal-up" style="font-size: 2rem; margin-bottom: 2rem; border-bottom: 1px solid var(--clr-gold-light); padding-bottom: 1rem;" data-en="Customer Reviews" data-am="የደንበኛ ግምገማዎች">Customer Reviews</h2>
+    
+    <div style="display:flex; flex-direction:column; gap:2rem;">
+      <div class="reveal-up" style="background:var(--clr-cream); padding:2rem; border-radius:8px;">
+        <div style="color:var(--clr-gold); margin-bottom:0.5rem">★★★★★</div>
+        <h4 style="margin-bottom:0.5rem">"Incredible Quality!"</h4>
+        <p style="color:#555">"I have tried many Berbere blends, but Shegye's is by far the most authentic. The aroma hits you as soon as you open the jar. Highly recommended!"</p>
+        <div style="margin-top:1rem; font-size:0.9rem; color:#888">- Sarah M.</div>
+      </div>
+
+      <div class="reveal-up" style="background:var(--clr-cream); padding:2rem; border-radius:8px;">
+        <div style="color:var(--clr-gold); margin-bottom:0.5rem">★★★★★</div>
+        <h4 style="margin-bottom:0.5rem">"Just like home"</h4>
+        <p style="color:#555">"Reminds me exactly of the spice blends my grandmother used to make. The heat level is perfect and the color is a beautiful rich red."</p>
+        <div style="margin-top:1rem; font-size:0.9rem; color:#888">- Dawit T.</div>
       </div>
     </div>
   </section>
@@ -74,31 +124,5 @@
   </footer>
 
   <script src="app.js"></script>
-  <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      document.getElementById('btn-add-detail').addEventListener('click', (e) => {
-        const qty = parseInt(document.getElementById('p-qty').innerText);
-        const name = document.querySelector('h1').getAttribute('data-en');
-        const img = document.getElementById('detail-img').src;
-        addToCart({id: name, name: name, price: 158, img: img, qty: qty});
-        
-        const badge = document.querySelector('.cart-badge');
-        badge.classList.add('bump');
-        setTimeout(() => badge.classList.remove('bump'), 300);
-      });
-      
-      const imgWrap = document.querySelector('.product-detail-img');
-      const img = imgWrap.querySelector('img');
-      imgWrap.addEventListener('mousemove', e => {
-        const rect = imgWrap.getBoundingClientRect();
-        const x = (e.clientX - rect.left) / rect.width * 100;
-        const y = (e.clientY - rect.top) / rect.height * 100;
-        img.style.transformOrigin = `${x}% ${y}%`;
-      });
-      imgWrap.addEventListener('mouseleave', () => {
-        img.style.transformOrigin = 'center center';
-      });
-    });
-  </script>
 </body>
 </html>

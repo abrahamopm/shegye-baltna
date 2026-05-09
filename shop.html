@@ -6,17 +6,8 @@
   <title>Spices Shop | Shegye Baltna</title>
   <link rel="stylesheet" href="index.css">
   <style>
-    .nav { background: rgba(44, 24, 16, 0.95); backdrop-filter: blur(20px); }
-    body { padding-top: 100px; }
-    .category-nav {
-      display: flex; gap: 1rem; overflow-x: auto; padding: 2rem 0; scrollbar-width: none;
-    }
-    .category-nav::-webkit-scrollbar { display: none; }
-    .cat-pill {
-      padding: 0.5rem 1.5rem; border-radius: 20px; border: 1px solid var(--clr-gold);
-      white-space: nowrap; cursor: pointer; transition: all 0.3s;
-    }
-    .cat-pill.active, .cat-pill:hover { background: var(--clr-gold); color: white; }
+    .shop-hero { height: 40vh; background: var(--clr-espresso); display: flex; align-items: center; justify-content: center; color: var(--clr-gold); text-align: center; margin-bottom: 4rem; position: relative; overflow: hidden; }
+    .shop-hero::before { content: ''; position: absolute; inset: 0; background: url('data:image/svg+xml,...'); opacity: 0.1; }
   </style>
 </head>
 <body>
@@ -40,90 +31,99 @@
         <span class="lang-label lang-en">EN</span>
         <span class="lang-label lang-am">አማ</span>
       </div>
-      <a href="cart.html" class="cart-icon">
+      <a href="#" class="cart-icon">
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
         <div class="cart-badge" style="display:none">0</div>
       </a>
     </div>
   </nav>
 
+  <div class="shop-hero">
+    <div class="reveal-scale">
+      <h1 class="display" style="font-size: 3.5rem; margin-bottom: 1rem;" data-en="The Spice Market" data-am="የቅመማ ገበያ">The Spice Market</h1>
+      <p style="font-size: 1.2rem; color: var(--clr-parchment);" data-en="Authentic flavors, delivered to your door." data-am="ትክክለኛ ጣዕም፣ እስከ በርዎ ድረስ ይደርሳል።">Authentic flavors, delivered to your door.</p>
+    </div>
+  </div>
+
   <section class="container">
-    <div class="category-nav reveal-left">
-      <div class="cat-pill active" data-en="All" data-am="ሁሉም">All</div>
-      <div class="cat-pill" data-en="Spices" data-am="ቅመሞች">Spices</div>
-      <div class="cat-pill" data-en="Blends" data-am="ቅልቅሎች">Blends</div>
-      <div class="cat-pill" data-en="Tools" data-am="መሳሪያዎች">Tools</div>
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+      <h2 class="display reveal-left" data-en="All Products" data-am="ሁሉም ምርቶች">All Products</h2>
+      <div class="reveal-right" style="display:flex; gap:1rem;">
+        <span style="padding:0.5rem 1rem; border:1px solid var(--clr-gold); border-radius:20px; cursor:none;" data-en="Filter" data-am="አጣራ">Filter</span>
+        <span style="padding:0.5rem 1rem; border:1px solid var(--clr-gold); border-radius:20px; cursor:none;" data-en="Sort" data-am="ደርድር">Sort</span>
+      </div>
     </div>
 
     <div class="product-grid reveal-stagger">
       
-      <a href="product.html" class="product-card reveal-up card-tilt">
-        <div class="product-img-wrapper"><img src="assets/images/spice-berbero.png" alt="Berbere" class="product-img"></div>
+      <div class="product-card reveal-up card-tilt">
+        <div class="product-img-wrapper"><a href="product.html"><img src="assets/images/spice-berbero.png" alt="Berbere" class="product-img"></a></div>
         <div class="product-info">
           <h3 data-en="Berbere" data-am="በርበሬ">Berbere</h3>
           <p class="product-price">158 ETB</p>
-          <span style="text-decoration:underline" data-en="Details" data-am="ዝርዝሮች">Details</span>
+          <a href="product.html" style="text-decoration:underline" data-en="Details" data-am="ዝርዝሮች">Details</a>
         </div>
         <button class="btn-quick-add">+</button>
-      </a>
+      </div>
 
-      <a href="product.html" class="product-card reveal-up card-tilt">
-        <div class="product-img-wrapper"><img src="assets/images/spice-shiro.png" alt="Shiro" class="product-img"></div>
+      <div class="product-card reveal-up card-tilt">
+        <div class="product-img-wrapper"><a href="product.html"><img src="assets/images/spice-shiro.png" alt="Shiro" class="product-img"></a></div>
         <div class="product-info">
           <h3 data-en="Shiro" data-am="ሽሮ">Shiro</h3>
           <p class="product-price">120 ETB</p>
-          <span style="text-decoration:underline" data-en="Details" data-am="ዝርዝሮች">Details</span>
+          <a href="product.html" style="text-decoration:underline" data-en="Details" data-am="ዝርዝሮች">Details</a>
         </div>
         <button class="btn-quick-add">+</button>
-      </a>
+      </div>
 
-      <a href="product.html" class="product-card reveal-up card-tilt">
-        <div class="product-img-wrapper"><img src="assets/images/spice-korarima.png" alt="Korarima" class="product-img"></div>
+      <div class="product-card reveal-up card-tilt">
+        <div class="product-img-wrapper"><a href="product.html"><img src="assets/images/spice-korarima.png" alt="Korarima" class="product-img"></a></div>
         <div class="product-info">
           <h3 data-en="Korarima" data-am="ኮረሪማ">Korarima</h3>
           <p class="product-price">250 ETB</p>
-          <span style="text-decoration:underline" data-en="Details" data-am="ዝርዝሮች">Details</span>
+          <a href="product.html" style="text-decoration:underline" data-en="Details" data-am="ዝርዝሮች">Details</a>
         </div>
         <button class="btn-quick-add">+</button>
-      </a>
+      </div>
 
-      <a href="product.html" class="product-card reveal-up card-tilt">
-        <div class="product-img-wrapper"><img src="assets/images/product-jar.png" alt="Berwa Blend" class="product-img"></div>
+      <div class="product-card reveal-up card-tilt">
+        <div class="product-img-wrapper"><a href="product.html"><img src="assets/images/product-jar.png" alt="Berwa Blend" class="product-img"></a></div>
         <div class="product-info">
           <h3 data-en="Berwa Blend" data-am="በርዋ ቅልቅል">Berwa Blend</h3>
           <p class="product-price">300 ETB</p>
-          <span style="text-decoration:underline" data-en="Details" data-am="ዝርዝሮች">Details</span>
+          <a href="product.html" style="text-decoration:underline" data-en="Details" data-am="ዝርዝሮች">Details</a>
         </div>
         <button class="btn-quick-add">+</button>
-      </a>
+      </div>
 
-      <a href="product.html" class="product-card reveal-up card-tilt">
-        <div class="product-img-wrapper"><img src="assets/images/product-jar.png" alt="Brsttra" class="product-img"></div>
+      <div class="product-card reveal-up card-tilt">
+        <div class="product-img-wrapper"><a href="product.html"><img src="assets/images/product-jar.png" alt="Brsttra" class="product-img"></a></div>
         <div class="product-info">
           <h3 data-en="Brsttra" data-am="ብርስትራ">Brsttra</h3>
           <p class="product-price">280 ETB</p>
-          <span style="text-decoration:underline" data-en="Details" data-am="ዝርዝሮች">Details</span>
+          <a href="product.html" style="text-decoration:underline" data-en="Details" data-am="ዝርዝሮች">Details</a>
         </div>
         <button class="btn-quick-add">+</button>
-      </a>
+      </div>
 
-      <a href="product.html" class="product-card reveal-up card-tilt">
-        <div class="product-img-wrapper"><img src="assets/images/kitchen-tools.png" alt="Kachen Tools" class="product-img"></div>
+      <div class="product-card reveal-up card-tilt">
+        <div class="product-img-wrapper"><a href="product.html"><img src="assets/images/kitchen-tools.png" alt="Kachen Tools" class="product-img"></a></div>
         <div class="product-info">
           <h3 data-en="Kachen Tools" data-am="የማድቤት እቃዎች">Kachen Tools</h3>
           <p class="product-price">450 ETB</p>
-          <span style="text-decoration:underline" data-en="Details" data-am="ዝርዝሮች">Details</span>
+          <a href="product.html" style="text-decoration:underline" data-en="Details" data-am="ዝርዝሮች">Details</a>
         </div>
         <button class="btn-quick-add">+</button>
-      </a>
+      </div>
 
     </div>
 
-    <h2 style="margin-top: 4rem" class="reveal-up" data-en="Featured" data-am="የተመረጡ">Featured</h2>
+    <!-- Expanded Carousel Section -->
+    <h2 style="margin-top: 6rem" class="display reveal-up" data-en="Best Sellers" data-am="ከፍተኛ ሽያጭ ያላቸው">Best Sellers</h2>
     <div class="h-scroll-strip reveal-up">
-      <div class="h-scroll-item"><img src="assets/images/spice-berbero.png" style="width:100%; border-radius:8px"></div>
-      <div class="h-scroll-item"><img src="assets/images/spice-shiro.png" style="width:100%; border-radius:8px"></div>
-      <div class="h-scroll-item"><img src="assets/images/spice-korarima.png" style="width:100%; border-radius:8px"></div>
+      <div class="h-scroll-item"><img src="assets/images/spice-berbero.png" style="width:100%; height:200px; object-fit:cover; border-radius:8px"></div>
+      <div class="h-scroll-item"><img src="assets/images/spice-shiro.png" style="width:100%; height:200px; object-fit:cover; border-radius:8px"></div>
+      <div class="h-scroll-item"><img src="assets/images/product-jar.png" style="width:100%; height:200px; object-fit:cover; border-radius:8px"></div>
     </div>
   </section>
 
