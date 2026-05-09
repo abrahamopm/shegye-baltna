@@ -33,14 +33,14 @@
         <span class="lang-label lang-en">EN</span>
         <span class="lang-label lang-am">አማ</span>
       </div>
-      <a href="#" class="cart-icon">
+      <a href="cart.html" class="cart-icon" aria-label="Basket">
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
         <div class="cart-badge" style="display:none">0</div>
       </a>
     </div>
   </nav>
 
-  <section class="container section-padding">
+  <section class="container section-padding" id="main-content" tabindex="-1">
     <div class="product-detail-layout product-card">
       <div class="product-detail-img reveal-left">
         <img src="assets/images/spice-berbero.png" alt="Berbere" class="product-img">
@@ -57,15 +57,17 @@
         
         <p style="font-size: 1.1rem; line-height: 1.6; color: #555; margin-bottom: 2rem;" data-en="The foundation of Ethiopian cuisine. A robust, complex, and fiery blend of sun-dried red chilies, garlic, ginger, basil, korarima, rue, ajwain or radhuni, nigella, and fenugreek." data-am="የኢትዮጵያ ምግብ መሠረት። ኃይለኛ፣ ውስብስብ እና ትኩስ የፀሐይ ደረቅ ቀይ ቃሪያ፣ ነጭ ሽንኩርት፣ ዝንጅብል፣ ባሲል፣ ኮረሪማ እና ሌሎችም ቅልቅል።">The foundation of Ethiopian cuisine. A robust, complex, and fiery blend of sun-dried red chilies, garlic, ginger, basil, korarima, rue, ajwain or radhuni, nigella, and fenugreek.</p>
         
-        <div style="display:flex; gap:1rem; margin-bottom: 3rem;">
-          <input type="number" value="1" min="1" style="width: 80px; padding: 1rem; border: 1px solid #ccc; border-radius: 4px; font-size: 1.2rem; text-align: center; outline:none">
+        <div style="display:flex; gap:1rem; margin-bottom: 3rem; align-items: center; flex-wrap: wrap;">
+          <label class="visually-hidden" for="product-qty" data-en="Quantity" data-am="ብዛት">Quantity</label>
+          <input type="number" id="product-qty" class="product-qty-input" value="1" min="1" max="99" aria-describedby="product-qty-hint" title="Quantity">
+          <span id="product-qty-hint" class="visually-hidden" data-en="Number of jars to add" data-am="የሚጨመሩ ማሰሮች ብዛት">Number of jars to add</span>
           <button class="btn-primary btn-magnetic btn-quick-add" style="flex:1" data-en="Add to Basket" data-am="ወደ ቅርጫት አክል">Add to Basket</button>
         </div>
 
         <!-- Accordions -->
         <div class="accordion">
           <div class="accordion-item">
-            <button class="accordion-header">
+            <button type="button" class="accordion-header">
               <span data-en="Ingredients" data-am="ንጥረ ነገሮች">Ingredients</span>
               <span class="accordion-icon">+</span>
             </button>
@@ -74,7 +76,7 @@
             </div>
           </div>
           <div class="accordion-item">
-            <button class="accordion-header">
+            <button type="button" class="accordion-header">
               <span data-en="Culinary Uses" data-am="የምግብ አጠቃቀም">Culinary Uses</span>
               <span class="accordion-icon">+</span>
             </button>
@@ -83,7 +85,7 @@
             </div>
           </div>
           <div class="accordion-item">
-            <button class="accordion-header">
+            <button type="button" class="accordion-header">
               <span data-en="Shipping Information" data-am="የማጓጓዣ መረጃ">Shipping Information</span>
               <span class="accordion-icon">+</span>
             </button>

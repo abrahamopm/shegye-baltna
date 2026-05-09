@@ -15,17 +15,29 @@
       <img src="logo.jpg" alt="Shegye Baltna Logo">
       <span data-en="Shegye Baltna" data-am="ሸግዬ ባልትና">Shegye Baltna</span>
     </a>
+    <div class="nav-links">
+      <a href="shop.html" class="nav-link" data-en="Spices Shop" data-am="የቅመማ ሱቅ">Spices Shop</a>
+      <a href="cart.html" class="nav-link" data-en="Basket" data-am="ቅርጫት">Basket</a>
+    </div>
     <div style="display: flex; align-items: center; gap: 2rem;">
       <div class="lang-toggle">
         <div class="lang-toggle-indicator"></div>
         <span class="lang-label lang-en">EN</span>
         <span class="lang-label lang-am">አማ</span>
       </div>
+      <a href="cart.html" class="cart-icon" aria-label="Basket">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
+        <div class="cart-badge" style="display:none">0</div>
+      </a>
     </div>
   </nav>
 
-  <section class="section-padding container" style="padding-top: 120px;" id="checkout-flow-container">
-    <h1 class="display reveal-up" style="font-size: 2.5rem; margin-bottom: 2rem;" data-en="Checkout" data-am="ክፍያ">Checkout</h1>
+  <section class="section-padding container checkout-flow-root" style="padding-top: 120px;" id="main-content" tabindex="-1">
+    <h1 class="display reveal-up" style="font-size: 2.5rem; margin-bottom: 1rem;" data-en="Checkout" data-am="ክፍያ">Checkout</h1>
+    <div id="checkout-cart-alert" class="checkout-cart-alert" hidden role="alert">
+      <p data-en="Your basket is empty. Add spices from the shop before you continue." data-am="ቅርጫትዎ ባዶ ነው። ከመቀጠልዎ በፊት ቅመሞችን ይጨምሩ።">Your basket is empty. Add spices from the shop before you continue.</p>
+      <a href="shop.html" class="btn-secondary btn-magnetic checkout-cart-alert-btn" data-en="Browse spices" data-am="ቅመሞችን ይመልከቱ">Browse spices</a>
+    </div>
     
     <div class="checkout-layout">
       <!-- LEFT COLUMN: FLOW -->
@@ -118,6 +130,11 @@
       </div>
     </div>
   </section>
+
+  <footer>
+    <img src="logo.jpg" alt="Logo">
+    <p>&copy; 2026 Shegye Baltna. All rights reserved.</p>
+  </footer>
 
   <script src="app.js"></script>
 </body>

@@ -31,7 +31,7 @@
         <span class="lang-label lang-en">EN</span>
         <span class="lang-label lang-am">አማ</span>
       </div>
-      <a href="#" class="cart-icon">
+      <a href="cart.html" class="cart-icon" aria-label="Basket">
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
         <div class="cart-badge" style="display:none">0</div>
       </a>
@@ -45,12 +45,17 @@
     </div>
   </div>
 
-  <section class="container">
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+  <section class="container" id="main-content" tabindex="-1">
+    <div style="display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 1rem; margin-bottom: 2rem;">
       <h2 class="display reveal-left" data-en="All Products" data-am="ሁሉም ምርቶች">All Products</h2>
-      <div class="reveal-right" style="display:flex; gap:1rem;">
-        <span style="padding:0.5rem 1rem; border:1px solid var(--clr-gold); border-radius:20px; cursor:none;" data-en="Filter" data-am="አጣራ">Filter</span>
-        <span style="padding:0.5rem 1rem; border:1px solid var(--clr-gold); border-radius:20px; cursor:none;" data-en="Sort" data-am="ደርድር">Sort</span>
+      <div class="shop-toolbar reveal-right">
+        <label class="shop-toolbar-label" for="shop-sort" data-en="Sort by" data-am="ደርድር በ">Sort by</label>
+        <select id="shop-sort" class="shop-sort-select" aria-label="Sort products">
+          <option value="default" data-en="Featured" data-am="ዋና">Featured</option>
+          <option value="price-asc" data-en="Price: Low to High" data-am="ዋጋ፦ ከዝቅተኛ">Price: Low to High</option>
+          <option value="price-desc" data-en="Price: High to Low" data-am="ዋጋ፦ ከከፍተኛ">Price: High to Low</option>
+          <option value="name" data-en="Name A–Z" data-am="ስም ሀ-ፐ">Name A–Z</option>
+        </select>
       </div>
     </div>
 
@@ -120,10 +125,10 @@
 
     <!-- Expanded Carousel Section -->
     <h2 style="margin-top: 6rem" class="display reveal-up" data-en="Best Sellers" data-am="ከፍተኛ ሽያጭ ያላቸው">Best Sellers</h2>
-    <div class="h-scroll-strip reveal-up">
-      <div class="h-scroll-item"><img src="assets/images/spice-berbero.png" style="width:100%; height:200px; object-fit:cover; border-radius:8px"></div>
-      <div class="h-scroll-item"><img src="assets/images/spice-shiro.png" style="width:100%; height:200px; object-fit:cover; border-radius:8px"></div>
-      <div class="h-scroll-item"><img src="assets/images/product-jar.png" style="width:100%; height:200px; object-fit:cover; border-radius:8px"></div>
+    <div class="h-scroll-strip reveal-up" aria-label="Best sellers">
+      <a href="product.html" class="h-scroll-item"><img src="assets/images/spice-berbero.png" alt="" style="width:100%; height:200px; object-fit:cover; border-radius:8px"></a>
+      <a href="product.html" class="h-scroll-item"><img src="assets/images/spice-shiro.png" alt="" style="width:100%; height:200px; object-fit:cover; border-radius:8px"></a>
+      <a href="product.html" class="h-scroll-item"><img src="assets/images/product-jar.png" alt="" style="width:100%; height:200px; object-fit:cover; border-radius:8px"></a>
     </div>
   </section>
 

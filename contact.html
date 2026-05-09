@@ -27,34 +27,34 @@
         <span class="lang-label lang-en">EN</span>
         <span class="lang-label lang-am">አማ</span>
       </div>
-      <a href="#" class="cart-icon">
+      <a href="cart.html" class="cart-icon" aria-label="Basket">
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
         <div class="cart-badge" style="display:none">0</div>
       </a>
     </div>
   </nav>
 
-  <section class="section-padding container" style="padding-top: 150px;">
+  <section class="section-padding container" style="padding-top: 150px;" id="main-content" tabindex="-1">
     <div style="display: flex; gap: 4rem; align-items: flex-start; flex-wrap: wrap;">
       
       <div class="reveal-right" style="flex: 1; min-width: 300px;">
         <h1 class="display" style="font-size: 3.5rem; color: var(--clr-espresso); margin-bottom: 2rem;" data-en="Get in Touch" data-am="ያግኙን">Get in Touch</h1>
         <p style="font-size: 1.1rem; line-height: 1.8; color: #555; margin-bottom: 2rem;" data-en="Whether you have a question about our spices, shipping, or just want to say hello, we'd love to hear from you." data-am="ስለ ቅመሞቻችን፣ ስለማጓጓዣ ጥያቄ ካለዎት፣ ወይም ሰላም ማለት ከፈለጉ፣ ከእርስዎ መስማት እንወዳለን።">Whether you have a question about our spices, shipping, or just want to say hello, we'd love to hear from you.</p>
         
-        <form style="display: flex; flex-direction: column; gap: 1.5rem;">
+        <form class="contact-form" style="display: flex; flex-direction: column; gap: 1.5rem;" novalidate>
           <div class="form-group" style="margin-bottom:0">
-            <input type="text" class="form-input" required>
-            <label class="form-label" data-en="Name" data-am="ስም">Name</label>
+            <input type="text" class="form-input" name="name" id="contact-name" autocomplete="name" required>
+            <label class="form-label" for="contact-name" data-en="Name" data-am="ስም">Name</label>
             <div class="form-line"></div>
           </div>
           <div class="form-group" style="margin-bottom:0">
-            <input type="email" class="form-input" required>
-            <label class="form-label" data-en="Email" data-am="ኢሜል">Email</label>
+            <input type="email" class="form-input" name="email" id="contact-email" autocomplete="email" required>
+            <label class="form-label" for="contact-email" data-en="Email" data-am="ኢሜል">Email</label>
             <div class="form-line"></div>
           </div>
           <div class="form-group" style="margin-bottom:0">
-            <input type="text" class="form-input" required>
-            <label class="form-label" data-en="Message" data-am="መልእክት">Message</label>
+            <textarea class="form-input" name="message" id="contact-message" rows="5" required></textarea>
+            <label class="form-label" for="contact-message" data-en="Message" data-am="መልእክት">Message</label>
             <div class="form-line"></div>
           </div>
           <button type="submit" class="btn-primary btn-magnetic" style="align-self: flex-start; margin-top: 1rem;" data-en="Send Message" data-am="መልእክት ይላኩ">Send Message</button>
@@ -67,15 +67,20 @@
         <div style="margin-top: 3rem;">
           <h3 class="display" style="font-size: 1.5rem; margin-bottom: 1rem; color: var(--clr-gold);" data-en="Follow Us" data-am="ተከተሉን">Follow Us</h3>
           <div style="display: flex; justify-content: center; gap: 1.5rem;">
-            <a href="#" style="font-size: 1.5rem; color: var(--clr-espresso); transition: transform 0.3s; cursor: none;">fb</a>
-            <a href="#" style="font-size: 1.5rem; color: var(--clr-espresso); transition: transform 0.3s; cursor: none;">ig</a>
-            <a href="#" style="font-size: 1.5rem; color: var(--clr-espresso); transition: transform 0.3s; cursor: none;">tw</a>
+            <a href="#" rel="noopener noreferrer" class="social-chip" aria-label="Facebook">Facebook</a>
+            <a href="#" rel="noopener noreferrer" class="social-chip" aria-label="Instagram">Instagram</a>
+            <a href="#" rel="noopener noreferrer" class="social-chip" aria-label="X">X</a>
           </div>
         </div>
       </div>
 
     </div>
   </section>
+
+  <footer>
+    <img src="logo.jpg" alt="Logo">
+    <p>&copy; 2026 Shegye Baltna. All rights reserved.</p>
+  </footer>
 
   <script src="app.js"></script>
 </body>

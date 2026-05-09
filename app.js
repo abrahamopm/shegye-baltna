@@ -1,25 +1,84 @@
+let currentLang = localStorage.getItem('shegye_lang') || 'en';
+
 document.addEventListener('DOMContentLoaded', () => {
   init();
 });
 
 function init() {
+  setupSkipLink();
   setupLanguage();
   setupCursor();
   setupNav();
+  setupMobileNav();
   setupAnimations();
   revealHero();
+  setupToastRegion();
   setupGlobalCartDrawer();
+  setupCartPage();
+  setupShopToolbar();
   setupAccordions();
   setupCheckoutFlow();
+  setupContactForm();
+  setupNewsletter();
   setupPageTransitions();
 }
 
+function escapeHtml(str) {
+  if (!str) return '';
+  const div = document.createElement('div');
+  div.textContent = str;
+  return div.innerHTML;
+}
+
+function showToast(message, variant = 'info') {
+  const host = document.getElementById('toast-region');
+  if (!host) return;
+  const t = document.createElement('div');
+  t.className = `toast toast--${variant}`;
+  t.setAttribute('role', 'status');
+  t.textContent = message;
+  host.appendChild(t);
+  requestAnimationFrame(() => t.classList.add('toast--visible'));
+  setTimeout(() => {
+    t.classList.remove('toast--visible');
+    setTimeout(() => t.remove(), 400);
+  }, 4200);
+}
+
+function setupToastRegion() {
+  if (document.getElementById('toast-region')) return;
+  const el = document.createElement('div');
+  el.id = 'toast-region';
+  el.className = 'toast-region';
+  el.setAttribute('aria-live', 'polite');
+  el.setAttribute('aria-relevant', 'additions');
+  document.body.appendChild(el);
+}
+
+function setupSkipLink() {
+  if (document.querySelector('.skip-link')) return;
+  const target = document.getElementById('main-content');
+  if (!target) return;
+  const a = document.createElement('a');
+  a.className = 'skip-link';
+  a.href = '#main-content';
+  a.setAttribute('data-en', 'Skip to main content');
+  a.setAttribute('data-am', 'ወደ ዋና ይዘት ይዝለሉ');
+  a.textContent = currentLang === 'en' ? a.getAttribute('data-en') : a.getAttribute('data-am');
+  document.body.insertBefore(a, document.body.firstChild);
+}
+
 /* --- LANGUAGE MODULE --- */
-let currentLang = localStorage.getItem('shegye_lang') || 'en';
 
 function setupLanguage() {
   const toggle = document.querySelector('.lang-toggle');
   if (toggle) {
+    toggle.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        toggle.click();
+      }
+    });
     toggle.addEventListener('click', () => {
       currentLang = currentLang === 'en' ? 'am' : 'en';
       localStorage.setItem('shegye_lang', currentLang);
@@ -53,18 +112,25 @@ function setupLanguage() {
 function applyLanguage() {
   document.documentElement.lang = currentLang;
   document.querySelectorAll('[data-en][data-am]').forEach(el => {
-    // Check if element contains input or is input
-    if(el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {
-        el.placeholder = el.getAttribute(`data-${currentLang}`);
+    if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {
+      el.placeholder = el.getAttribute(`data-${currentLang}`);
+    } else if (el.tagName === 'OPTION') {
+      el.textContent = el.getAttribute(`data-${currentLang}`);
     } else {
-        el.textContent = el.getAttribute(`data-${currentLang}`);
+      el.textContent = el.getAttribute(`data-${currentLang}`);
     }
   });
 }
 
 function updateToggleUI() {
   const toggle = document.querySelector('.lang-toggle');
-  if (toggle) toggle.classList.toggle('am-active', currentLang === 'am');
+  if (toggle) {
+    toggle.classList.toggle('am-active', currentLang === 'am');
+    toggle.setAttribute('role', 'switch');
+    toggle.setAttribute('aria-checked', currentLang === 'am' ? 'true' : 'false');
+    toggle.setAttribute('aria-label', currentLang === 'en' ? 'Switch language to Amharic' : 'Switch language to English');
+    toggle.tabIndex = 0;
+  }
 }
 
 /* --- ANIMATION MODULE --- */
@@ -154,6 +220,7 @@ function revealHero() {
 }
 
 function setupCursor() {
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
   if (window.matchMedia("(max-width: 768px)").matches) return;
   const dot = document.createElement('div'); dot.className = 'cursor-dot';
   const ring = document.createElement('div'); ring.className = 'cursor-ring';
@@ -191,7 +258,41 @@ function createParticle(x, y) {
 
 function setupNav() {
   const nav = document.querySelector('.nav');
+  if (!nav) return;
   window.addEventListener('scroll', () => nav.classList.toggle('scrolled', window.scrollY > 80));
+}
+
+function setupMobileNav() {
+  const nav = document.querySelector('.nav');
+  const links = nav?.querySelector('.nav-links');
+  if (!nav || !links || nav.querySelector('.nav-toggle')) return;
+
+  links.id = links.id || 'primary-navigation';
+
+  const btn = document.createElement('button');
+  btn.type = 'button';
+  btn.className = 'nav-toggle';
+  btn.setAttribute('aria-expanded', 'false');
+  btn.setAttribute('aria-controls', links.id);
+  btn.setAttribute('data-en', 'Menu');
+  btn.setAttribute('data-am', 'ሜኑ');
+  btn.textContent = currentLang === 'en' ? 'Menu' : 'ሜኑ';
+
+  btn.addEventListener('click', () => {
+    const open = nav.classList.toggle('nav-mobile-open');
+    btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+    document.body.style.overflow = open ? 'hidden' : '';
+  });
+
+  nav.insertBefore(btn, links);
+
+  links.querySelectorAll('a').forEach((a) => {
+    a.addEventListener('click', () => {
+      nav.classList.remove('nav-mobile-open');
+      btn.setAttribute('aria-expanded', 'false');
+      document.body.style.overflow = '';
+    });
+  });
 }
 
 function setupPageTransitions() {
@@ -209,116 +310,189 @@ function setupPageTransitions() {
 /* --- CART DRAWER MODULE --- */
 let cart = JSON.parse(localStorage.getItem('shegye_cart')) || [];
 
+function extractProductFromCard(btn) {
+  const card = btn.closest('.product-card');
+  if (!card) return null;
+  const titleEl = card.querySelector('h3[data-en]') || card.querySelector('h1[data-en]');
+  const priceEl = card.querySelector('.product-price');
+  const imgEl = card.querySelector('.product-img');
+  if (!titleEl || !priceEl || !imgEl) return null;
+  const name = titleEl.getAttribute('data-en');
+  const price = parseFloat(priceEl.textContent.replace(/[^0-9.]/g, ''));
+  if (!name || Number.isNaN(price)) return null;
+  const qtyInput = card.querySelector('.product-qty-input');
+  const qty = qtyInput ? Math.max(1, parseInt(qtyInput.value, 10) || 1) : 1;
+  return { id: name, name, price, img: imgEl.src, qty };
+}
+
+function flyToCart(imgEl) {
+  const cartIcon = document.querySelector('.cart-icon');
+  if (!imgEl || !cartIcon) return;
+  const rect = imgEl.getBoundingClientRect();
+  const target = cartIcon.getBoundingClientRect();
+  const imgClone = imgEl.cloneNode();
+  imgClone.alt = '';
+  imgClone.style.cssText = `position:fixed;top:${rect.top}px;left:${rect.left}px;width:${rect.width}px;height:${rect.height}px;border-radius:8px;z-index:10000;transition:all 0.8s cubic-bezier(0.2,0.8,0.2,1);pointer-events:none`;
+  document.body.appendChild(imgClone);
+  requestAnimationFrame(() => {
+    imgClone.style.top = `${target.top}px`;
+    imgClone.style.left = `${target.left}px`;
+    imgClone.style.width = '20px';
+    imgClone.style.height = '20px';
+    imgClone.style.opacity = '0';
+    imgClone.style.borderRadius = '50%';
+  });
+  setTimeout(() => {
+    imgClone.remove();
+    document.querySelectorAll('.cart-badge').forEach((b) => {
+      b.classList.add('bump');
+      setTimeout(() => b.classList.remove('bump'), 300);
+    });
+  }, 800);
+}
+
 function setupGlobalCartDrawer() {
-  // Inject drawer HTML if it doesn't exist
   if (!document.querySelector('.cart-drawer')) {
     const drawerHTML = `
-      <div class="cart-drawer-overlay"></div>
-      <div class="cart-drawer">
+      <div class="cart-drawer-overlay" tabindex="-1"></div>
+      <aside class="cart-drawer" aria-hidden="true" aria-labelledby="cart-drawer-title">
         <div class="cart-drawer-header">
-          <h2 data-en="Your Basket" data-am="ቅርጫትዎ">Your Basket</h2>
-          <button class="cart-drawer-close">&times;</button>
+          <h2 id="cart-drawer-title" data-en="Your Basket" data-am="ቅርጫትዎ">Your Basket</h2>
+          <button type="button" class="cart-drawer-close" aria-label="Close basket">&times;</button>
         </div>
         <div class="cart-drawer-body" id="drawer-items"></div>
         <div class="cart-drawer-footer">
           <div class="summary-line"><span data-en="Subtotal" data-am="ንዑስ ድምር">Subtotal</span><span id="drawer-subtotal">0 ETB</span></div>
-          <a href="checkout.html" class="btn-primary btn-magnetic" style="width:100%" data-en="Proceed to Checkout" data-am="ወደ ክፍያ ይቀጥሉ">Proceed to Checkout</a>
+          <a href="cart.html" class="btn-secondary btn-magnetic cart-drawer-full-btn" style="width:100%;margin-bottom:0.75rem;" data-en="View full basket" data-am="ሙሉ ቅርጫት ይመልከቱ">View full basket</a>
+          <a href="checkout.html" class="btn-primary btn-magnetic cart-drawer-checkout-btn" style="width:100%" data-en="Proceed to Checkout" data-am="ወደ ክፍያ ይቀጥሉ">Proceed to Checkout</a>
         </div>
-      </div>
+      </aside>
     `;
     document.body.insertAdjacentHTML('beforeend', drawerHTML);
-    applyLanguage(); // apply to newly injected html
+    applyLanguage();
+
+    const drawerBody = document.getElementById('drawer-items');
+    if (drawerBody && !drawerBody.dataset.delegateBound) {
+      drawerBody.dataset.delegateBound = '1';
+      drawerBody.addEventListener('click', (e) => {
+        const row = e.target.closest('.drawer-item');
+        if (!row) return;
+        const id = row.getAttribute('data-cart-id');
+        if (!id) return;
+        if (e.target.closest('[data-drawer-dec]')) changeCartLineQty(id, -1);
+        else if (e.target.closest('[data-drawer-inc]')) changeCartLineQty(id, 1);
+        else if (e.target.closest('[data-drawer-remove]')) changeCartLineQty(id, -Infinity);
+      });
+    }
+
+    const proceed = document.querySelector('.cart-drawer-checkout-btn');
+    if (proceed && !proceed.dataset.emptyGuard) {
+      proceed.dataset.emptyGuard = '1';
+      proceed.addEventListener(
+        'click',
+        (e) => {
+          if (cart.length === 0) {
+            e.preventDefault();
+            e.stopPropagation();
+            showToast(
+              currentLang === 'en'
+                ? 'Your basket is empty — add something delicious first.'
+                : 'ቅርጫትዎ ባዶ ነው።',
+              'warning'
+            );
+          }
+        },
+        true
+      );
+    }
   }
 
   syncBadge();
 
-  document.querySelector('.cart-icon').addEventListener('click', (e) => {
-    e.preventDefault();
-    toggleCartDrawer(true);
+  const cartIcons = document.querySelectorAll('.cart-icon');
+  cartIcons.forEach((icon) => {
+    icon.addEventListener('click', (e) => {
+      e.preventDefault();
+      toggleCartDrawer(true);
+    });
   });
 
-  document.querySelector('.cart-drawer-close').addEventListener('click', () => toggleCartDrawer(false));
-  document.querySelector('.cart-drawer-overlay').addEventListener('click', () => toggleCartDrawer(false));
+  const closeBtn = document.querySelector('.cart-drawer-close');
+  const overlay = document.querySelector('.cart-drawer-overlay');
+  const drawer = document.querySelector('.cart-drawer');
+  if (closeBtn) closeBtn.addEventListener('click', () => toggleCartDrawer(false));
+  if (overlay) overlay.addEventListener('click', () => toggleCartDrawer(false));
 
-  document.querySelectorAll('.btn-quick-add').forEach(btn => {
-    btn.addEventListener('click', e => {
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && drawer?.classList.contains('open')) toggleCartDrawer(false);
+  });
+
+  document.querySelectorAll('.btn-quick-add').forEach((btn) => {
+    btn.addEventListener('click', (e) => {
       e.preventDefault();
-      const card = btn.closest('.product-card');
-      const name = card.querySelector('h3').getAttribute('data-en');
-      const priceStr = card.querySelector('.product-price').textContent;
-      const price = parseFloat(priceStr.replace(/[^0-9.]/g, ''));
-      const img = card.querySelector('.product-img').src;
+      const data = extractProductFromCard(btn);
+      if (!data) return;
 
-      addToCart({id: name, name, price, img, qty: 1});
-      
-      const imgClone = card.querySelector('.product-img').cloneNode();
-      const rect = card.querySelector('.product-img').getBoundingClientRect();
-      const cartIcon = document.querySelector('.cart-icon').getBoundingClientRect();
-      
-      imgClone.style.cssText = `position:fixed; top:${rect.top}px; left:${rect.left}px; width:${rect.width}px; height:${rect.height}px; border-radius:8px; z-index:10000; transition:all 0.8s cubic-bezier(0.2,0.8,0.2,1);`;
-      document.body.appendChild(imgClone);
+      addToCart(data);
+      const imgEl = btn.closest('.product-card')?.querySelector('.product-img');
+      flyToCart(imgEl);
 
-      setTimeout(() => {
-        imgClone.style.top = cartIcon.top + 'px';
-        imgClone.style.left = cartIcon.left + 'px';
-        imgClone.style.width = '20px';
-        imgClone.style.height = '20px';
-        imgClone.style.opacity = '0';
-        imgClone.style.borderRadius = '50%';
-      }, 10);
-
-      setTimeout(() => {
-        imgClone.remove();
-        document.querySelector('.cart-badge').classList.add('bump');
-        setTimeout(() => document.querySelector('.cart-badge').classList.remove('bump'), 300);
-        toggleCartDrawer(true);
-      }, 800);
+      const msg =
+        currentLang === 'en'
+          ? `${data.qty > 1 ? data.qty + ' × ' : ''}${data.name} added to your basket`
+          : `${data.name} ወደ ቅርጫትዎ ታክሏል`;
+      showToast(msg, 'success');
+      toggleCartDrawer(true);
     });
   });
 }
 
 function toggleCartDrawer(show) {
-  if(show) renderDrawerItems();
-  document.querySelector('.cart-drawer').classList.toggle('open', show);
-  document.querySelector('.cart-drawer-overlay').classList.toggle('open', show);
+  const drawer = document.querySelector('.cart-drawer');
+  const overlay = document.querySelector('.cart-drawer-overlay');
+  if (!drawer || !overlay) return;
+
+  if (show) renderDrawerItems();
+
+  drawer.classList.toggle('open', show);
+  overlay.classList.toggle('open', show);
+  drawer.setAttribute('aria-hidden', show ? 'false' : 'true');
+
+  updateDrawerCheckoutState();
   document.body.style.overflow = show ? 'hidden' : '';
 }
 
 function addToCart(item) {
-  const existing = cart.find(i => i.id === item.id);
-  if(existing) existing.qty += item.qty || 1;
-  else cart.push(item);
+  const existing = cart.find((i) => i.id === item.id);
+  const addQty = item.qty || 1;
+  if (existing) existing.qty += addQty;
+  else cart.push({ ...item, qty: addQty });
   saveCart();
 }
 
-function removeFromCart(id, rowEl) {
-  cart = cart.filter(i => i.id !== id);
+function changeCartLineQty(id, delta) {
+  const item = cart.find((i) => i.id === id);
+  if (!item) return;
+  if (delta === -Infinity) {
+    cart = cart.filter((i) => i.id !== id);
+  } else {
+    item.qty += delta;
+    if (item.qty < 1) cart = cart.filter((i) => i.id !== id);
+  }
   saveCart();
-  if(rowEl) {
-    rowEl.style.opacity = '0';
-    setTimeout(() => { rowEl.remove(); calcDrawerTotals(); }, 300);
-  }
+  renderDrawerItems();
 }
-
-// Make globally available for inline onclicks in drawer
-window.updateDrawerQty = function(id, qty) {
-  const item = cart.find(i => i.id === id);
-  if(item) {
-    item.qty = Math.max(1, qty);
-    saveCart();
-    renderDrawerItems();
-  }
-};
-window.removeDrawerItem = function(id, el) { removeFromCart(id, el.closest('.drawer-item')); };
 
 function saveCart() {
   localStorage.setItem('shegye_cart', JSON.stringify(cart));
   syncBadge();
+  renderCartPageIfPresent();
+  renderCheckoutSummary();
 }
 
 function syncBadge() {
   const count = cart.reduce((sum, item) => sum + item.qty, 0);
-  document.querySelectorAll('.cart-badge').forEach(b => {
+  document.querySelectorAll('.cart-badge').forEach((b) => {
     b.textContent = count;
     b.style.display = count > 0 ? 'flex' : 'none';
   });
@@ -326,38 +500,229 @@ function syncBadge() {
 
 function renderDrawerItems() {
   const list = document.getElementById('drawer-items');
-  if(!list) return;
-  
-  if(cart.length === 0) {
-    list.innerHTML = `<p style="text-align:center; margin-top:2rem; color:#888" data-en="Your basket is empty." data-am="ቅርጫትዎ ባዶ ነው።">${currentLang==='en'?'Your basket is empty.':'ቅርጫትዎ ባዶ ነው።'}</p>`;
+  if (!list) return;
+
+  if (cart.length === 0) {
+    list.innerHTML = `<p class="cart-empty-hint" data-en="Your basket is empty." data-am="ቅርጫትዎ ባዶ ነው።">${currentLang === 'en' ? 'Your basket is empty.' : 'ቅርጫትዎ ባዶ ነው።'}</p>`;
     calcDrawerTotals();
+    updateDrawerCheckoutState();
     return;
   }
 
-  list.innerHTML = cart.map(item => `
-    <div class="drawer-item" style="display:flex; gap:1rem; margin-bottom:1.5rem; transition:opacity 0.3s">
-      <img src="${item.img}" style="width:70px; height:70px; object-fit:cover; border-radius:8px">
-      <div style="flex:1">
-        <h4 style="margin-bottom:0.2rem">${item.name}</h4>
-        <div style="color:var(--clr-berbere); margin-bottom:0.5rem">${item.price.toFixed(2)} ETB</div>
-        <div style="display:flex; align-items:center; gap:10px">
-          <button onclick="updateDrawerQty('${item.id}', ${item.qty-1})" style="width:25px;height:25px; border:1px solid #ccc; background:none; cursor:none">-</button>
-          <span>${item.qty}</span>
-          <button onclick="updateDrawerQty('${item.id}', ${item.qty+1})" style="width:25px;height:25px; border:1px solid #ccc; background:none; cursor:none">+</button>
+  list.innerHTML = cart
+    .map(
+      (item) => `
+    <div class="drawer-item" data-cart-id="${escapeHtml(item.id)}">
+      <img src="${item.img.replace(/"/g, '&quot;')}" alt="" class="drawer-item-thumb" width="70" height="70">
+      <div class="drawer-item-main">
+        <h4 class="drawer-item-title">${escapeHtml(item.name)}</h4>
+        <div class="drawer-item-price">${item.price.toFixed(2)} ETB</div>
+        <div class="qty-stepper" role="group" aria-label="${escapeHtml(item.name)} quantity">
+          <button type="button" class="qty-stepper-btn" data-drawer-dec aria-label="Decrease quantity">−</button>
+          <span class="qty-stepper-val">${item.qty}</span>
+          <button type="button" class="qty-stepper-btn" data-drawer-inc aria-label="Increase quantity">+</button>
         </div>
       </div>
-      <button onclick="removeDrawerItem('${item.id}', this)" style="background:none; border:none; color:#888; cursor:none; font-size:1.2rem">&times;</button>
+      <button type="button" class="drawer-item-remove" data-drawer-remove aria-label="Remove">&times;</button>
     </div>
-  `).join('');
-  
+  `
+    )
+    .join('');
+
   calcDrawerTotals();
-  if(typeof renderCheckoutSummary === 'function') renderCheckoutSummary();
+  updateDrawerCheckoutState();
+}
+
+function updateDrawerCheckoutState() {
+  const drawer = document.querySelector('.cart-drawer');
+  if (!drawer) return;
+  const proceed = drawer.querySelector('.cart-drawer-checkout-btn');
+  if (!proceed) return;
+  const disable = cart.length === 0;
+  proceed.classList.toggle('is-disabled', disable);
+  proceed.setAttribute('aria-disabled', disable ? 'true' : 'false');
 }
 
 function calcDrawerTotals() {
-  const sub = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
+  const sub = cart.reduce((sum, item) => sum + item.price * item.qty, 0);
   const subEl = document.getElementById('drawer-subtotal');
-  if(subEl) subEl.textContent = sub.toFixed(2) + ' ETB';
+  if (subEl) subEl.textContent = sub.toFixed(2) + ' ETB';
+}
+
+function cartTotalsDetailed() {
+  const sub = cart.reduce((sum, item) => sum + item.price * item.qty, 0);
+  const ship = cart.length ? 10 : 0;
+  const tax = sub * 0.025;
+  const total = sub + ship + tax;
+  return { sub, ship, tax, total };
+}
+
+function renderCartPageIfPresent() {
+  const root = document.getElementById('cart-items-list');
+  const subEl = document.getElementById('cart-subtotal');
+  if (!root || !subEl) return;
+
+  if (cart.length === 0) {
+    root.innerHTML = `
+      <div class="cart-empty-state reveal-up active">
+        <p class="cart-empty-state-title" data-en="Your basket is empty" data-am="ቅርጫትዎ ባዶ ነው">${currentLang === 'en' ? 'Your basket is empty' : 'ቅርጫትዎ ባዶ ነው'}</p>
+        <p class="cart-empty-state-text" data-en="Browse the spice market and tap + on any product to start." data-am="የቅመማ ገበያውን ይመልከቱ እና በማንኛውም ምርት ላይ + ይጫኑ።">${currentLang === 'en' ? 'Browse the spice market and tap + on any product to start.' : 'የቅመማ ገበያውን ይመልከቱ እና በማንኛውም ምርት ላይ + ይጫኑ።'}</p>
+        <a href="shop.html" class="btn-primary btn-magnetic" data-en="Shop spices" data-am="ቅመሞችን ይግዙ">Shop spices</a>
+      </div>`;
+    document.getElementById('cart-subtotal').textContent = '0.00 ETB';
+    document.getElementById('cart-shipping').textContent = '0.00 ETB';
+    document.getElementById('cart-tax').textContent = '0.00 ETB';
+    document.getElementById('cart-total').textContent = '0.00 ETB';
+    const checkoutBtn = document.querySelector('.cart-summary .btn-primary');
+    if (checkoutBtn) {
+      checkoutBtn.classList.add('is-disabled');
+      checkoutBtn.setAttribute('aria-disabled', 'true');
+    }
+    return;
+  }
+
+  const checkoutBtn = document.querySelector('.cart-summary .btn-primary');
+  if (checkoutBtn) {
+    checkoutBtn.classList.remove('is-disabled');
+    checkoutBtn.removeAttribute('aria-disabled');
+  }
+
+  root.innerHTML = cart
+    .map(
+      (item) => `
+    <div class="cart-line card-row" data-cart-id="${escapeHtml(item.id)}">
+      <img src="${item.img.replace(/"/g, '&quot;')}" alt="" class="cart-line-thumb" width="96" height="96">
+      <div class="cart-line-body">
+        <h3 class="cart-line-title">${escapeHtml(item.name)}</h3>
+        <p class="cart-line-unit">${item.price.toFixed(2)} ETB <span data-en="each" data-am="ለአንዱ">${currentLang === 'en' ? 'each' : 'ለአንዱ'}</span></p>
+        <div class="qty-stepper" role="group" aria-label="${escapeHtml(item.name)}">
+          <button type="button" class="qty-stepper-btn" data-cart-dec aria-label="Decrease">−</button>
+          <span class="qty-stepper-val">${item.qty}</span>
+          <button type="button" class="qty-stepper-btn" data-cart-inc aria-label="Increase">+</button>
+        </div>
+      </div>
+      <div class="cart-line-meta">
+        <span class="cart-line-sub">${(item.price * item.qty).toFixed(2)} ETB</span>
+        <button type="button" class="cart-line-remove" data-cart-remove data-en="Remove" data-am="ያስወግዱ">${currentLang === 'en' ? 'Remove' : 'ያስወግዱ'}</button>
+      </div>
+    </div>`
+    )
+    .join('');
+
+  root.querySelectorAll('[data-en][data-am]').forEach((el) => {
+    if (el.tagName !== 'BUTTON') return;
+    el.textContent = el.getAttribute(`data-${currentLang}`);
+  });
+
+  if (!root.dataset.cartDelegateBound) {
+    root.dataset.cartDelegateBound = '1';
+    root.addEventListener('click', (e) => {
+      const row = e.target.closest('.cart-line');
+      if (!row) return;
+      const id = row.getAttribute('data-cart-id');
+      if (!id) return;
+      if (e.target.closest('[data-cart-dec]')) changeCartLineQty(id, -1);
+      else if (e.target.closest('[data-cart-inc]')) changeCartLineQty(id, 1);
+      else if (e.target.closest('[data-cart-remove]')) changeCartLineQty(id, -Infinity);
+    });
+  }
+
+  const { sub, ship, tax, total } = cartTotalsDetailed();
+  document.getElementById('cart-subtotal').textContent = sub.toFixed(2) + ' ETB';
+  document.getElementById('cart-shipping').textContent = ship.toFixed(2) + ' ETB';
+  document.getElementById('cart-tax').textContent = tax.toFixed(2) + ' ETB';
+  document.getElementById('cart-total').textContent = total.toFixed(2) + ' ETB';
+}
+
+function setupCartPage() {
+  renderCartPageIfPresent();
+
+  const checkoutBtn = document.querySelector('.cart-summary a[href="checkout.html"]');
+  if (checkoutBtn && !checkoutBtn.dataset.guardBound) {
+    checkoutBtn.dataset.guardBound = '1';
+    checkoutBtn.addEventListener('click', (e) => {
+      if (cart.length === 0) {
+        e.preventDefault();
+        showToast(
+          currentLang === 'en' ? 'Add items before checkout.' : 'ከመክፈልዎ በፊት እቃ ይጨምሩ።',
+          'warning'
+        );
+      }
+    });
+  }
+}
+
+function setupShopToolbar() {
+  const sort = document.getElementById('shop-sort');
+  const grid = document.querySelector('.shop-toolbar')?.closest('section')?.querySelector('.product-grid');
+  if (!sort || !grid) return;
+
+  const originalOrder = [...grid.querySelectorAll('.product-card')];
+
+  sort.addEventListener('change', () => {
+    const cards = [...grid.querySelectorAll('.product-card')];
+    const v = sort.value;
+    if (v === 'default') {
+      originalOrder.forEach((c) => grid.appendChild(c));
+      return;
+    }
+    cards.sort((a, b) => {
+      const pa = parseFloat(a.querySelector('.product-price')?.textContent.replace(/[^0-9.]/g, '') || 0);
+      const pb = parseFloat(b.querySelector('.product-price')?.textContent.replace(/[^0-9.]/g, '') || 0);
+      const na = (a.querySelector('h3')?.getAttribute('data-en') || '').toLowerCase();
+      const nb = (b.querySelector('h3')?.getAttribute('data-en') || '').toLowerCase();
+      if (v === 'price-asc') return pa - pb;
+      if (v === 'price-desc') return pb - pa;
+      if (v === 'name') return na.localeCompare(nb);
+      return 0;
+    });
+    cards.forEach((c) => grid.appendChild(c));
+  });
+}
+
+function setupContactForm() {
+  const form = document.querySelector('.contact-form');
+  if (!form || form.dataset.bound) return;
+  form.dataset.bound = '1';
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const name = form.querySelector('[name="name"]')?.value.trim();
+    const email = form.querySelector('[name="email"]')?.value.trim();
+    const message = form.querySelector('[name="message"]')?.value.trim();
+    if (!name || !email || !message) {
+      showToast(currentLang === 'en' ? 'Please fill in all fields.' : 'እባክዎ ሁሉንም መስኮች ይሙሉ።', 'warning');
+      return;
+    }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      showToast(currentLang === 'en' ? 'Enter a valid email address.' : 'ትክክለኛ ኢሜል ያስገቡ።', 'warning');
+      return;
+    }
+    showToast(
+      currentLang === 'en' ? 'Thanks — your message has been sent.' : 'እናመሰግናለን — መልእክትዎ ተልኳል።',
+      'success'
+    );
+    form.reset();
+  });
+}
+
+function setupNewsletter() {
+  const form = document.querySelector('.newsletter-form');
+  if (!form || form.dataset.bound) return;
+  form.dataset.bound = '1';
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const input = form.querySelector('input[type="email"]');
+    const email = input?.value.trim();
+    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      showToast(currentLang === 'en' ? 'Please enter a valid email.' : 'ትክክለኛ ኢሜል ያስገቡ።', 'warning');
+      return;
+    }
+    showToast(
+      currentLang === 'en' ? 'You are subscribed — welcome to the table.' : 'ተመዝግበዋል — እንኳን ደህና መጡ።',
+      'success'
+    );
+    input.value = '';
+  });
 }
 
 /* --- ACCORDION MODULE --- */
@@ -384,27 +749,59 @@ function setupAccordions() {
 
 /* --- CHECKOUT FLOW MODULE --- */
 function setupCheckoutFlow() {
-  if(!document.getElementById('checkout-flow-container')) return;
+  const root = document.querySelector('.checkout-flow-root');
+  if (!root) return;
 
   renderCheckoutSummary();
 
-  const steps = document.querySelectorAll('.checkout-step-panel');
-  
-  window.nextCheckoutStep = function(currentStepNum) {
-    // Basic validation
-    if(currentStepNum === 1) {
+  const steps = root.querySelectorAll('.checkout-step-panel');
+
+  window.nextCheckoutStep = function (currentStepNum) {
+    if (currentStepNum === 1 && cart.length === 0) {
+      showToast(
+        currentLang === 'en'
+          ? 'Your basket is empty — add spices before continuing.'
+          : 'ቅርጫትዎ ባዶ ነው።',
+        'warning'
+      );
+      return;
+    }
+    if (currentStepNum === 1) {
       const inputs = steps[0].querySelectorAll('input[required]');
       let valid = true;
-      inputs.forEach(i => { if(!i.value) { i.parentElement.style.animation = 'shake 0.4s'; setTimeout(()=>i.parentElement.style.animation='', 400); valid = false; }});
-      if(!valid) return;
+      inputs.forEach((i) => {
+        if (!i.value.trim()) {
+          i.parentElement.style.animation = 'shake 0.4s';
+          setTimeout(() => (i.parentElement.style.animation = ''), 400);
+          valid = false;
+        }
+      });
+      const email = document.getElementById('femail');
+      if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value.trim())) {
+        email.parentElement.style.animation = 'shake 0.4s';
+        setTimeout(() => (email.parentElement.style.animation = ''), 400);
+        showToast(
+          currentLang === 'en' ? 'Please enter a valid email.' : 'ትክክለኛ ኢሜል ያስገቡ።',
+          'warning'
+        );
+        valid = false;
+      }
+      if (!valid) return;
     }
 
-    steps.forEach(s => s.classList.remove('active'));
+    steps.forEach((s) => s.classList.remove('active'));
     steps[currentStepNum].classList.add('active');
   };
 
-  window.completeOrder = function() {
-    steps.forEach(s => s.classList.remove('active'));
+  window.completeOrder = function () {
+    if (cart.length === 0) {
+      showToast(
+        currentLang === 'en' ? 'Nothing to order — your basket is empty.' : 'ቅርጫትዎ ባዶ ነው።',
+        'warning'
+      );
+      return;
+    }
+    steps.forEach((s) => s.classList.remove('active'));
     document.getElementById('checkout-success').classList.add('active');
     
     // Confetti
@@ -431,13 +828,20 @@ function setupCheckoutFlow() {
 function renderCheckoutSummary() {
   const list = document.getElementById('checkout-summary-items');
   if(!list) return;
-  
+
+  const alertBox = document.getElementById('checkout-cart-alert');
+  if (alertBox) alertBox.hidden = cart.length > 0;
+
   if(cart.length === 0) {
     list.innerHTML = `<p data-en="Basket is empty" data-am="ቅርጫት ባዶ ነው">${currentLang==='en'?'Basket is empty':'ቅርጫት ባዶ ነው'}</p>`;
-    document.getElementById('checkout-sub').textContent = '0 ETB';
-    document.getElementById('checkout-ship').textContent = '0 ETB';
-    document.getElementById('checkout-tax').textContent = '0 ETB';
-    document.getElementById('checkout-total').textContent = '0 ETB';
+    const sub = document.getElementById('checkout-sub');
+    const ship = document.getElementById('checkout-ship');
+    const tax = document.getElementById('checkout-tax');
+    const total = document.getElementById('checkout-total');
+    if (sub) sub.textContent = '0 ETB';
+    if (ship) ship.textContent = '0 ETB';
+    if (tax) tax.textContent = '0 ETB';
+    if (total) total.textContent = '0 ETB';
     return;
   }
 
@@ -451,8 +855,12 @@ function renderCheckoutSummary() {
   const sub = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
   const ship = 10;
   const tax = sub * 0.025;
-  document.getElementById('checkout-sub').textContent = sub.toFixed(2) + ' ETB';
-  document.getElementById('checkout-ship').textContent = ship.toFixed(2) + ' ETB';
-  document.getElementById('checkout-tax').textContent = tax.toFixed(2) + ' ETB';
-  document.getElementById('checkout-total').textContent = (sub+ship+tax).toFixed(2) + ' ETB';
+  const subEl = document.getElementById('checkout-sub');
+  const shipEl = document.getElementById('checkout-ship');
+  const taxEl = document.getElementById('checkout-tax');
+  const totalEl = document.getElementById('checkout-total');
+  if (subEl) subEl.textContent = sub.toFixed(2) + ' ETB';
+  if (shipEl) shipEl.textContent = ship.toFixed(2) + ' ETB';
+  if (taxEl) taxEl.textContent = tax.toFixed(2) + ' ETB';
+  if (totalEl) totalEl.textContent = (sub + ship + tax).toFixed(2) + ' ETB';
 }
