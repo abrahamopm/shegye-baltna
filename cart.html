@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Basket | Shegye Baltna</title>
+  <link rel="stylesheet" href="index.css">
+  <style>
+    .nav { background: rgba(44, 24, 16, 0.95); backdrop-filter: blur(20px); }
+    body { padding-top: 120px; }
+    .cart-layout { display: flex; gap: 4rem; flex-wrap: wrap; margin-bottom: 4rem; }
+    .cart-items { flex: 2; min-width: 300px; }
+    .cart-summary { flex: 1; min-width: 300px; background: white; padding: 2rem; border-radius: 8px; border: 1px solid var(--clr-gold-light); height: fit-content; }
+    .summary-line { display: flex; justify-content: space-between; margin-bottom: 1rem; }
+    .summary-total { font-size: 1.5rem; font-weight: bold; border-top: 2px solid var(--clr-espresso); padding-top: 1rem; margin-top: 1rem; }
+  </style>
+</head>
+<body>
+
+  <div class="page-overlay"></div>
+
+  <nav class="nav">
+    <a href="index.html" class="nav-logo">
+      <img src="logo.jpg" alt="Shegye Baltna Logo">
+      <span data-en="Shegye Baltna" data-am="ሸግዬ ባልትና">Shegye Baltna</span>
+    </a>
+    <div class="nav-links">
+      <a href="index.html" class="nav-link" data-en="Home" data-am="ዋና ገፅ">Home</a>
+      <a href="story.html" class="nav-link" data-en="Story" data-am="ታሪካችን">Story</a>
+      <a href="shop.html" class="nav-link" data-en="Spices Shop" data-am="የቅመማ ሱቅ">Spices Shop</a>
+      <a href="contact.html" class="nav-link" data-en="Contact" data-am="ያግኙን">Contact</a>
+    </div>
+    <div style="display: flex; align-items: center; gap: 2rem;">
+      <div class="lang-toggle">
+        <div class="lang-toggle-indicator"></div>
+        <span class="lang-label lang-en">EN</span>
+        <span class="lang-label lang-am">አማ</span>
+      </div>
+      <a href="cart.html" class="cart-icon">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
+        <div class="cart-badge" style="display:none">0</div>
+      </a>
+    </div>
+  </nav>
+
+  <section class="container">
+    <h1 class="reveal-up" style="margin-bottom: 2rem" data-en="Basket" data-am="ቅርጫት">Basket</h1>
+    
+    <div class="cart-layout">
+      <div class="cart-items" id="cart-items-list">
+        <!-- Rendered by JS -->
+      </div>
+      
+      <div class="cart-summary reveal-left">
+        <h3 style="margin-bottom:1.5rem" data-en="Order Summary" data-am="የትዕዛዝ ማጠቃለያ">Order Summary</h3>
+        <div class="summary-line">
+          <span data-en="Subtotal" data-am="ንዑስ ድምር">Subtotal</span>
+          <span id="cart-subtotal">0.00 ETB</span>
+        </div>
+        <div class="summary-line">
+          <span data-en="Shipping" data-am="ማጓጓዣ">Shipping</span>
+          <span id="cart-shipping">0.00 ETB</span>
+        </div>
+        <div class="summary-line">
+          <span data-en="Tax" data-am="ታክስ">Tax</span>
+          <span id="cart-tax">0.00 ETB</span>
+        </div>
+        <div class="summary-line summary-total">
+          <span data-en="Total" data-am="አጠቃላይ ድምር">Total</span>
+          <span id="cart-total" style="color:var(--clr-berbere)">0.00 ETB</span>
+        </div>
+        
+        <a href="checkout.html" class="btn-primary btn-magnetic" style="display:block; text-align:center; margin-top:2rem;" data-en="Continue to Payment" data-am="ወደ ክፍያ ይቀጥሉ">Continue to Payment</a>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <img src="logo.jpg" alt="Logo">
+    <p>&copy; 2026 Shegye Baltna. All rights reserved.</p>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>

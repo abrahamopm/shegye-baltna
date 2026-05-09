@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Our Story | Shegye Baltna</title>
+  <link rel="stylesheet" href="index.css">
+  <style>
+    .story-section { padding: 120px 2rem; display: flex; gap: 4rem; align-items: center; flex-wrap: wrap; }
+    .story-portrait { flex: 1; min-width: 300px; position: relative; }
+    .story-frame { 
+      position: absolute; inset: -20px; 
+      border: 4px solid var(--clr-gold); 
+      box-shadow: 0 0 20px rgba(197,165,90,0.4); 
+      animation: morphBlob 10s infinite;
+      z-index: -1;
+    }
+    .story-text { flex: 1.5; min-width: 300px; font-size: 1.1rem; line-height: 1.8; }
+    .story-text h2 { font-size: 3rem; color: var(--clr-berbere); margin-bottom: 2rem; }
+    .story-text p { margin-bottom: 1.5rem; }
+    .pull-quote { 
+      border-left: 4px solid var(--clr-gold); 
+      padding-left: 2rem; 
+      margin: 3rem 0; 
+      font-size: 1.5rem; 
+      font-style: italic; 
+      color: var(--clr-berbere);
+      font-family: var(--font-display);
+    }
+    .nav { background: rgba(44, 24, 16, 0.95); backdrop-filter: blur(20px); }
+  </style>
+</head>
+<body>
+
+  <!-- Page Overlay -->
+  <div class="page-overlay"></div>
+
+  <!-- Navigation -->
+  <nav class="nav">
+    <a href="index.html" class="nav-logo">
+      <img src="logo.jpg" alt="Shegye Baltna Logo">
+      <span data-en="Shegye Baltna" data-am="ሸግዬ ባልትና">Shegye Baltna</span>
+    </a>
+    <div class="nav-links">
+      <a href="index.html" class="nav-link" data-en="Home" data-am="ዋና ገፅ">Home</a>
+      <a href="story.html" class="nav-link" style="color:var(--clr-gold)" data-en="Story" data-am="ታሪካችን">Story</a>
+      <a href="shop.html" class="nav-link" data-en="Spices Shop" data-am="የቅመማ ሱቅ">Spices Shop</a>
+      <a href="contact.html" class="nav-link" data-en="Contact" data-am="ያግኙን">Contact</a>
+    </div>
+    <div style="display: flex; align-items: center; gap: 2rem;">
+      <div class="lang-toggle">
+        <div class="lang-toggle-indicator"></div>
+        <span class="lang-label lang-en">EN</span>
+        <span class="lang-label lang-am">አማ</span>
+      </div>
+      <a href="cart.html" class="cart-icon">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
+        <div class="cart-badge" style="display:none">0</div>
+      </a>
+    </div>
+  </nav>
+
+  <section class="container story-section">
+    <div class="story-portrait reveal-scale card-tilt">
+      <div class="story-frame"></div>
+      <img src="assets/images/hero-portrait.png" alt="Founder" style="width:100%; border-radius:8px;">
+    </div>
+    
+    <div class="story-text">
+      <h2 class="reveal-up" data-en="Our Story" data-am="ታሪካችን">Our Story</h2>
+      <p class="reveal-up" data-en="Shegye is West baltna... We bring you the authentic taste of Ethiopia, sourced directly from the finest farmers and prepared with generations of care." data-am="ሸግዬ ባልትና... እውነተኛውን የኢትዮጵያ ጣዕም በቀጥታ ከተመረጡ ገበሬዎች እናመጣለን፣ በዘመናት ጥንቃቄም እናዘጋጃለን።">Shegye is West baltna... We bring you the authentic taste of Ethiopia, sourced directly from the finest farmers and prepared with generations of care.</p>
+      
+      <div class="pull-quote reveal-left" data-en="&quot;A tradition of flavor, preserved for your table.&quot;" data-am="&quot;የጣዕም ትውፊት፣ ለማዕድዎ የተጠበቀ።&quot;">
+        "A tradition of flavor, preserved for your table."
+      </div>
+      
+      <p class="reveal-up" data-en="Our spices are more than ingredients; they are stories of our land, sun-dried and perfectly blended." data-am="ቅመሞቻችን ከግብዓት በላይ ናቸው፤ የሀገራችን ታሪክ፣ በፀሐይ የደረቁ እና በትክክል የተቀላቀሉ ናቸው።">Our spices are more than ingredients; they are stories of our land, sun-dried and perfectly blended.</p>
+      
+      <div style="margin-top: 3rem;" class="reveal-up">
+        <a href="shop.html" class="btn-primary btn-magnetic" data-en="For Little Price" data-am="በአነስተኛ ዋጋ">For Little Price</a>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <img src="logo.jpg" alt="Logo">
+    <p>&copy; 2026 Shegye Baltna. All rights reserved.</p>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>

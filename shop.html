@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Spices Shop | Shegye Baltna</title>
+  <link rel="stylesheet" href="index.css">
+  <style>
+    .nav { background: rgba(44, 24, 16, 0.95); backdrop-filter: blur(20px); }
+    body { padding-top: 100px; }
+    .category-nav {
+      display: flex; gap: 1rem; overflow-x: auto; padding: 2rem 0; scrollbar-width: none;
+    }
+    .category-nav::-webkit-scrollbar { display: none; }
+    .cat-pill {
+      padding: 0.5rem 1.5rem; border-radius: 20px; border: 1px solid var(--clr-gold);
+      white-space: nowrap; cursor: pointer; transition: all 0.3s;
+    }
+    .cat-pill.active, .cat-pill:hover { background: var(--clr-gold); color: white; }
+  </style>
+</head>
+<body>
+
+  <div class="page-overlay"></div>
+
+  <nav class="nav">
+    <a href="index.html" class="nav-logo">
+      <img src="logo.jpg" alt="Shegye Baltna Logo">
+      <span data-en="Shegye Baltna" data-am="ሸግዬ ባልትና">Shegye Baltna</span>
+    </a>
+    <div class="nav-links">
+      <a href="index.html" class="nav-link" data-en="Home" data-am="ዋና ገፅ">Home</a>
+      <a href="story.html" class="nav-link" data-en="Story" data-am="ታሪካችን">Story</a>
+      <a href="shop.html" class="nav-link" style="color:var(--clr-gold)" data-en="Spices Shop" data-am="የቅመማ ሱቅ">Spices Shop</a>
+      <a href="contact.html" class="nav-link" data-en="Contact" data-am="ያግኙን">Contact</a>
+    </div>
+    <div style="display: flex; align-items: center; gap: 2rem;">
+      <div class="lang-toggle">
+        <div class="lang-toggle-indicator"></div>
+        <span class="lang-label lang-en">EN</span>
+        <span class="lang-label lang-am">አማ</span>
+      </div>
+      <a href="cart.html" class="cart-icon">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
+        <div class="cart-badge" style="display:none">0</div>
+      </a>
+    </div>
+  </nav>
+
+  <section class="container">
+    <div class="category-nav reveal-left">
+      <div class="cat-pill active" data-en="All" data-am="ሁሉም">All</div>
+      <div class="cat-pill" data-en="Spices" data-am="ቅመሞች">Spices</div>
+      <div class="cat-pill" data-en="Blends" data-am="ቅልቅሎች">Blends</div>
+      <div class="cat-pill" data-en="Tools" data-am="መሳሪያዎች">Tools</div>
+    </div>
+
+    <div class="product-grid reveal-stagger">
+      
+      <a href="product.html" class="product-card reveal-up card-tilt">
+        <div class="product-img-wrapper"><img src="assets/images/spice-berbero.png" alt="Berbere" class="product-img"></div>
+        <div class="product-info">
+          <h3 data-en="Berbere" data-am="በርበሬ">Berbere</h3>
+          <p class="product-price">158 ETB</p>
+          <span style="text-decoration:underline" data-en="Details" data-am="ዝርዝሮች">Details</span>
+        </div>
+        <button class="btn-quick-add">+</button>
+      </a>
+
+      <a href="product.html" class="product-card reveal-up card-tilt">
+        <div class="product-img-wrapper"><img src="assets/images/spice-shiro.png" alt="Shiro" class="product-img"></div>
+        <div class="product-info">
+          <h3 data-en="Shiro" data-am="ሽሮ">Shiro</h3>
+          <p class="product-price">120 ETB</p>
+          <span style="text-decoration:underline" data-en="Details" data-am="ዝርዝሮች">Details</span>
+        </div>
+        <button class="btn-quick-add">+</button>
+      </a>
+
+      <a href="product.html" class="product-card reveal-up card-tilt">
+        <div class="product-img-wrapper"><img src="assets/images/spice-korarima.png" alt="Korarima" class="product-img"></div>
+        <div class="product-info">
+          <h3 data-en="Korarima" data-am="ኮረሪማ">Korarima</h3>
+          <p class="product-price">250 ETB</p>
+          <span style="text-decoration:underline" data-en="Details" data-am="ዝርዝሮች">Details</span>
+        </div>
+        <button class="btn-quick-add">+</button>
+      </a>
+
+      <a href="product.html" class="product-card reveal-up card-tilt">
+        <div class="product-img-wrapper"><img src="assets/images/product-jar.png" alt="Berwa Blend" class="product-img"></div>
+        <div class="product-info">
+          <h3 data-en="Berwa Blend" data-am="በርዋ ቅልቅል">Berwa Blend</h3>
+          <p class="product-price">300 ETB</p>
+          <span style="text-decoration:underline" data-en="Details" data-am="ዝርዝሮች">Details</span>
+        </div>
+        <button class="btn-quick-add">+</button>
+      </a>
+
+      <a href="product.html" class="product-card reveal-up card-tilt">
+        <div class="product-img-wrapper"><img src="assets/images/product-jar.png" alt="Brsttra" class="product-img"></div>
+        <div class="product-info">
+          <h3 data-en="Brsttra" data-am="ብርስትራ">Brsttra</h3>
+          <p class="product-price">280 ETB</p>
+          <span style="text-decoration:underline" data-en="Details" data-am="ዝርዝሮች">Details</span>
+        </div>
+        <button class="btn-quick-add">+</button>
+      </a>
+
+      <a href="product.html" class="product-card reveal-up card-tilt">
+        <div class="product-img-wrapper"><img src="assets/images/kitchen-tools.png" alt="Kachen Tools" class="product-img"></div>
+        <div class="product-info">
+          <h3 data-en="Kachen Tools" data-am="የማድቤት እቃዎች">Kachen Tools</h3>
+          <p class="product-price">450 ETB</p>
+          <span style="text-decoration:underline" data-en="Details" data-am="ዝርዝሮች">Details</span>
+        </div>
+        <button class="btn-quick-add">+</button>
+      </a>
+
+    </div>
+
+    <h2 style="margin-top: 4rem" class="reveal-up" data-en="Featured" data-am="የተመረጡ">Featured</h2>
+    <div class="h-scroll-strip reveal-up">
+      <div class="h-scroll-item"><img src="assets/images/spice-berbero.png" style="width:100%; border-radius:8px"></div>
+      <div class="h-scroll-item"><img src="assets/images/spice-shiro.png" style="width:100%; border-radius:8px"></div>
+      <div class="h-scroll-item"><img src="assets/images/spice-korarima.png" style="width:100%; border-radius:8px"></div>
+    </div>
+  </section>
+
+  <footer>
+    <img src="logo.jpg" alt="Logo">
+    <p>&copy; 2026 Shegye Baltna. All rights reserved.</p>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>

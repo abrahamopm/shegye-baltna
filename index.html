@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Shegye Baltna | Her Legacy, Your Table</title>
+  <link rel="stylesheet" href="index.css">
+</head>
+<body>
+
+  <!-- Loading Screen -->
+  <div class="loading-screen">
+    <img src="logo.jpg" alt="Logo" class="loading-logo">
+    <div class="loading-text">
+      <span class="loading-char">S</span>
+      <span class="loading-char">h</span>
+      <span class="loading-char">e</span>
+      <span class="loading-char">g</span>
+      <span class="loading-char">y</span>
+      <span class="loading-char">e</span>
+      <span class="loading-char">&nbsp;</span>
+      <span class="loading-char">B</span>
+      <span class="loading-char">a</span>
+      <span class="loading-char">l</span>
+      <span class="loading-char">t</span>
+      <span class="loading-char">n</span>
+      <span class="loading-char">a</span>
+    </div>
+  </div>
+
+  <!-- Page Overlay -->
+  <div class="page-overlay"></div>
+
+  <!-- Navigation -->
+  <nav class="nav">
+    <a href="index.html" class="nav-logo">
+      <img src="logo.jpg" alt="Shegye Baltna Logo">
+      <span data-en="Shegye Baltna" data-am="ሸግዬ ባልትና">Shegye Baltna</span>
+    </a>
+    <div class="nav-links">
+      <a href="index.html" class="nav-link" data-en="Home" data-am="ዋና ገፅ">Home</a>
+      <a href="story.html" class="nav-link" data-en="Story" data-am="ታሪካችን">Story</a>
+      <a href="shop.html" class="nav-link" data-en="Spices Shop" data-am="የቅመማ ሱቅ">Spices Shop</a>
+      <a href="contact.html" class="nav-link" data-en="Contact" data-am="ያግኙን">Contact</a>
+    </div>
+    <div style="display: flex; align-items: center; gap: 2rem;">
+      <div class="lang-toggle">
+        <div class="lang-toggle-indicator"></div>
+        <span class="lang-label lang-en">EN</span>
+        <span class="lang-label lang-am">አማ</span>
+      </div>
+      <a href="cart.html" class="cart-icon">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
+        <div class="cart-badge" style="display:none">0</div>
+      </a>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <img src="assets/images/hero-portrait.png" alt="Ethiopian Woman" class="hero-bg" data-parallax="0.4">
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+      <h1 data-en="HER LEGACY, YOUR TABLE" data-am="የሴ ቅርስ ፣ ያንተ ማዕድ">HER LEGACY, YOUR TABLE</h1>
+      <p class="hero-subtitle" data-en="Discover authentic Ethiopian spices directly from the source." data-am="እውነተኛ የኢትዮጵያ ቅመማ ቅመሞችን ከምንጩ ያግኙ።">Discover authentic Ethiopian spices directly from the source.</p>
+      <a href="shop.html" class="btn-primary btn-magnetic" data-en="EXPLORE" data-am="ቃኙ">EXPLORE</a>
+    </div>
+    <div class="scroll-indicator">
+      <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+    </div>
+  </section>
+
+  <!-- Featured Strip -->
+  <section class="container" style="margin-top: -100px; padding-bottom: 4rem; position: relative; z-index: 10;">
+    <div class="product-grid reveal-stagger">
+      
+      <!-- Card 1 -->
+      <a href="product.html" class="product-card reveal-up card-tilt">
+        <div class="product-img-wrapper">
+          <img src="assets/images/spice-berbero.png" alt="Berbero" class="product-img">
+        </div>
+        <div class="product-info">
+          <h3 data-en="Berbere" data-am="በርበሬ">Berbere</h3>
+          <p class="product-price">158 ETB</p>
+          <span style="text-decoration:underline" data-en="Details" data-am="ዝርዝሮች">Details</span>
+        </div>
+        <button class="btn-quick-add">+</button>
+      </a>
+
+      <!-- Card 2 -->
+      <a href="product.html" class="product-card reveal-up card-tilt">
+        <div class="product-img-wrapper">
+          <img src="assets/images/spice-shiro.png" alt="Shiro" class="product-img">
+        </div>
+        <div class="product-info">
+          <h3 data-en="Shiro" data-am="ሽሮ">Shiro</h3>
+          <p class="product-price">120 ETB</p>
+          <span style="text-decoration:underline" data-en="Details" data-am="ዝርዝሮች">Details</span>
+        </div>
+        <button class="btn-quick-add">+</button>
+      </a>
+
+      <!-- Card 3 -->
+      <a href="product.html" class="product-card reveal-up card-tilt">
+        <div class="product-img-wrapper">
+          <img src="assets/images/spice-korarima.png" alt="Korarima" class="product-img">
+        </div>
+        <div class="product-info">
+          <h3 data-en="Korarima" data-am="ኮረሪማ">Korarima</h3>
+          <p class="product-price">250 ETB</p>
+          <span style="text-decoration:underline" data-en="Details" data-am="ዝርዝሮች">Details</span>
+        </div>
+        <button class="btn-quick-add">+</button>
+      </a>
+
+    </div>
+  </section>
+
+  <footer>
+    <img src="logo.jpg" alt="Logo">
+    <p>&copy; 2026 Shegye Baltna. All rights reserved.</p>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
