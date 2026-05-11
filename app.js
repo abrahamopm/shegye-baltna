@@ -704,44 +704,213 @@ function setupContactForm() {
   const form = document.querySelector('.contact-form');
   if (!form || form.dataset.bound) return;
   form.dataset.bound = '1';
-  form.addEventListener('submit', (e) => {
+
+  // Load form draft from localStorage
+  loadFormDraft(form);
+
+  // Real-time validation
+  const nameInput = form.querySelector('[name="name"]');
+  const emailInput = form.querySelector('[name="email"]');
+  const messageInput = form.querySelector('[name="message"]');
+  const submitBtn = form.querySelector('button[type="submit"]');
+
+  // Add input event listeners for real-time validation
+  nameInput?.addEventListener('input', () => validateField(nameInput, 'name'));
+  emailInput?.addEventListener('input', () => validateField(emailInput, 'email'));
+  messageInput?.addEventListener('input', () => validateField(messageInput, 'message'));
+
+  // Save form draft on input
+  form.addEventListener('input', debounce(() => saveFormDraft(form), 500));
+
+  form.addEventListener('submit', async (e) => {
     e.preventDefault();
-    const name = form.querySelector('[name="name"]')?.value.trim();
-    const email = form.querySelector('[name="email"]')?.value.trim();
-    const message = form.querySelector('[name="message"]')?.value.trim();
-    if (!name || !email || !message) {
-      showToast(currentLang === 'en' ? 'Please fill in all fields.' : 'እባክዎ ሁሉንም መስኮች ይሙሉ።', 'warning');
+    
+    // Validate all fields
+    const name = nameInput?.value.trim();
+    const email = emailInput?.value.trim();
+    const message = messageInput?.value.trim();
+
+    const nameValid = validateField(nameInput, 'name');
+    const emailValid = validateField(emailInput, 'email');
+    const messageValid = validateField(messageInput, 'message');
+
+    if (!nameValid || !emailValid || !messageValid) {
+      showToast(currentLang === 'en' ? 'Please correct the errors above.' : 'እባክዎ የላይኛውን ስህተቶች ያስተካክሉ።', 'warning');
       return;
     }
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      showToast(currentLang === 'en' ? 'Enter a valid email address.' : 'ትክክለኛ ኢሜል ያስገቡ።', 'warning');
-      return;
+
+    // Show loading state
+    const originalText = submitBtn.textContent;
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = currentLang === 'en' ? 'Sending...' : 'በማስተላለፍ ላይ...';
+    submitBtn.style.opacity = '0.7';
+
+    try {
+      // Simulate API call
+      await simulateApiCall();
+      
+      showToast(
+        currentLang === 'en' ? 'Thanks — your message has been sent successfully!' : 'እናመሰግናለን — መልእክትዎ በተሳካ ሁኔታ ተልኳል!',
+        'success'
+      );
+      
+      // Clear form and draft
+      form.reset();
+      clearFormDraft();
+      clearFieldErrors(nameInput, emailInput, messageInput);
+      
+    } catch (error) {
+      showToast(
+        currentLang === 'en' ? 'Sorry, something went wrong. Please try again.' : 'ይቅርታ፣ ስህተት ተፈጥሯል። እባክዎ በድጋሜ ይሞክሩ።',
+        'error'
+      );
+    } finally {
+      // Reset button state
+      submitBtn.disabled = false;
+      submitBtn.textContent = originalText;
+      submitBtn.style.opacity = '1';
     }
-    showToast(
-      currentLang === 'en' ? 'Thanks — your message has been sent.' : 'እናመሰግናለን — መልእክትዎ ተልኳል።',
-      'success'
-    );
-    form.reset();
   });
 }
 
-function setupNewsletter() {
-  const form = document.querySelector('.newsletter-form');
-  if (!form || form.dataset.bound) return;
-  form.dataset.bound = '1';
-  form.addEventListener('submit', (e) => {
-    e.preventDefault();
-    const input = form.querySelector('input[type="email"]');
-    const email = input?.value.trim();
-    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      showToast(currentLang === 'en' ? 'Please enter a valid email.' : 'ትክክለኛ ኢሜል ያስገቡ።', 'warning');
-      return;
+function validateField(field, fieldType) {
+  const value = field?.value.trim();
+  const formGroup = field?.closest('.form-group');
+  if (!field || !formGroup) return false;
+
+  // Remove existing error
+  const existingError = formGroup.querySelector('.field-error');
+  if (existingError) existingError.remove();
+
+  let isValid = true;
+  let errorMessage = '';
+
+  switch (fieldType) {
+    case 'name':
+      if (!value) {
+        isValid = false;
+        errorMessage = currentLang === 'en' ? 'Name is required' : 'ስም ግዴታ ነው';
+      } else if (value.length < 2) {
+        isValid = false;
+        errorMessage = currentLang === 'en' ? 'Name must be at least 2 characters' : 'ስም ቢዝን ቢዝን 2 ፊደሎች መሆን አለበት';
+      }
+      break;
+    
+    case 'email':
+      if (!value) {
+        isValid = false;
+        errorMessage = currentLang === 'en' ? 'Email is required' : 'ኢሜል ግዴታ ነው';
+      } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
+        isValid = false;
+        errorMessage = currentLang === 'en' ? 'Enter a valid email address' : 'ትክክለኛ ኢሜል ያስገቡ';
+      }
+      break;
+    
+    case 'message':
+      if (!value) {
+        isValid = false;
+        errorMessage = currentLang === 'en' ? 'Message is required' : 'መልእክት ግዴታ ነው';
+      } else if (value.length < 10) {
+        isValid = false;
+        errorMessage = currentLang === 'en' ? 'Message must be at least 10 characters' : 'መልእክት ቢዝን ቢዝን 10 ፊደሎች መሆን አለበት';
+      }
+      break;
+  }
+
+  if (!isValid) {
+    field.style.borderColor = 'var(--clr-error, #e74c3c)';
+    const errorElement = document.createElement('div');
+    errorElement.className = 'field-error';
+    errorElement.style.cssText = 'color: var(--clr-error, #e74c3c); font-size: 0.875rem; margin-top: 0.5rem;';
+    errorElement.textContent = errorMessage;
+    formGroup.appendChild(errorElement);
+  } else {
+    field.style.borderColor = '';
+  }
+
+  return isValid;
+}
+
+function clearFieldErrors(...fields) {
+  fields.forEach(field => {
+    if (field) {
+      field.style.borderColor = '';
+      const formGroup = field.closest('.form-group');
+      const error = formGroup?.querySelector('.field-error');
+      if (error) error.remove();
     }
-    showToast(
-      currentLang === 'en' ? 'You are subscribed — welcome to the table.' : 'ተመዝግበዋል — እንኳን ደህና መጡ።',
-      'success'
-    );
-    input.value = '';
+  });
+}
+
+function saveFormDraft(form) {
+  const formData = {
+    name: form.querySelector('[name="name"]')?.value || '',
+    email: form.querySelector('[name="email"]')?.value || '',
+    message: form.querySelector('[name="message"]')?.value || '',
+    timestamp: Date.now()
+  };
+  localStorage.setItem('contactFormDraft', JSON.stringify(formData));
+}
+
+function loadFormDraft(form) {
+  try {
+    const draft = localStorage.getItem('contactFormDraft');
+    if (draft) {
+      const formData = JSON.parse(draft);
+      // Only load if draft is less than 1 hour old
+      if (Date.now() - formData.timestamp < 3600000) {
+        form.querySelector('[name="name"]').value = formData.name || '';
+        form.querySelector('[name="email"]').value = formData.email || '';
+        form.querySelector('[name="message"]').value = formData.message || '';
+      }
+    }
+  } catch (error) {
+    console.warn('Could not load form draft:', error);
+  }
+}
+
+function clearFormDraft() {
+  localStorage.removeItem('contactFormDraft');
+}
+
+function simulateApiCall() {
+  return new Promise((resolve) => {
+    setTimeout(resolve, 1500); // Simulate network delay
+  });
+}
+
+function debounce(func, wait) {
+  let timeout;
+  return function executedFunction(...args) {
+    const later = () => {
+      clearTimeout(timeout);
+      func(...args);
+    };
+    clearTimeout(timeout);
+    timeout = setTimeout(later, wait);
+  };
+}
+
+function setupNewsletter() {
+  // Handle both main newsletter form and footer newsletter forms
+  const forms = document.querySelectorAll('.newsletter-form, .footer-newsletter-form');
+  forms.forEach(form => {
+    if (form.dataset.bound) return;
+    form.dataset.bound = '1';
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const input = form.querySelector('input[type="email"]');
+      const email = input?.value.trim();
+      if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        showToast(currentLang === 'en' ? 'Please enter a valid email.' : 'ትክክለኛ ኢሜል ያስገቡ።', 'warning');
+        return;
+      }
+      showToast(
+        currentLang === 'en' ? 'You are subscribed — welcome to the table.' : 'ተመዝግበዋል — እንኳን ደህና መጡ።',
+        'success'
+      );
+      input.value = '';
+    });
   });
 }
 
