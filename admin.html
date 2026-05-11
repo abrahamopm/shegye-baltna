@@ -16,6 +16,55 @@
     #admin-gate { display: flex; flex-wrap: wrap; gap: 1rem; align-items: flex-end; margin-top: 1rem; }
     #admin-gate label { display: flex; flex-direction: column; gap: 0.35rem; font-weight: 600; font-size: 0.9rem; }
     #admin-gate input { padding: 0.65rem 0.85rem; border-radius: 8px; border: 1px solid rgba(44,24,16,0.25); min-width: 200px; }
+    
+    /* Tab Navigation */
+    .admin-tabs { display: flex; gap: 0.5rem; margin-bottom: 1.5rem; border-bottom: 2px solid var(--clr-gold-light); }
+    .tab-btn { padding: 0.75rem 1.5rem; background: none; border: none; border-bottom: 3px solid transparent; cursor: pointer; font-weight: 600; color: var(--clr-espresso); transition: all 0.3s ease; }
+    .tab-btn:hover { background: rgba(44,24,16,0.05); }
+    .tab-btn.active { border-bottom-color: var(--clr-gold); color: var(--clr-gold); }
+    
+    /* Tab Content */
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+    
+    /* Product Form Styles */
+    .product-form { margin-bottom: 2rem; }
+    .product-form h3 { color: var(--clr-espresso); margin-bottom: 1rem; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem; }
+    .form-group { display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1rem; }
+    .form-group label { font-weight: 600; color: var(--clr-espresso); }
+    .form-group input, .form-group textarea { padding: 0.75rem; border: 1px solid rgba(44,24,16,0.2); border-radius: 8px; font-family: inherit; font-size: 0.95rem; }
+    .form-group input:focus, .form-group textarea:focus { outline: none; border-color: var(--clr-gold); box-shadow: 0 0 0 3px rgba(212,175,55,0.1); }
+    .form-group small { color: #666; font-size: 0.85rem; }
+    .form-actions { display: flex; gap: 1rem; margin-top: 1.5rem; }
+    
+    /* Image Input Group */
+    .image-input-group { display: flex; gap: 0.5rem; align-items: center; }
+    .image-input-group input { flex: 1; }
+    #image-preview img { max-width: 200px; max-height: 150px; border-radius: 8px; border: 1px solid rgba(44,24,16,0.2); }
+    
+    /* Product List Styles */
+    .product-list { margin-top: 2rem; }
+    .product-list h3 { color: var(--clr-espresso); margin-bottom: 1rem; }
+    #products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1rem; }
+    .product-card { background: white; border: 1px solid rgba(44,24,16,0.1); border-radius: 8px; padding: 1rem; position: relative; }
+    .product-card h4 { color: var(--clr-espresso); margin-bottom: 0.5rem; }
+    .product-card .price { color: var(--clr-gold); font-weight: 600; margin-bottom: 0.5rem; }
+    .product-card .product-id { color: #666; font-size: 0.85rem; margin-bottom: 0.5rem; }
+    .product-card .badges { display: flex; gap: 0.5rem; margin-bottom: 0.75rem; }
+    .badge { padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.75rem; font-weight: 600; }
+    .badge.featured { background: var(--clr-gold-light); color: var(--clr-espresso); }
+    .badge.bestseller { background: var(--clr-gold); color: white; }
+    .product-card .actions { display: flex; gap: 0.5rem; }
+    .product-card button { padding: 0.5rem 1rem; border: none; border-radius: 4px; cursor: pointer; font-size: 0.85rem; }
+    .edit-btn { background: var(--clr-gold-light); color: var(--clr-espresso); }
+    .delete-btn { background: #dc3545; color: white; }
+    .product-card button:hover { opacity: 0.8; }
+    
+    @media (max-width: 768px) {
+      .form-row { grid-template-columns: 1fr; }
+      #products-grid { grid-template-columns: 1fr; }
+    }
   </style>
   <!-- Default PIN: shegye-admin — change ADMIN_PIN below before publishing if this file is public. -->
 </head>
@@ -47,15 +96,143 @@
     </div>
 
     <div id="admin-editor" hidden class="admin-panel">
-      <textarea class="admin-json" id="admin-json" aria-label="Products JSON"></textarea>
-      <div class="admin-actions">
-        <button type="button" class="btn-primary" id="admin-save">Save to browser</button>
-        <button type="button" class="btn-secondary" id="admin-reset">Clear browser override</button>
-        <button type="button" class="btn-secondary" id="admin-download">Download JSON</button>
-        <label class="btn-secondary" style="cursor: pointer; margin: 0;">
-          Import file
-          <input type="file" id="admin-import" accept="application/json,.json" hidden>
-        </label>
+      <!-- Tab Navigation -->
+      <div class="admin-tabs">
+        <button type="button" class="tab-btn active" data-tab="form">Product Form</button>
+        <button type="button" class="tab-btn" data-tab="json">JSON Editor</button>
+      </div>
+
+      <!-- Product Form Tab -->
+      <div id="form-tab" class="tab-content active">
+        <div class="product-form">
+          <h3>Add/Edit Product</h3>
+          <form id="product-form">
+            <div class="form-row">
+              <div class="form-group">
+                <label for="product-id">Product ID</label>
+                <input type="text" id="product-id" required>
+              </div>
+              <div class="form-group">
+                <label for="product-price">Price (ETB)</label>
+                <input type="number" id="product-price" required>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="product-name-en">Name (English)</label>
+                <input type="text" id="product-name-en" required>
+              </div>
+              <div class="form-group">
+                <label for="product-name-am">Name (Amharic)</label>
+                <input type="text" id="product-name-am" required>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="product-image">Image</label>
+              <div class="image-input-group">
+                <input type="text" id="product-image" placeholder="assets/images/spice-name.png">
+                <label class="btn-secondary" style="cursor: pointer; margin: 0;">
+                  Upload Image
+                  <input type="file" id="image-upload" accept="image/*" hidden>
+                </label>
+              </div>
+              <small>Enter the path manually or upload a new image (will be saved to assets/images/)</small>
+              <div id="image-preview" style="margin-top: 0.5rem;"></div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label>
+                  <input type="checkbox" id="product-featured">
+                  Featured Product
+                </label>
+              </div>
+              <div class="form-group">
+                <label>
+                  <input type="checkbox" id="product-bestseller">
+                  Best Seller
+                </label>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="product-short-desc-en">Short Description (English)</label>
+              <textarea id="product-short-desc-en" rows="2" required></textarea>
+            </div>
+
+            <div class="form-group">
+              <label for="product-short-desc-am">Short Description (Amharic)</label>
+              <textarea id="product-short-desc-am" rows="2" required></textarea>
+            </div>
+
+            <div class="form-group">
+              <label for="product-desc-en">Full Description (English)</label>
+              <textarea id="product-desc-en" rows="3" required></textarea>
+            </div>
+
+            <div class="form-group">
+              <label for="product-desc-am">Full Description (Amharic)</label>
+              <textarea id="product-desc-am" rows="3" required></textarea>
+            </div>
+
+            <div class="form-group">
+              <label for="product-ingredients-en">Ingredients (English)</label>
+              <textarea id="product-ingredients-en" rows="2" required></textarea>
+            </div>
+
+            <div class="form-group">
+              <label for="product-ingredients-am">Ingredients (Amharic)</label>
+              <textarea id="product-ingredients-am" rows="2" required></textarea>
+            </div>
+
+            <div class="form-group">
+              <label for="product-culinary-en">Culinary Uses (English)</label>
+              <textarea id="product-culinary-en" rows="2" required></textarea>
+            </div>
+
+            <div class="form-group">
+              <label for="product-culinary-am">Culinary Uses (Amharic)</label>
+              <textarea id="product-culinary-am" rows="2" required></textarea>
+            </div>
+
+            <div class="form-group">
+              <label for="product-shipping-en">Shipping Info (English)</label>
+              <textarea id="product-shipping-en" rows="2" required></textarea>
+            </div>
+
+            <div class="form-group">
+              <label for="product-shipping-am">Shipping Info (Amharic)</label>
+              <textarea id="product-shipping-am" rows="2" required></textarea>
+            </div>
+
+            <div class="form-actions">
+              <button type="submit" class="btn-primary">Save Product</button>
+              <button type="button" class="btn-secondary" id="clear-form">Clear Form</button>
+            </div>
+          </form>
+        </div>
+
+        <!-- Product List -->
+        <div class="product-list">
+          <h3>Existing Products</h3>
+          <div id="products-grid"></div>
+        </div>
+      </div>
+
+      <!-- JSON Editor Tab -->
+      <div id="json-tab" class="tab-content">
+        <textarea class="admin-json" id="admin-json" aria-label="Products JSON"></textarea>
+        <div class="admin-actions">
+          <button type="button" class="btn-primary" id="admin-save">Save to browser</button>
+          <button type="button" class="btn-secondary" id="admin-reset">Clear browser override</button>
+          <button type="button" class="btn-secondary" id="admin-download">Download JSON</button>
+          <label class="btn-secondary" style="cursor: pointer; margin: 0;">
+            Import file
+            <input type="file" id="admin-import" accept="application/json,.json" hidden>
+          </label>
+        </div>
       </div>
     </div>
   </main>
@@ -109,17 +286,239 @@
       var ADMIN_PIN = 'shegye-admin';
       var STORAGE_KEY = 'shegye_products_catalog';
       var SESSION_KEY = 'shegye_admin_ok';
+      var currentEditId = null;
 
       function showEditor(show) {
         document.getElementById('admin-editor').hidden = !show;
         document.getElementById('admin-gate').style.display = show ? 'none' : 'flex';
       }
 
-      async function loadIntoTextarea() {
-        if (!window.Catalog) return;
+      async function loadProducts() {
+        if (!window.Catalog) return [];
         await Catalog.load();
-        document.getElementById('admin-json').value = JSON.stringify({ products: Catalog.products }, null, 2);
+        return Catalog.products;
       }
+
+      async function loadIntoTextarea() {
+        const products = await loadProducts();
+        document.getElementById('admin-json').value = JSON.stringify({ products }, null, 2);
+        renderProductsGrid(products);
+      }
+
+      function switchTab(tabName) {
+        document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+        document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+        
+        document.querySelector(`[data-tab="${tabName}"]`).classList.add('active');
+        document.getElementById(`${tabName}-tab`).classList.add('active');
+      }
+
+      function renderProductsGrid(products) {
+        const grid = document.getElementById('products-grid');
+        grid.innerHTML = '';
+        
+        products.forEach(product => {
+          const card = document.createElement('div');
+          card.className = 'product-card';
+          
+          const badges = [];
+          if (product.featured) badges.push('<span class="badge featured">Featured</span>');
+          if (product.bestSeller) badges.push('<span class="badge bestseller">Best Seller</span>');
+          
+          card.innerHTML = `
+            <h4>${product.names.en}</h4>
+            <div class="price">ETB ${product.price}</div>
+            <div class="product-id">ID: ${product.id}</div>
+            <div class="badges">${badges.join('')}</div>
+            <div class="actions">
+              <button class="edit-btn" onclick="editProduct('${product.id}')">Edit</button>
+              <button class="delete-btn" onclick="deleteProduct('${product.id}')">Delete</button>
+            </div>
+          `;
+          
+          grid.appendChild(card);
+        });
+      }
+
+      function clearForm() {
+        document.getElementById('product-form').reset();
+        currentEditId = null;
+      }
+
+      function fillForm(product) {
+        document.getElementById('product-id').value = product.id;
+        document.getElementById('product-price').value = product.price;
+        document.getElementById('product-name-en').value = product.names.en;
+        document.getElementById('product-name-am').value = product.names.am;
+        document.getElementById('product-image').value = product.image;
+        document.getElementById('product-featured').checked = product.featured || false;
+        document.getElementById('product-bestseller').checked = product.bestSeller || false;
+        document.getElementById('product-short-desc-en').value = product.shortDescription.en;
+        document.getElementById('product-short-desc-am').value = product.shortDescription.am;
+        document.getElementById('product-desc-en').value = product.description.en;
+        document.getElementById('product-desc-am').value = product.description.am;
+        document.getElementById('product-ingredients-en').value = product.ingredients.en;
+        document.getElementById('product-ingredients-am').value = product.ingredients.am;
+        document.getElementById('product-culinary-en').value = product.culinary.en;
+        document.getElementById('product-culinary-am').value = product.culinary.am;
+        document.getElementById('product-shipping-en').value = product.shipping.en;
+        document.getElementById('product-shipping-am').value = product.shipping.am;
+        
+        currentEditId = product.id;
+        document.getElementById('product-id').scrollIntoView({ behavior: 'smooth' });
+      }
+
+      window.editProduct = async function(productId) {
+        const products = await loadProducts();
+        const product = products.find(p => p.id === productId);
+        if (product) {
+          fillForm(product);
+          switchTab('form');
+        }
+      };
+
+      window.deleteProduct = async function(productId) {
+        if (!confirm('Are you sure you want to delete this product?')) return;
+        
+        const products = await loadProducts();
+        const updatedProducts = products.filter(p => p.id !== productId);
+        
+        const data = { products: updatedProducts };
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+        
+        await loadIntoTextarea();
+        alert('Product deleted successfully!');
+      };
+
+      async function saveProduct(formData) {
+        const products = await loadProducts();
+        
+        const productData = {
+          id: formData.get('id'),
+          price: parseInt(formData.get('price')),
+          image: formData.get('image') || 'assets/images/product-jar.png',
+          featured: formData.get('featured') === 'on',
+          bestSeller: formData.get('bestseller') === 'on',
+          names: {
+            en: formData.get('name-en'),
+            am: formData.get('name-am')
+          },
+          shortDescription: {
+            en: formData.get('short-desc-en'),
+            am: formData.get('short-desc-am')
+          },
+          description: {
+            en: formData.get('desc-en'),
+            am: formData.get('desc-am')
+          },
+          ingredients: {
+            en: formData.get('ingredients-en'),
+            am: formData.get('ingredients-am')
+          },
+          culinary: {
+            en: formData.get('culinary-en'),
+            am: formData.get('culinary-am')
+          },
+          shipping: {
+            en: formData.get('shipping-en'),
+            am: formData.get('shipping-am')
+          }
+        };
+
+        if (currentEditId) {
+          const index = products.findIndex(p => p.id === currentEditId);
+          if (index !== -1) {
+            products[index] = productData;
+          }
+        } else {
+          if (products.some(p => p.id === productData.id)) {
+            alert('A product with this ID already exists!');
+            return false;
+          }
+          products.push(productData);
+        }
+
+        const data = { products };
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+        
+        await loadIntoTextarea();
+        clearForm();
+        
+        alert(currentEditId ? 'Product updated successfully!' : 'Product added successfully!');
+        return true;
+      }
+
+      // Tab switching
+      document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.addEventListener('click', () => switchTab(btn.dataset.tab));
+      });
+
+      // Form submission
+      document.getElementById('product-form').addEventListener('submit', async function (e) {
+        e.preventDefault();
+        const formData = new FormData();
+        formData.append('id', document.getElementById('product-id').value);
+        formData.append('price', document.getElementById('product-price').value);
+        formData.append('image', document.getElementById('product-image').value);
+        formData.append('featured', document.getElementById('product-featured').checked ? 'on' : '');
+        formData.append('bestseller', document.getElementById('product-bestseller').checked ? 'on' : '');
+        formData.append('name-en', document.getElementById('product-name-en').value);
+        formData.append('name-am', document.getElementById('product-name-am').value);
+        formData.append('short-desc-en', document.getElementById('product-short-desc-en').value);
+        formData.append('short-desc-am', document.getElementById('product-short-desc-am').value);
+        formData.append('desc-en', document.getElementById('product-desc-en').value);
+        formData.append('desc-am', document.getElementById('product-desc-am').value);
+        formData.append('ingredients-en', document.getElementById('product-ingredients-en').value);
+        formData.append('ingredients-am', document.getElementById('product-ingredients-am').value);
+        formData.append('culinary-en', document.getElementById('product-culinary-en').value);
+        formData.append('culinary-am', document.getElementById('product-culinary-am').value);
+        formData.append('shipping-en', document.getElementById('product-shipping-en').value);
+        formData.append('shipping-am', document.getElementById('product-shipping-am').value);
+
+        await saveProduct(formData);
+      });
+
+      // Image upload handling
+      document.getElementById('image-upload').addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if (!file) return;
+        
+        // Validate file type
+        if (!file.type.startsWith('image/')) {
+          alert('Please select an image file.');
+          return;
+        }
+        
+        // Validate file size (max 5MB)
+        if (file.size > 5 * 1024 * 1024) {
+          alert('Image size should be less than 5MB.');
+          return;
+        }
+        
+        // Generate filename
+        const fileExtension = file.name.split('.').pop();
+        const timestamp = Date.now();
+        const fileName = `spice-${timestamp}.${fileExtension}`;
+        const imagePath = `assets/images/${fileName}`;
+        
+        // Update the image path input
+        document.getElementById('product-image').value = imagePath;
+        
+        // Show preview
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          const preview = document.getElementById('image-preview');
+          preview.innerHTML = `<img src="${e.target.result}" alt="Preview">`;
+        };
+        reader.readAsDataURL(file);
+        
+        // Note: In a real implementation, you would need server-side code
+        // to actually save the file to the assets/images folder
+        alert(`Image "${fileName}" will be saved to ${imagePath}. Note: In a production environment, server-side code is needed to actually save the file.`);
+      });
+
+      // Clear form button
+      document.getElementById('clear-form').addEventListener('click', clearForm);
 
       document.getElementById('admin-unlock').addEventListener('click', async function () {
         var pin = document.getElementById('admin-pin').value.trim();
@@ -139,6 +538,7 @@
           if (!data || !Array.isArray(data.products)) throw new Error('JSON must contain a "products" array.');
           localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
           alert('Saved to this browser. Shop pages will use this until you clear the override.');
+          renderProductsGrid(data.products);
         } catch (e) {
           alert('Invalid JSON: ' + e.message);
         }
@@ -170,8 +570,16 @@
         var f = e.target.files[0];
         if (!f) return;
         var r = new FileReader();
-        r.onload = function () {
+        r.onload = async function () {
           document.getElementById('admin-json').value = r.result;
+          try {
+            const data = JSON.parse(r.result);
+            if (data && Array.isArray(data.products)) {
+              renderProductsGrid(data.products);
+            }
+          } catch (e) {
+            console.error('Invalid JSON imported');
+          }
         };
         r.readAsText(f);
         e.target.value = '';
