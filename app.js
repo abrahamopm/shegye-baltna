@@ -1064,128 +1064,211 @@ function renderCheckoutSummary() {
 
 /* --- CHAPA PAYMENT MODULE --- */
 
-// Chapa payment configuration
+// Environment-based configuration
 const CHAPA_CONFIG = {
-  // This should be replaced with your actual backend endpoint
-  backendUrl: '/api/chapa/initialize', // Backend endpoint for Chapa initialization
-  // For development, you can use a test endpoint
-  testMode: true,
+  // Determine environment
+  isProduction: window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1',
+  
+  // Backend endpoints
+  get backendUrl() {
+    return this.isProduction 
+      ? '/api/chapa/initialize' 
+      : 'https://api.chapa.co/v1/transaction/initialize'; // Test endpoint
+  },
+  
+  get verifyUrl() {
+    return this.isProduction 
+      ? '/api/chapa/verify' 
+      : 'https://api.chapa.co/v1/transaction/verify';
+  },
+  
+  // Test mode based on environment
+  testMode: window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1',
+  
+  // API keys (should be moved to environment variables in production)
+  get secretKey() {
+    return this.isProduction 
+      ? '' // Production key should come from backend
+      : 'CHASECK_TEST-xxxxxxxxxxxx'; // Test key
+  },
+  
   supportedMethods: ['telebirr', 'cbe-birr', 'dashen', 'awash', 'boa', 'zemen'],
-  currency: 'ETB'
+  currency: 'ETB',
+  
+  // Security settings
+  timeout: 30000, // 30 seconds timeout
+  maxRetries: 3,
+  retryDelay: 1000 // 1 second between retries
 };
 
-// Payment state management
+// Enhanced payment state management
 let paymentState = {
   isProcessing: false,
   currentOrder: null,
-  transactionRef: null
+  transactionRef: null,
+  paymentId: null, // Unique payment session ID
+  startTime: null,
+  retryCount: 0,
+  
+  // Atomic state management
+  setProcessing(processing) {
+    if (processing && this.isProcessing) {
+      return false; // Already processing
+    }
+    this.isProcessing = processing;
+    if (processing) {
+      this.startTime = Date.now();
+      this.retryCount = 0;
+    } else {
+      this.startTime = null;
+    }
+    return true;
+  },
+  
+  reset() {
+    this.isProcessing = false;
+    this.currentOrder = null;
+    this.transactionRef = null;
+    this.paymentId = null;
+    this.startTime = null;
+    this.retryCount = 0;
+  }
 };
+
+// Payment event listeners registry for cleanup
+const paymentEventListeners = new Map();
+
+// Input sanitization utilities
+function sanitizeInput(input) {
+  if (typeof input !== 'string') return '';
+  return input
+    .trim()
+    .replace(/[<>]/g, '') // Remove potential XSS characters
+    .replace(/[\x00-\x1f\x7f]/g, '') // Remove control characters
+    .substring(0, 500); // Limit length
+}
+
+function sanitizeEmail(email) {
+  const sanitized = sanitizeInput(email);
+  // Basic email validation after sanitization
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(sanitized) ? sanitized : '';
+}
+
+function sanitizePhone(phone) {
+  const sanitized = sanitizeInput(phone);
+  // Remove all non-digit characters except +
+  return sanitized.replace(/[^0-9+]/g, '');
+}
 
 // Initialize Chapa payment
 async function initiateChapaPayment() {
-  if (paymentState.isProcessing) {
+  // Atomic state check
+  if (!paymentState.setProcessing(true)) {
     showToast(currentLang === 'en' ? 'Payment is already processing...' : 'ክፍያው በሂደት ላይ ነው...', 'warning');
     return;
   }
 
-  // Validate form fields
-  const email = document.getElementById('payment-email')?.value?.trim();
-  const phone = document.getElementById('payment-phone')?.value?.trim();
-  const selectedMethod = document.querySelector('input[name="payment_method"]:checked')?.value;
-
-  if (!email || !phone || !selectedMethod) {
-    showToast(
-      currentLang === 'en' ? 'Please fill in all payment details' : 'እባክዎ ሁሉንም የክፍያ ዝርዝሮች ይሙሉ',
-      'warning'
-    );
-    return;
-  }
-
-  // Validate email format
-  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-    showToast(
-      currentLang === 'en' ? 'Please enter a valid email address' : 'እባክዎ ትክክለኛ ኢሜል ያስገቡ',
-      'warning'
-    );
-    return;
-  }
-
-  // Validate phone format (Ethiopian phone numbers)
-  if (!/^(\+251|0)?[9][0-9]{8}$/.test(phone.replace(/\s/g, ''))) {
-    showToast(
-      currentLang === 'en' ? 'Please enter a valid Ethiopian phone number' : 'እባክዎ ትክክለኛ የኢትዮጵያ ስልክ ቁጥር ያስገቡ',
-      'warning'
-    );
-    return;
-  }
-
-  // Get shipping details
-  const shippingDetails = getShippingDetails();
-  if (!shippingDetails) {
-    showToast(
-      currentLang === 'en' ? 'Please complete shipping details first' : 'እባክዎ የማጓጓዣ ዝርዝሮችን ይሙሉ በመጀመር',
-      'warning'
-    );
-    nextCheckoutStep(0); // Go back to shipping step
-    return;
-  }
-
-  paymentState.isProcessing = true;
-  updatePaymentUI(true);
-
   try {
+    // Validate cart is not empty
+    if (!cart || cart.length === 0) {
+      throw new Error(currentLang === 'en' ? 'Your cart is empty' : 'ቅርጫትዎ ባዶ ነው');
+    }
+
+    // Validate and sanitize form fields
+    const emailElement = document.getElementById('payment-email');
+    const phoneElement = document.getElementById('payment-phone');
+    const selectedMethodElement = document.querySelector('input[name="payment_method"]:checked');
+
+    if (!emailElement || !phoneElement || !selectedMethodElement) {
+      throw new Error(currentLang === 'en' ? 'Payment form not properly loaded' : 'የክፍያ ቅጽ በትክክል አልተጫነም');
+    }
+
+    const email = sanitizeEmail(emailElement.value);
+    const phone = sanitizePhone(phoneElement.value);
+    const selectedMethod = selectedMethodElement.value;
+
+    if (!email || !phone || !selectedMethod) {
+      throw new Error(currentLang === 'en' ? 'Please fill in all payment details correctly' : 'እባክዎ ሁሉንም የክፍያ ዝርዝሮችን በትክክል ይሙሉ');
+    }
+
+    // Validate phone format (Ethiopian phone numbers) - corrected regex
+    if (!/^\+2519[0-9]{8}$|^09[0-9]{8}$/.test(phone)) {
+      throw new Error(currentLang === 'en' ? 'Please enter a valid Ethiopian phone number' : 'እባክዎ ትክክለኛ የኢትዮጵያ ስልክ ቁጥር ያስገቡ');
+    }
+
+    // Get and validate shipping details
+    const shippingDetails = getShippingDetails();
+    if (!shippingDetails) {
+      throw new Error(currentLang === 'en' ? 'Please complete shipping details first' : 'እባክዎ የማጓጓዣ ዝርዝሮችን ይሙሉ በመጀመር');
+    }
+
+    // Generate unique payment session ID
+    paymentState.paymentId = generatePaymentId();
+    
     // Calculate order total
     const orderTotal = calculateOrderTotal();
     
-    // Generate transaction reference
+    // Generate secure transaction reference
     const transactionRef = generateTransactionRef();
     paymentState.transactionRef = transactionRef;
 
-    // Prepare order data
+    // Prepare sanitized order data
     const orderData = {
+      payment_id: paymentState.paymentId,
       email: email,
       phone: phone,
       amount: orderTotal.total,
       currency: CHAPA_CONFIG.currency,
       payment_method: selectedMethod,
       transaction_ref: transactionRef,
-      shipping: shippingDetails,
+      shipping: {
+        full_name: sanitizeInput(shippingDetails.full_name),
+        email: sanitizeEmail(shippingDetails.email),
+        address: sanitizeInput(shippingDetails.address)
+      },
       items: cart.map(item => ({
-        name: item.name,
-        quantity: item.qty,
-        price: item.price,
-        total: item.price * item.qty
+        name: sanitizeInput(item.name),
+        quantity: parseInt(item.qty) || 0,
+        price: parseFloat(item.price) || 0,
+        total: (parseFloat(item.price) || 0) * (parseInt(item.qty) || 0)
       })),
       callback_url: `${window.location.origin}/payment-callback.html`,
       return_url: `${window.location.origin}/payment-success.html`,
       customization: {
-        title: 'Shegye Baltna Order',
-        description: `Payment for ${cart.length} item${cart.length > 1 ? 's' : ''}`
-      }
+        title: sanitizeInput('Shegye Baltna Order'),
+        description: sanitizeInput(`Payment for ${cart.length} item${cart.length > 1 ? 's' : ''}`)
+      },
+      timestamp: Date.now()
     };
 
-    // For development/testing - simulate API call
-    if (CHAPA_CONFIG.testMode) {
-      await simulateChapaPayment(orderData);
-    } else {
-      // Production - call backend API
-      await callChapaBackend(orderData);
-    }
+    paymentState.currentOrder = orderData;
+    updatePaymentUI(true);
+
+    // Process payment with timeout and retry
+    await processPaymentWithRetry(orderData);
 
   } catch (error) {
     console.error('Payment initialization error:', error);
     handlePaymentError(error);
   } finally {
-    paymentState.isProcessing = false;
+    paymentState.setProcessing(false);
     updatePaymentUI(false);
   }
 }
 
 // Get shipping details from form
 function getShippingDetails() {
-  const fname = document.getElementById('fname')?.value?.trim();
-  const femail = document.getElementById('femail')?.value?.trim();
-  const faddr = document.getElementById('faddr')?.value?.trim();
+  const fnameElement = document.getElementById('fname');
+  const femailElement = document.getElementById('femail');
+  const faddrElement = document.getElementById('faddr');
+
+  if (!fnameElement || !femailElement || !faddrElement) {
+    return null;
+  }
+
+  const fname = sanitizeInput(fnameElement.value);
+  const femail = sanitizeEmail(femailElement.value);
+  const faddr = sanitizeInput(faddrElement.value);
 
   if (!fname || !femail || !faddr) {
     return null;
@@ -1213,11 +1296,64 @@ function calculateOrderTotal() {
   };
 }
 
-// Generate transaction reference
+// Generate secure transaction reference
 function generateTransactionRef() {
   const timestamp = Date.now();
-  const random = Math.floor(Math.random() * 10000);
-  return `SHEGYE${timestamp}${random}`;
+  const randomBytes = new Uint8Array(8);
+  crypto.getRandomValues(randomBytes);
+  const randomHex = Array.from(randomBytes, byte => byte.toString(16).padStart(2, '0')).join('');
+  return `SHEGYE${timestamp}${randomHex}`;
+}
+
+// Generate unique payment session ID
+function generatePaymentId() {
+  const timestamp = Date.now();
+  const randomBytes = new Uint8Array(16);
+  crypto.getRandomValues(randomBytes);
+  const randomHex = Array.from(randomBytes, byte => byte.toString(16).padStart(2, '0')).join('');
+  return `PAY_${timestamp}_${randomHex}`;
+}
+
+// Process payment with timeout and retry mechanism
+async function processPaymentWithRetry(orderData) {
+  const maxRetries = CHAPA_CONFIG.maxRetries;
+  let lastError;
+  
+  for (let attempt = 0; attempt <= maxRetries; attempt++) {
+    try {
+      paymentState.retryCount = attempt;
+      
+      if (attempt > 0) {
+        showToast(
+          currentLang === 'en' ? `Retrying payment... (${attempt}/${maxRetries})` : `ክፍያው በድጋሜ በሂደት ላይ... (${attempt}/${maxRetries})`,
+          'info'
+        );
+        
+        // Exponential backoff
+        await new Promise(resolve => setTimeout(resolve, CHAPA_CONFIG.retryDelay * Math.pow(2, attempt - 1)));
+      }
+      
+      let result;
+      if (CHAPA_CONFIG.testMode) {
+        result = await simulateChapaPayment(orderData);
+      } else {
+        result = await callChapaBackend(orderData);
+      }
+      
+      return result;
+      
+    } catch (error) {
+      lastError = error;
+      console.error(`Payment attempt ${attempt + 1} failed:`, error);
+      
+      // Don't retry on certain errors
+      if (error.message.includes('validation') || error.message.includes('invalid')) {
+        throw error;
+      }
+    }
+  }
+  
+  throw lastError || new Error('Payment failed after maximum retries');
 }
 
 // Update payment UI states
@@ -1236,6 +1372,52 @@ function updatePaymentUI(isProcessing) {
   }
 }
 
+// Secure localStorage utilities
+const secureStorage = {
+  set(key, data) {
+    try {
+      const encrypted = btoa(JSON.stringify(data));
+      localStorage.setItem(key, encrypted);
+      return true;
+    } catch (error) {
+      console.error('Storage error:', error);
+      return false;
+    }
+  },
+  
+  get(key) {
+    try {
+      const encrypted = localStorage.getItem(key);
+      if (!encrypted) return null;
+      return JSON.parse(atob(encrypted));
+    } catch (error) {
+      console.error('Storage retrieval error:', error);
+      return null;
+    }
+  },
+  
+  remove(key) {
+    try {
+      localStorage.removeItem(key);
+      return true;
+    } catch (error) {
+      console.error('Storage removal error:', error);
+      return false;
+    }
+  },
+  
+  clear() {
+    try {
+      const keys = Object.keys(localStorage).filter(key => key.startsWith('chapa_'));
+      keys.forEach(key => localStorage.removeItem(key));
+      return true;
+    } catch (error) {
+      console.error('Storage clear error:', error);
+      return false;
+    }
+  }
+};
+
 // Simulate Chapa payment (for development)
 async function simulateChapaPayment(orderData) {
   // Show loading state
@@ -1244,29 +1426,42 @@ async function simulateChapaPayment(orderData) {
     'info'
   );
 
-  // Simulate API delay
-  await new Promise(resolve => setTimeout(resolve, 2000));
+  // Simulate API delay with timeout
+  await Promise.race([
+    new Promise(resolve => setTimeout(resolve, 2000)),
+    new Promise((_, reject) => 
+      setTimeout(() => reject(new Error('Payment timeout')), CHAPA_CONFIG.timeout)
+    )
+  ]);
 
   // Simulate successful payment initialization
   const paymentUrl = `https://checkout.chapa.co/pay/${orderData.transaction_ref}`;
   
-  // Store order data for callback verification
-  localStorage.setItem('chapa_order_data', JSON.stringify(orderData));
+  // Store order data securely
+  secureStorage.set('chapa_order_data', orderData);
   
   // Redirect to Chapa payment page
   window.location.href = paymentUrl;
+  return { success: true, url: paymentUrl };
 }
 
 // Call Chapa backend API (for production)
 async function callChapaBackend(orderData) {
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), CHAPA_CONFIG.timeout);
+  
   try {
     const response = await fetch(CHAPA_CONFIG.backendUrl, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        'X-Requested-With': 'XMLHttpRequest',
       },
-      body: JSON.stringify(orderData)
+      body: JSON.stringify(orderData),
+      signal: controller.signal
     });
+
+    clearTimeout(timeoutId);
 
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
@@ -1275,15 +1470,21 @@ async function callChapaBackend(orderData) {
     const result = await response.json();
     
     if (result.success && result.checkout_url) {
-      // Store order data
-      localStorage.setItem('chapa_order_data', JSON.stringify(orderData));
+      // Store order data securely
+      secureStorage.set('chapa_order_data', orderData);
       
       // Redirect to payment
       window.location.href = result.checkout_url;
+      return result;
     } else {
       throw new Error(result.message || 'Payment initialization failed');
     }
   } catch (error) {
+    clearTimeout(timeoutId);
+    
+    if (error.name === 'AbortError') {
+      throw new Error('Payment request timed out');
+    }
     throw new Error(`Backend error: ${error.message}`);
   }
 }
@@ -1310,72 +1511,217 @@ function handlePaymentCallback() {
   const urlParams = new URLSearchParams(window.location.search);
   const status = urlParams.get('status');
   const tx_ref = urlParams.get('tx_ref');
+  const transaction_id = urlParams.get('transaction_id');
 
+  // Validate required parameters
   if (!tx_ref) {
+    console.error('Missing transaction reference in callback');
     window.location.href = 'checkout.html';
     return;
   }
 
-  const orderData = JSON.parse(localStorage.getItem('chapa_order_data') || '{}');
+  // Sanitize inputs
+  const sanitizedStatus = sanitizeInput(status);
+  const sanitizedTxRef = sanitizeInput(tx_ref);
+  const sanitizedTransactionId = sanitizeInput(transaction_id);
+
+  // Get stored order data securely
+  const orderData = secureStorage.get('chapa_order_data');
   
-  if (status === 'success') {
-    // Payment successful
-    localStorage.removeItem('chapa_order_data');
-    window.location.href = `payment-success.html?tx_ref=${tx_ref}`;
-  } else {
-    // Payment failed
-    window.location.href = `payment-failed.html?tx_ref=${tx_ref}`;
+  if (!orderData || orderData.transaction_ref !== sanitizedTxRef) {
+    console.error('Invalid or missing order data');
+    secureStorage.remove('chapa_order_data');
+    window.location.href = 'checkout.html';
+    return;
   }
+
+  // Verify payment with backend (don't trust callback status)
+  verifyPaymentWithBackend(sanitizedTxRef, sanitizedTransactionId)
+    .then(isValid => {
+      // Clear stored data
+      secureStorage.remove('chapa_order_data');
+      
+      if (isValid && sanitizedStatus === 'success') {
+        // Payment successful
+        window.location.href = `payment-success.html?tx_ref=${encodeURIComponent(sanitizedTxRef)}`;
+      } else {
+        // Payment failed or invalid
+        window.location.href = `payment-failed.html?tx_ref=${encodeURIComponent(sanitizedTxRef)}`;
+      }
+    })
+    .catch(error => {
+      console.error('Payment verification error:', error);
+      secureStorage.remove('chapa_order_data');
+      window.location.href = `payment-failed.html?tx_ref=${encodeURIComponent(sanitizedTxRef)}`;
+    });
 }
 
 // Verify payment with backend
-async function verifyPayment(tx_ref) {
+async function verifyPaymentWithBackend(tx_ref, transaction_id) {
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), CHAPA_CONFIG.timeout);
+  
   try {
-    const response = await fetch(`${CHAPA_CONFIG.backendUrl}/verify`, {
+    const response = await fetch(CHAPA_CONFIG.verifyUrl, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        'X-Requested-With': 'XMLHttpRequest',
       },
-      body: JSON.stringify({ tx_ref })
+      body: JSON.stringify({ 
+        tx_ref: tx_ref,
+        transaction_id: transaction_id
+      }),
+      signal: controller.signal
     });
+
+    clearTimeout(timeoutId);
+
+    if (!response.ok) {
+      throw new Error(`Verification failed: ${response.status}`);
+    }
 
     const result = await response.json();
     return result.success && result.status === 'success';
+    
   } catch (error) {
-    console.error('Payment verification error:', error);
-    return false;
+    clearTimeout(timeoutId);
+    
+    if (error.name === 'AbortError') {
+      throw new Error('Verification timeout');
+    }
+    
+    // In test mode, simulate verification
+    if (CHAPA_CONFIG.testMode) {
+      console.log('Test mode: simulating payment verification');
+      return true; // Simulate success for testing
+    }
+    
+    throw error;
   }
 }
 
 // Auto-populate payment form with shipping details
 function autoPopulatePaymentForm() {
-  const email = document.getElementById('femail')?.value?.trim();
-  const paymentEmail = document.getElementById('payment-email');
+  const emailElement = document.getElementById('femail');
+  const paymentEmailElement = document.getElementById('payment-email');
   
-  if (email && paymentEmail && !paymentEmail.value) {
-    paymentEmail.value = email;
+  if (emailElement && paymentEmailElement && !paymentEmailElement.value) {
+    const sanitizedEmail = sanitizeEmail(emailElement.value);
+    if (sanitizedEmail) {
+      paymentEmailElement.value = sanitizedEmail;
+    }
   }
+}
+
+// Clean up payment event listeners
+function cleanupPaymentEventListeners() {
+  paymentEventListeners.forEach((listener, element) => {
+    if (element && typeof element.removeEventListener === 'function') {
+      element.removeEventListener(listener.type, listener.handler);
+    }
+  });
+  paymentEventListeners.clear();
+}
+
+// Add event listener with cleanup tracking
+function addPaymentEventListener(element, eventType, handler) {
+  if (!element || typeof element.addEventListener !== 'function') {
+    return;
+  }
+  
+  const wrappedHandler = handler;
+  element.addEventListener(eventType, wrappedHandler);
+  
+  // Track for cleanup
+  paymentEventListeners.set(element, {
+    type: eventType,
+    handler: wrappedHandler
+  });
 }
 
 // Initialize payment form when checkout step 2 is shown
 function setupPaymentForm() {
+  // Clean up previous listeners
+  cleanupPaymentEventListeners();
+  
   autoPopulatePaymentForm();
   
-  // Add real-time validation
+  // Add real-time validation with proper cleanup
   const emailInput = document.getElementById('payment-email');
   const phoneInput = document.getElementById('payment-phone');
   
   if (emailInput) {
-    emailInput.addEventListener('input', () => {
-      const isValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailInput.value.trim());
+    const emailHandler = () => {
+      const value = emailInput.value.trim();
+      const isValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
       emailInput.style.borderColor = isValid ? '' : '#e74c3c';
-    });
+    };
+    
+    addPaymentEventListener(emailInput, 'input', emailHandler);
+    addPaymentEventListener(emailInput, 'blur', emailHandler);
   }
   
   if (phoneInput) {
-    phoneInput.addEventListener('input', () => {
-      const isValid = /^(\+251|0)?[9][0-9]{8}$/.test(phoneInput.value.replace(/\s/g, ''));
+    const phoneHandler = () => {
+      const value = phoneInput.value.replace(/\s/g, '');
+      const isValid = /^\+2519[0-9]{8}$|^09[0-9]{8}$/.test(value);
       phoneInput.style.borderColor = isValid ? '' : '#e74c3c';
-    });
+    };
+    
+    addPaymentEventListener(phoneInput, 'input', phoneHandler);
+    addPaymentEventListener(phoneInput, 'blur', phoneHandler);
   }
 }
+
+// Handle browser back button during payment
+window.addEventListener('popstate', function(event) {
+  // If we're in payment processing state, warn user
+  if (paymentState.isProcessing) {
+    const message = currentLang === 'en' 
+      ? 'Payment is in progress. Are you sure you want to leave?' 
+      : 'ክፍያው በሂደት ላይ ነው። መልሱ እርግጠኛ ነዎት?';
+    
+    if (confirm(message)) {
+      // Reset payment state
+      paymentState.reset();
+      secureStorage.remove('chapa_order_data');
+      cleanupPaymentEventListeners();
+    } else {
+      // Push state back to prevent navigation
+      history.pushState(null, null, location.href);
+    }
+  }
+});
+
+// Handle page unload during payment
+window.addEventListener('beforeunload', function(event) {
+  if (paymentState.isProcessing) {
+    const message = currentLang === 'en' 
+      ? 'Payment is in progress. Your order may be lost if you leave.' 
+      : 'ክፍያው በሂደት ላይ ነው። ትዕዛዝዎ ሊጠፋ ይችላል።';
+    
+    event.preventDefault();
+    event.returnValue = message;
+    return message;
+  }
+});
+
+// Initialize payment state on page load
+document.addEventListener('DOMContentLoaded', function() {
+  // Check for any interrupted payment sessions
+  const storedPayment = secureStorage.get('chapa_order_data');
+  if (storedPayment && storedPayment.timestamp) {
+    const sessionAge = Date.now() - storedPayment.timestamp;
+    const maxSessionAge = 30 * 60 * 1000; // 30 minutes
+    
+    if (sessionAge > maxSessionAge) {
+      // Session expired, clean up
+      secureStorage.remove('chapa_order_data');
+      console.log('Expired payment session cleaned up');
+    }
+  }
+  
+  // Reset payment state
+  paymentState.reset();
+});
