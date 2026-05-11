@@ -983,6 +983,11 @@ function setupCheckoutFlow() {
 
     steps.forEach((s) => s.classList.remove('active'));
     steps[currentStepNum].classList.add('active');
+    
+    // Setup payment form when moving to payment step
+    if (currentStepNum === 1) {
+      setTimeout(() => setupPaymentForm(), 100);
+    }
   };
 
   window.completeOrder = function () {
@@ -1055,4 +1060,322 @@ function renderCheckoutSummary() {
   if (shipEl) shipEl.textContent = ship.toFixed(2) + ' ETB';
   if (taxEl) taxEl.textContent = tax.toFixed(2) + ' ETB';
   if (totalEl) totalEl.textContent = (sub + ship + tax).toFixed(2) + ' ETB';
+}
+
+/* --- CHAPA PAYMENT MODULE --- */
+
+// Chapa payment configuration
+const CHAPA_CONFIG = {
+  // This should be replaced with your actual backend endpoint
+  backendUrl: '/api/chapa/initialize', // Backend endpoint for Chapa initialization
+  // For development, you can use a test endpoint
+  testMode: true,
+  supportedMethods: ['telebirr', 'cbe-birr', 'dashen', 'awash', 'boa', 'zemen'],
+  currency: 'ETB'
+};
+
+// Payment state management
+let paymentState = {
+  isProcessing: false,
+  currentOrder: null,
+  transactionRef: null
+};
+
+// Initialize Chapa payment
+async function initiateChapaPayment() {
+  if (paymentState.isProcessing) {
+    showToast(currentLang === 'en' ? 'Payment is already processing...' : 'ክፍያው በሂደት ላይ ነው...', 'warning');
+    return;
+  }
+
+  // Validate form fields
+  const email = document.getElementById('payment-email')?.value?.trim();
+  const phone = document.getElementById('payment-phone')?.value?.trim();
+  const selectedMethod = document.querySelector('input[name="payment_method"]:checked')?.value;
+
+  if (!email || !phone || !selectedMethod) {
+    showToast(
+      currentLang === 'en' ? 'Please fill in all payment details' : 'እባክዎ ሁሉንም የክፍያ ዝርዝሮች ይሙሉ',
+      'warning'
+    );
+    return;
+  }
+
+  // Validate email format
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    showToast(
+      currentLang === 'en' ? 'Please enter a valid email address' : 'እባክዎ ትክክለኛ ኢሜል ያስገቡ',
+      'warning'
+    );
+    return;
+  }
+
+  // Validate phone format (Ethiopian phone numbers)
+  if (!/^(\+251|0)?[9][0-9]{8}$/.test(phone.replace(/\s/g, ''))) {
+    showToast(
+      currentLang === 'en' ? 'Please enter a valid Ethiopian phone number' : 'እባክዎ ትክክለኛ የኢትዮጵያ ስልክ ቁጥር ያስገቡ',
+      'warning'
+    );
+    return;
+  }
+
+  // Get shipping details
+  const shippingDetails = getShippingDetails();
+  if (!shippingDetails) {
+    showToast(
+      currentLang === 'en' ? 'Please complete shipping details first' : 'እባክዎ የማጓጓዣ ዝርዝሮችን ይሙሉ በመጀመር',
+      'warning'
+    );
+    nextCheckoutStep(0); // Go back to shipping step
+    return;
+  }
+
+  paymentState.isProcessing = true;
+  updatePaymentUI(true);
+
+  try {
+    // Calculate order total
+    const orderTotal = calculateOrderTotal();
+    
+    // Generate transaction reference
+    const transactionRef = generateTransactionRef();
+    paymentState.transactionRef = transactionRef;
+
+    // Prepare order data
+    const orderData = {
+      email: email,
+      phone: phone,
+      amount: orderTotal.total,
+      currency: CHAPA_CONFIG.currency,
+      payment_method: selectedMethod,
+      transaction_ref: transactionRef,
+      shipping: shippingDetails,
+      items: cart.map(item => ({
+        name: item.name,
+        quantity: item.qty,
+        price: item.price,
+        total: item.price * item.qty
+      })),
+      callback_url: `${window.location.origin}/payment-callback.html`,
+      return_url: `${window.location.origin}/payment-success.html`,
+      customization: {
+        title: 'Shegye Baltna Order',
+        description: `Payment for ${cart.length} item${cart.length > 1 ? 's' : ''}`
+      }
+    };
+
+    // For development/testing - simulate API call
+    if (CHAPA_CONFIG.testMode) {
+      await simulateChapaPayment(orderData);
+    } else {
+      // Production - call backend API
+      await callChapaBackend(orderData);
+    }
+
+  } catch (error) {
+    console.error('Payment initialization error:', error);
+    handlePaymentError(error);
+  } finally {
+    paymentState.isProcessing = false;
+    updatePaymentUI(false);
+  }
+}
+
+// Get shipping details from form
+function getShippingDetails() {
+  const fname = document.getElementById('fname')?.value?.trim();
+  const femail = document.getElementById('femail')?.value?.trim();
+  const faddr = document.getElementById('faddr')?.value?.trim();
+
+  if (!fname || !femail || !faddr) {
+    return null;
+  }
+
+  return {
+    full_name: fname,
+    email: femail,
+    address: faddr
+  };
+}
+
+// Calculate order total
+function calculateOrderTotal() {
+  const sub = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
+  const ship = cart.length ? 10 : 0;
+  const tax = sub * 0.025;
+  const total = sub + ship + tax;
+
+  return {
+    subtotal: sub,
+    shipping: ship,
+    tax: tax,
+    total: total
+  };
+}
+
+// Generate transaction reference
+function generateTransactionRef() {
+  const timestamp = Date.now();
+  const random = Math.floor(Math.random() * 10000);
+  return `SHEGYE${timestamp}${random}`;
+}
+
+// Update payment UI states
+function updatePaymentUI(isProcessing) {
+  const button = document.querySelector('button[onclick="initiateChapaPayment()"]');
+  const paymentForm = document.querySelector('.payment-form-fields');
+  
+  if (isProcessing) {
+    button.disabled = true;
+    button.innerHTML = currentLang === 'en' ? 'Processing...' : 'በሂደት ላይ...';
+    paymentForm?.classList.add('payment-processing');
+  } else {
+    button.disabled = false;
+    button.innerHTML = currentLang === 'en' ? 'Proceed to Payment' : 'ወደ ክፍያ ይቀጥሉ';
+    paymentForm?.classList.remove('payment-processing');
+  }
+}
+
+// Simulate Chapa payment (for development)
+async function simulateChapaPayment(orderData) {
+  // Show loading state
+  showToast(
+    currentLang === 'en' ? 'Initializing payment...' : 'ክፍያው በማስጀመር ላይ...',
+    'info'
+  );
+
+  // Simulate API delay
+  await new Promise(resolve => setTimeout(resolve, 2000));
+
+  // Simulate successful payment initialization
+  const paymentUrl = `https://checkout.chapa.co/pay/${orderData.transaction_ref}`;
+  
+  // Store order data for callback verification
+  localStorage.setItem('chapa_order_data', JSON.stringify(orderData));
+  
+  // Redirect to Chapa payment page
+  window.location.href = paymentUrl;
+}
+
+// Call Chapa backend API (for production)
+async function callChapaBackend(orderData) {
+  try {
+    const response = await fetch(CHAPA_CONFIG.backendUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(orderData)
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const result = await response.json();
+    
+    if (result.success && result.checkout_url) {
+      // Store order data
+      localStorage.setItem('chapa_order_data', JSON.stringify(orderData));
+      
+      // Redirect to payment
+      window.location.href = result.checkout_url;
+    } else {
+      throw new Error(result.message || 'Payment initialization failed');
+    }
+  } catch (error) {
+    throw new Error(`Backend error: ${error.message}`);
+  }
+}
+
+// Handle payment errors
+function handlePaymentError(error) {
+  console.error('Payment error:', error);
+  
+  let errorMessage = currentLang === 'en' 
+    ? 'Payment failed. Please try again.' 
+    : 'ክፍያው አልተሳካም። እባክዎ በድጋሜ ይሞክሩ።';
+
+  if (error.message.includes('network')) {
+    errorMessage = currentLang === 'en' 
+      ? 'Network error. Please check your connection.' 
+      : 'የኔትወርክ ስህተት። እባክዎ ግንኙነትዎን ይመርምጡ።';
+  }
+
+  showToast(errorMessage, 'error');
+}
+
+// Payment callback handler (called from callback page)
+function handlePaymentCallback() {
+  const urlParams = new URLSearchParams(window.location.search);
+  const status = urlParams.get('status');
+  const tx_ref = urlParams.get('tx_ref');
+
+  if (!tx_ref) {
+    window.location.href = 'checkout.html';
+    return;
+  }
+
+  const orderData = JSON.parse(localStorage.getItem('chapa_order_data') || '{}');
+  
+  if (status === 'success') {
+    // Payment successful
+    localStorage.removeItem('chapa_order_data');
+    window.location.href = `payment-success.html?tx_ref=${tx_ref}`;
+  } else {
+    // Payment failed
+    window.location.href = `payment-failed.html?tx_ref=${tx_ref}`;
+  }
+}
+
+// Verify payment with backend
+async function verifyPayment(tx_ref) {
+  try {
+    const response = await fetch(`${CHAPA_CONFIG.backendUrl}/verify`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ tx_ref })
+    });
+
+    const result = await response.json();
+    return result.success && result.status === 'success';
+  } catch (error) {
+    console.error('Payment verification error:', error);
+    return false;
+  }
+}
+
+// Auto-populate payment form with shipping details
+function autoPopulatePaymentForm() {
+  const email = document.getElementById('femail')?.value?.trim();
+  const paymentEmail = document.getElementById('payment-email');
+  
+  if (email && paymentEmail && !paymentEmail.value) {
+    paymentEmail.value = email;
+  }
+}
+
+// Initialize payment form when checkout step 2 is shown
+function setupPaymentForm() {
+  autoPopulatePaymentForm();
+  
+  // Add real-time validation
+  const emailInput = document.getElementById('payment-email');
+  const phoneInput = document.getElementById('payment-phone');
+  
+  if (emailInput) {
+    emailInput.addEventListener('input', () => {
+      const isValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailInput.value.trim());
+      emailInput.style.borderColor = isValid ? '' : '#e74c3c';
+    });
+  }
+  
+  if (phoneInput) {
+    phoneInput.addEventListener('input', () => {
+      const isValid = /^(\+251|0)?[9][0-9]{8}$/.test(phoneInput.value.replace(/\s/g, ''));
+      phoneInput.style.borderColor = isValid ? '' : '#e74c3c';
+    });
+  }
 }

@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Payment Processing | Shegye Baltna</title>
+  <link rel="stylesheet" href="index.css">
+  <style>
+    .callback-container {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 2rem;
+    }
+    .callback-content {
+      max-width: 500px;
+      background: white;
+      padding: 3rem;
+      border-radius: 16px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.1);
+    }
+    .callback-spinner {
+      width: 60px;
+      height: 60px;
+      border: 4px solid var(--clr-gold-light);
+      border-top: 4px solid var(--clr-gold);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 2rem;
+    }
+    .callback-icon {
+      width: 80px;
+      height: 80px;
+      margin: 0 auto 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      font-size: 2rem;
+    }
+    .callback-icon.processing {
+      background: var(--clr-gold-light);
+      color: var(--clr-gold);
+    }
+    .callback-icon.success {
+      background: #4caf50;
+      color: white;
+    }
+    .callback-icon.error {
+      background: #f44336;
+      color: white;
+    }
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+  <div class="callback-container">
+    <div class="callback-content">
+      <div id="callback-icon" class="callback-icon processing">
+        <div class="callback-spinner"></div>
+      </div>
+      <h1 id="callback-title" data-en="Processing Your Payment" data-am="ክፍያዎን በሂደት ላይ">Processing Your Payment</h1>
+      <p id="callback-message" data-en="Please wait while we verify your payment..." data-am="እባክዎ ይጠብቁ ክፍያዎን እንለውጣለን...">Please wait while we verify your payment...</p>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // Initialize language
+      currentLang = localStorage.getItem('shegye_lang') || 'en';
+      applyLanguage();
+      
+      // Handle payment callback
+      handlePaymentCallback();
+    });
+  </script>
+</body>
+</html>
