@@ -155,5 +155,56 @@
       "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36",
       "referrer": "http://localhost:3000/checkout.html"
     }
+  },
+  {
+    "id": "order-1778669354845-8c589d22",
+    "createdAt": "2026-05-13T10:49:14.897Z",
+    "status": "pending",
+    "user": {
+      "name": "hhihih",
+      "email": "abrahamnkw@gmail.com",
+      "phone": "0912123466",
+      "address": "Addis Ababa"
+    },
+    "items": [
+      {
+        "id": "shiro",
+        "name": "Shiro",
+        "price": 120,
+        "qty": 2,
+        "total": 240
+      },
+      {
+        "id": "brsttra",
+        "name": "Brsttra",
+        "price": 280,
+        "qty": 3,
+        "total": 840
+      },
+      {
+        "id": "berwa-blend",
+        "name": "Berwa Blend",
+        "price": 300,
+        "qty": 1,
+        "total": 300
+      }
+    ],
+    "totals": {
+      "subtotal": 1380,
+      "shipping": 10,
+      "tax": 34.5,
+      "total": 1424.5
+    },
+    "payment": {
+      "status": "pending",
+      "proof": {
+        "fieldName": "paymentProof",
+        "originalName": "the-iconic-pain-panel-upscaled-with-ai-link-in-the-comments-v0-58ugyimgkj661 (1).jpg",
+        "storedName": "1778669354880-c7f7ee-the-iconic-pain-panel-upscaled-with-ai-link-in-the-comments-v0-58ugyimgkj661 (1).jpg",
+        "relativePath": "data/uploads/order-1778669354845-8c589d22/1778669354880-c7f7ee-the-iconic-pain-panel-upscaled-with-ai-link-in-the-comments-v0-58ugyimgkj661 (1).jpg",
+        "size": 102330,
+        "mimeType": "image/jpeg"
+      }
+    }
   }
 ]

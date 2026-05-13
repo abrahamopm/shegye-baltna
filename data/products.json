@@ -2,30 +2,25 @@
   "products": [
     {
       "id": "berbere",
-      "price": 158,
+      "price": 1580,
       "image": "assets/images/spice-berbero.png",
       "featured": true,
       "bestSeller": true,
-      "names": { "en": "Berbere", "am": "በርበሬ" },
+      "names": {
+        "en": "Berbere",
+        "am": "በርበሬ"
+      },
       "shortDescription": {
         "en": "The foundation of Ethiopian cuisine — sun-dried red chilies, garlic, ginger, and warming spices.",
         "am": "የኢትዮጵያ ምግብ መሠረት — በፀሐይ የደረቁ ቀይ ቃሪያ፣ ሽንኩርት፣ ዝንጅብል እና ሞቅ ባሉ ቅመሞች።"
       },
       "description": {
         "en": "A robust, complex, and fiery blend of sun-dried red chilies, garlic, ginger, basil, korarima, rue, ajwain or radhuni, nigella, and fenugreek.",
-        "am": "ኃይለኛ፣ ውስብስብ እና ትኩስ የፀሐይ ደረቅ ቀይ ቃሪያ፣ ነጭ ሽንኩርት፣ ዝንጅብል፣ ባሲል፣ ኮረሪማ እና ሌሎችም ቅልቅል።"
+        "am": ""
       },
       "ingredients": {
         "en": "Chili peppers, garlic, ginger, basil, korarima, rue, ajwain, nigella, and fenugreek. All 100% natural and sun-dried.",
-        "am": "ቀይ ቃሪያ፣ ነጭ ሽንኩርት፣ ዝንጅብል፣ ባሲል፣ ኮረሪማ፣ ጤና አዳም፣ ጥቁር አዝሙድ፣ እና አብሽ። ሁሉም 100% ተፈጥሯዊ።"
-      },
-      "culinary": {
-        "en": "Essential for Doro Wat (chicken stew), Misir Wat (lentil stew), and as a dry rub for roasted meats.",
-        "am": "ለዶሮ ወጥ፣ ምስር ወጥ፣ እና ለተጠበሰ ስጋ።"
-      },
-      "shipping": {
-        "en": "Ships securely packaged to preserve freshness. Deliveries within Addis Ababa take 1–2 days. International shipping available via DHL.",
-        "am": "ትኩስነቱን ለመጠበቅ ደህንነቱ በተጠበቀ ሁኔታ። በአዲስ አበባ 1–2 ቀን።"
+        "am": ""
       }
     },
     {
@@ -34,7 +29,10 @@
       "image": "assets/images/spice-shiro.png",
       "featured": true,
       "bestSeller": true,
-      "names": { "en": "Shiro", "am": "ሽሮ" },
+      "names": {
+        "en": "Shiro",
+        "am": "ሽሮ"
+      },
       "shortDescription": {
         "en": "Chickpea and spice blend for silky shiro wat — a comforting staple.",
         "am": "ለልዩ ሽሮ ወጥ የአክሊል እና ቅመም ቅልቅል።"
@@ -62,7 +60,10 @@
       "image": "assets/images/spice-korarima.png",
       "featured": true,
       "bestSeller": false,
-      "names": { "en": "Korarima", "am": "ኮረሪማ" },
+      "names": {
+        "en": "Korarima",
+        "am": "ኮረሪማ"
+      },
       "shortDescription": {
         "en": "Ethiopian cardamom — fragrant seeds for coffee, stews, and baking.",
         "am": "የኢትዮጵያ ኮረሪማ — ለቡና፣ ወጥ እና ምግብ።"
@@ -86,30 +87,25 @@
     },
     {
       "id": "berwa-blend",
-      "price": 300,
+      "price": 2999999,
       "image": "assets/images/product-jar.png",
       "featured": false,
       "bestSeller": true,
-      "names": { "en": "Berwa Blend", "am": "በርዋ ቅልቅል" },
+      "names": {
+        "en": "Berwa Blend",
+        "am": "በርዋ ቅልቅል"
+      },
       "shortDescription": {
         "en": "House blend of warm spices for everyday Ethiopian cooking.",
         "am": "ለዕለታዊ የኢትዮጵያ ምግብ የቤት ቅልቅል።"
       },
       "description": {
         "en": "A balanced jarred blend crafted for depth and aroma in soups and sautés.",
-        "am": "ለወጥ እና ለጥብስ የተመጣጠነ ቅልቅል።"
+        "am": ""
       },
       "ingredients": {
         "en": "Proprietary blend of sun-dried spices. All natural.",
-        "am": "በፀሐይ የደረቁ ቅመሞች ቅልቅል።"
-      },
-      "culinary": {
-        "en": "Season lentils, vegetables, and slow-cooked dishes.",
-        "am": "ለምስር፣ አትክልት እና ለቀስ ብለው የሚበስሉ ምግቦች።"
-      },
-      "shipping": {
-        "en": "Ships securely packaged. Local delivery 1–2 days.",
-        "am": "ደህንነቱ በተጠበቀ ሁኔታ።"
+        "am": ""
       }
     },
     {
@@ -118,7 +114,10 @@
       "image": "assets/images/product-jar.png",
       "featured": false,
       "bestSeller": false,
-      "names": { "en": "Brsttra", "am": "ብርስትራ" },
+      "names": {
+        "en": "Brsttra",
+        "am": "ብርስትራ"
+      },
       "shortDescription": {
         "en": "Traditional blend for rich, aromatic sauces.",
         "am": "ለጠንካራ እና ሽታ ባላቸው ምርጫዎች።"
@@ -146,7 +145,10 @@
       "image": "assets/images/kitchen-tools.png",
       "featured": false,
       "bestSeller": false,
-      "names": { "en": "Kitchen Tools", "am": "የማድቤት እቃዎች" },
+      "names": {
+        "en": "Kitchen Tools",
+        "am": "የማድቤት እቃዎች"
+      },
       "shortDescription": {
         "en": "Handy tools for prepping injera, spices, and everyday cooking.",
         "am": "ለእንጀራ፣ ቅመም እና ምግብ የሚያገለግሉ እቃዎች።"
