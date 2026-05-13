@@ -1,0 +1,34 @@
+[
+  {
+    "id": "1778660299117-cf056eef",
+    "createdAt": "2026-05-13T08:18:19.121Z",
+    "readAt": null,
+    "email": "kalmulmath@gmail.com",
+    "companyName": "Naomi Mesfin",
+    "streetAddress": "",
+    "addressLine2": "",
+    "zipCode": "",
+    "phoneNumber": "",
+    "mcNumber": "",
+    "usdotNumber": "",
+    "ein": "",
+    "tNumber": "",
+    "numberOfTrucks": "",
+    "numberOfDrivers": "",
+    "preferredStates": [],
+    "documents": {
+      "mcAuthorityLetter": null,
+      "ndaOrVoidCheck": null,
+      "liabilityInsurance": null,
+      "w9": null
+    },
+    "smsConsent": false,
+    "privacyAccepted": false,
+    "name": "Naomi Mesfin",
+    "company": "",
+    "phone": "",
+    "message": "Hello World Hello",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36",
+    "referrer": "http://localhost:3000/contact.html"
+  }
+]

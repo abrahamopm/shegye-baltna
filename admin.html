@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,67 +8,291 @@
   <title>Catalog admin | Shegye Baltna</title>
   <link rel="stylesheet" href="index.css">
   <style>
-    body.admin-page { cursor: auto; }
-    .admin-wrap { max-width: 920px; margin: 0 auto; padding: 110px 1.5rem 4rem; }
-    .admin-panel { background: var(--clr-parchment); border: 1px solid var(--clr-gold-light); border-radius: 12px; padding: 1.75rem; margin-top: 1rem; box-shadow: 0 8px 30px rgba(44,24,16,0.06); }
-    textarea.admin-json { width: 100%; min-height: 460px; font-family: ui-monospace, Consolas, monospace; font-size: 13px; line-height: 1.45; padding: 1rem; border-radius: 8px; border: 1px solid rgba(44,24,16,0.2); background: #fff; color: var(--clr-espresso); }
-    .admin-actions { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 1.25rem; align-items: center; }
-    .admin-hint { color: #555; line-height: 1.65; margin: 0.75rem 0 1.25rem; font-size: 0.95rem; }
-    #admin-gate { display: flex; flex-wrap: wrap; gap: 1rem; align-items: flex-end; margin-top: 1rem; }
-    #admin-gate label { display: flex; flex-direction: column; gap: 0.35rem; font-weight: 600; font-size: 0.9rem; }
-    #admin-gate input { padding: 0.65rem 0.85rem; border-radius: 8px; border: 1px solid rgba(44,24,16,0.25); min-width: 200px; }
-    
+    body.admin-page {
+      cursor: auto;
+    }
+
+    .admin-wrap {
+      max-width: 920px;
+      margin: 0 auto;
+      padding: 110px 1.5rem 4rem;
+    }
+
+    .admin-panel {
+      background: var(--clr-parchment);
+      border: 1px solid var(--clr-gold-light);
+      border-radius: 12px;
+      padding: 1.75rem;
+      margin-top: 1rem;
+      box-shadow: 0 8px 30px rgba(44, 24, 16, 0.06);
+    }
+
+    textarea.admin-json {
+      width: 100%;
+      min-height: 460px;
+      font-family: ui-monospace, Consolas, monospace;
+      font-size: 13px;
+      line-height: 1.45;
+      padding: 1rem;
+      border-radius: 8px;
+      border: 1px solid rgba(44, 24, 16, 0.2);
+      background: #fff;
+      color: var(--clr-espresso);
+    }
+
+    .admin-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      margin-top: 1.25rem;
+      align-items: center;
+    }
+
+    .admin-hint {
+      color: #555;
+      line-height: 1.65;
+      margin: 0.75rem 0 1.25rem;
+      font-size: 0.95rem;
+    }
+
+    #admin-gate {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      align-items: flex-end;
+      margin-top: 1rem;
+    }
+
+    #admin-gate label {
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+      font-weight: 600;
+      font-size: 0.9rem;
+    }
+
+    #admin-gate input {
+      padding: 0.65rem 0.85rem;
+      border-radius: 8px;
+      border: 1px solid rgba(44, 24, 16, 0.25);
+      min-width: 200px;
+    }
+
     /* Tab Navigation */
-    .admin-tabs { display: flex; gap: 0.5rem; margin-bottom: 1.5rem; border-bottom: 2px solid var(--clr-gold-light); }
-    .tab-btn { padding: 0.75rem 1.5rem; background: none; border: none; border-bottom: 3px solid transparent; cursor: pointer; font-weight: 600; color: var(--clr-espresso); transition: all 0.3s ease; }
-    .tab-btn:hover { background: rgba(44,24,16,0.05); }
-    .tab-btn.active { border-bottom-color: var(--clr-gold); color: var(--clr-gold); }
-    
+    .admin-tabs {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1.5rem;
+      border-bottom: 2px solid var(--clr-gold-light);
+    }
+
+    .tab-btn {
+      padding: 0.75rem 1.5rem;
+      background: none;
+      border: none;
+      border-bottom: 3px solid transparent;
+      cursor: pointer;
+      font-weight: 600;
+      color: var(--clr-espresso);
+      transition: all 0.3s ease;
+    }
+
+    .tab-btn:hover {
+      background: rgba(44, 24, 16, 0.05);
+    }
+
+    .tab-btn.active {
+      border-bottom-color: var(--clr-gold);
+      color: var(--clr-gold);
+    }
+
     /* Tab Content */
-    .tab-content { display: none; }
-    .tab-content.active { display: block; }
-    
+    .tab-content {
+      display: none;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
     /* Product Form Styles */
-    .product-form { margin-bottom: 2rem; }
-    .product-form h3 { color: var(--clr-espresso); margin-bottom: 1rem; }
-    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem; }
-    .form-group { display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1rem; }
-    .form-group label { font-weight: 600; color: var(--clr-espresso); }
-    .form-group input, .form-group textarea { padding: 0.75rem; border: 1px solid rgba(44,24,16,0.2); border-radius: 8px; font-family: inherit; font-size: 0.95rem; }
-    .form-group input:focus, .form-group textarea:focus { outline: none; border-color: var(--clr-gold); box-shadow: 0 0 0 3px rgba(212,175,55,0.1); }
-    .form-group small { color: #666; font-size: 0.85rem; }
-    .form-actions { display: flex; gap: 1rem; margin-top: 1.5rem; }
-    
+    .product-form {
+      margin-bottom: 2rem;
+    }
+
+    .product-form h3 {
+      color: var(--clr-espresso);
+      margin-bottom: 1rem;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .form-group label {
+      font-weight: 600;
+      color: var(--clr-espresso);
+    }
+
+    .form-group input,
+    .form-group textarea {
+      padding: 0.75rem;
+      border: 1px solid rgba(44, 24, 16, 0.2);
+      border-radius: 8px;
+      font-family: inherit;
+      font-size: 0.95rem;
+    }
+
+    .form-group input:focus,
+    .form-group textarea:focus {
+      outline: none;
+      border-color: var(--clr-gold);
+      box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.1);
+    }
+
+    .form-group small {
+      color: #666;
+      font-size: 0.85rem;
+    }
+
+    .form-actions {
+      display: flex;
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+
     /* Image Input Group */
-    .image-input-group { display: flex; gap: 0.5rem; align-items: center; }
-    .image-input-group input { flex: 1; }
-    #image-preview img { max-width: 200px; max-height: 150px; border-radius: 8px; border: 1px solid rgba(44,24,16,0.2); }
-    
+    .image-input-group {
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+    }
+
+    .image-input-group input {
+      flex: 1;
+    }
+
+    #image-preview img {
+      max-width: 200px;
+      max-height: 150px;
+      border-radius: 8px;
+      border: 1px solid rgba(44, 24, 16, 0.2);
+    }
+
     /* Product List Styles */
-    .product-list { margin-top: 2rem; }
-    .product-list h3 { color: var(--clr-espresso); margin-bottom: 1rem; }
-    #products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1rem; }
-    .product-card { background: white; border: 1px solid rgba(44,24,16,0.1); border-radius: 8px; padding: 1rem; position: relative; }
-    .product-card h4 { color: var(--clr-espresso); margin-bottom: 0.5rem; }
-    .product-card .price { color: var(--clr-gold); font-weight: 600; margin-bottom: 0.5rem; }
-    .product-card .product-id { color: #666; font-size: 0.85rem; margin-bottom: 0.5rem; }
-    .product-card .badges { display: flex; gap: 0.5rem; margin-bottom: 0.75rem; }
-    .badge { padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.75rem; font-weight: 600; }
-    .badge.featured { background: var(--clr-gold-light); color: var(--clr-espresso); }
-    .badge.bestseller { background: var(--clr-gold); color: white; }
-    .product-card .actions { display: flex; gap: 0.5rem; }
-    .product-card button { padding: 0.5rem 1rem; border: none; border-radius: 4px; cursor: pointer; font-size: 0.85rem; }
-    .edit-btn { background: var(--clr-gold-light); color: var(--clr-espresso); }
-    .delete-btn { background: #dc3545; color: white; }
-    .product-card button:hover { opacity: 0.8; }
-    
+    .product-list {
+      margin-top: 2rem;
+    }
+
+    .product-list h3 {
+      color: var(--clr-espresso);
+      margin-bottom: 1rem;
+    }
+
+    #products-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1rem;
+    }
+
+    .product-card {
+      background: white;
+      border: 1px solid rgba(44, 24, 16, 0.1);
+      border-radius: 8px;
+      padding: 1rem;
+      position: relative;
+    }
+
+    .product-card h4 {
+      color: var(--clr-espresso);
+      margin-bottom: 0.5rem;
+    }
+
+    .product-card .price {
+      color: var(--clr-gold);
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+
+    .product-card .product-id {
+      color: #666;
+      font-size: 0.85rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .product-card .badges {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .badge {
+      padding: 0.25rem 0.5rem;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+
+    .badge.featured {
+      background: var(--clr-gold-light);
+      color: var(--clr-espresso);
+    }
+
+    .badge.bestseller {
+      background: var(--clr-gold);
+      color: white;
+    }
+
+    .product-card .actions {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .product-card button {
+      padding: 0.5rem 1rem;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 0.85rem;
+    }
+
+    .edit-btn {
+      background: var(--clr-gold-light);
+      color: var(--clr-espresso);
+    }
+
+    .delete-btn {
+      background: #dc3545;
+      color: white;
+    }
+
+    .product-card button:hover {
+      opacity: 0.8;
+    }
+
     @media (max-width: 768px) {
-      .form-row { grid-template-columns: 1fr; }
-      #products-grid { grid-template-columns: 1fr; }
+      .form-row {
+        grid-template-columns: 1fr;
+      }
+
+      #products-grid {
+        grid-template-columns: 1fr;
+      }
     }
   </style>
   <!-- Default PIN: shegye-admin — change ADMIN_PIN below before publishing if this file is public. -->
 </head>
+
 <body class="admin-page">
 
   <nav class="nav">
@@ -84,8 +309,8 @@
   <main class="admin-wrap" id="main-content" tabindex="-1">
     <h1 class="display" style="font-size: 2rem; color: var(--clr-espresso);">Catalog admin</h1>
     <p class="admin-hint">
-      Edit the product list as JSON. <strong>Save to browser</strong> stores an override in this device only and merges with <code>data/products.json</code> on the shop and product pages.
-      Use <strong>Download JSON</strong> to replace the file in your project, then deploy — that is how changes go live for all visitors.
+      Manage products stored on the backend. Use the form to add/update products, or the JSON editor to replace the full
+      catalog.
     </p>
 
     <div id="admin-gate">
@@ -138,7 +363,7 @@
                   <input type="file" id="image-upload" accept="image/*" hidden>
                 </label>
               </div>
-              <small>Enter the path manually or upload a new image (will be saved to assets/images/)</small>
+              <small>Enter a public image path or upload a new image (saved to assets/uploads/).</small>
               <div id="image-preview" style="margin-top: 0.5rem;"></div>
             </div>
 
@@ -225,8 +450,8 @@
       <div id="json-tab" class="tab-content">
         <textarea class="admin-json" id="admin-json" aria-label="Products JSON"></textarea>
         <div class="admin-actions">
-          <button type="button" class="btn-primary" id="admin-save">Save to browser</button>
-          <button type="button" class="btn-secondary" id="admin-reset">Clear browser override</button>
+          <button type="button" class="btn-primary" id="admin-save">Save to server</button>
+          <button type="button" class="btn-secondary" id="admin-reset">Reload from server</button>
           <button type="button" class="btn-secondary" id="admin-download">Download JSON</button>
           <label class="btn-secondary" style="cursor: pointer; margin: 0;">
             Import file
@@ -244,7 +469,11 @@
           <img src="logo.jpg" alt="Shegye Baltna Logo">
           <span data-en="Shegye Baltna" data-am="ሸግዬ ባልትና">Shegye Baltna</span>
         </a>
-        <p class="footer-description" data-en="Bringing authentic Ethiopian spices from our heritage to your table. Experience the rich flavors and traditions passed down through generations." data-am="እውነተኛ የኢትዮጵያ ቅመማ ቅመሞችን ከቅርሳችን ወደ ማዕዳትዎ በማምጣት። በትውልድ የተላለፉ የጣዕም ጣዕሞችን እና ባህሎቶችን ይሞክሩ።">Bringing authentic Ethiopian spices from our heritage to your table. Experience the rich flavors and traditions passed down through generations.</p>
+        <p class="footer-description"
+          data-en="Bringing authentic Ethiopian spices from our heritage to your table. Experience the rich flavors and traditions passed down through generations."
+          data-am="እውነተኛ የኢትዮጵያ ቅመማ ቅመሞችን ከቅርሳችን ወደ ማዕዳትዎ በማምጣት። በትውልድ የተላለፉ የጣዕም ጣዕሞችን እና ባህሎቶችን ይሞክሩ።">Bringing
+          authentic Ethiopian spices from our heritage to your table. Experience the rich flavors and traditions passed
+          down through generations.</p>
         <div class="footer-social">
           <a href="#" class="social-link" aria-label="Facebook">f</a>
           <a href="#" class="social-link" aria-label="Instagram">i</a>
@@ -262,13 +491,16 @@
         </div>
       </div>
 
-      
+
       <div class="footer-cta">
         <h3 data-en="Join Our Table" data-am="ማዕዳችንን ይቀላቀሉ">Join Our Table</h3>
-        <p data-en="Subscribe for exclusive recipes, new blends, and stories from Ethiopia." data-am="ለልዩ የምግብ አዘገጃጀቶች፣ አዳዲስ ቅልቅሎች እና ከኢትዮጵያ ለሚመጡ ታሪኮች ይመዝገቡ።">Subscribe for exclusive recipes, new blends, and stories from Ethiopia.</p>
+        <p data-en="Subscribe for exclusive recipes, new blends, and stories from Ethiopia."
+          data-am="ለልዩ የምግብ አዘገጃጀቶች፣ አዳዲስ ቅልቅሎች እና ከኢትዮጵያ ለሚመጡ ታሪኮች ይመዝገቡ።">Subscribe for exclusive recipes, new blends,
+          and stories from Ethiopia.</p>
         <div class="footer-newsletter">
           <form class="footer-newsletter-form" novalidate>
-            <input type="email" placeholder="Your email" data-en-placeholder="Your email" data-am-placeholder="ኢሜይልዎ" required>
+            <input type="email" placeholder="Your email" data-en-placeholder="Your email" data-am-placeholder="ኢሜይልዎ"
+              required>
             <button type="submit" data-en="Subscribe" data-am="ይመዝገቡ">Subscribe</button>
           </form>
         </div>
@@ -284,7 +516,6 @@
   <script>
     (function () {
       var ADMIN_PIN = 'shegye-admin';
-      var STORAGE_KEY = 'shegye_products_catalog';
       var SESSION_KEY = 'shegye_admin_ok';
       var currentEditId = null;
 
@@ -294,9 +525,15 @@
       }
 
       async function loadProducts() {
-        if (!window.Catalog) return [];
-        await Catalog.load();
-        return Catalog.products;
+        try {
+          const res = await fetch('/products', { cache: 'no-store' });
+          if (!res.ok) return [];
+          const data = await res.json();
+          return Array.isArray(data.products) ? data.products : [];
+        } catch (error) {
+          console.error('Failed to load products:', error);
+          return [];
+        }
       }
 
       async function loadIntoTextarea() {
@@ -308,7 +545,7 @@
       function switchTab(tabName) {
         document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
         document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
-        
+
         document.querySelector(`[data-tab="${tabName}"]`).classList.add('active');
         document.getElementById(`${tabName}-tab`).classList.add('active');
       }
@@ -316,15 +553,15 @@
       function renderProductsGrid(products) {
         const grid = document.getElementById('products-grid');
         grid.innerHTML = '';
-        
+
         products.forEach(product => {
           const card = document.createElement('div');
           card.className = 'product-card';
-          
+
           const badges = [];
           if (product.featured) badges.push('<span class="badge featured">Featured</span>');
           if (product.bestSeller) badges.push('<span class="badge bestseller">Best Seller</span>');
-          
+
           card.innerHTML = `
             <h4>${product.names.en}</h4>
             <div class="price">ETB ${product.price}</div>
@@ -335,13 +572,15 @@
               <button class="delete-btn" onclick="deleteProduct('${product.id}')">Delete</button>
             </div>
           `;
-          
+
           grid.appendChild(card);
         });
       }
 
       function clearForm() {
         document.getElementById('product-form').reset();
+        document.getElementById('image-upload').value = '';
+        document.getElementById('image-preview').innerHTML = '';
         currentEditId = null;
       }
 
@@ -363,12 +602,12 @@
         document.getElementById('product-culinary-am').value = product.culinary.am;
         document.getElementById('product-shipping-en').value = product.shipping.en;
         document.getElementById('product-shipping-am').value = product.shipping.am;
-        
+
         currentEditId = product.id;
         document.getElementById('product-id').scrollIntoView({ behavior: 'smooth' });
       }
 
-      window.editProduct = async function(productId) {
+      window.editProduct = async function (productId) {
         const products = await loadProducts();
         const product = products.find(p => p.id === productId);
         if (product) {
@@ -377,85 +616,25 @@
         }
       };
 
-      window.deleteProduct = async function(productId) {
+      window.deleteProduct = async function (productId) {
         if (!confirm('Are you sure you want to delete this product?')) return;
-        
-        const products = await loadProducts();
-        const updatedProducts = products.filter(p => p.id !== productId);
-        
-        const data = { products: updatedProducts };
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-        
+
+        const response = await fetch('/api/products/delete', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ id: productId })
+        });
+
+        if (!response.ok) {
+          alert('Failed to delete product.');
+          return;
+        }
+
         await loadIntoTextarea();
         alert('Product deleted successfully!');
       };
 
-      async function saveProduct(formData) {
-        const products = await loadProducts();
-        
-        const productData = {
-          id: formData.get('id'),
-          price: parseInt(formData.get('price')),
-          image: formData.get('image') || 'assets/images/product-jar.png',
-          featured: formData.get('featured') === 'on',
-          bestSeller: formData.get('bestseller') === 'on',
-          names: {
-            en: formData.get('name-en'),
-            am: formData.get('name-am')
-          },
-          shortDescription: {
-            en: formData.get('short-desc-en'),
-            am: formData.get('short-desc-am')
-          },
-          description: {
-            en: formData.get('desc-en'),
-            am: formData.get('desc-am')
-          },
-          ingredients: {
-            en: formData.get('ingredients-en'),
-            am: formData.get('ingredients-am')
-          },
-          culinary: {
-            en: formData.get('culinary-en'),
-            am: formData.get('culinary-am')
-          },
-          shipping: {
-            en: formData.get('shipping-en'),
-            am: formData.get('shipping-am')
-          }
-        };
-
-        if (currentEditId) {
-          const index = products.findIndex(p => p.id === currentEditId);
-          if (index !== -1) {
-            products[index] = productData;
-          }
-        } else {
-          if (products.some(p => p.id === productData.id)) {
-            alert('A product with this ID already exists!');
-            return false;
-          }
-          products.push(productData);
-        }
-
-        const data = { products };
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-        
-        await loadIntoTextarea();
-        clearForm();
-        
-        alert(currentEditId ? 'Product updated successfully!' : 'Product added successfully!');
-        return true;
-      }
-
-      // Tab switching
-      document.querySelectorAll('.tab-btn').forEach(btn => {
-        btn.addEventListener('click', () => switchTab(btn.dataset.tab));
-      });
-
-      // Form submission
-      document.getElementById('product-form').addEventListener('submit', async function (e) {
-        e.preventDefault();
+      async function saveProduct() {
         const formData = new FormData();
         formData.append('id', document.getElementById('product-id').value);
         formData.append('price', document.getElementById('product-price').value);
@@ -475,46 +654,68 @@
         formData.append('shipping-en', document.getElementById('product-shipping-en').value);
         formData.append('shipping-am', document.getElementById('product-shipping-am').value);
 
-        await saveProduct(formData);
+        const fileInput = document.getElementById('image-upload');
+        if (fileInput && fileInput.files && fileInput.files[0]) {
+          formData.append('imageFile', fileInput.files[0]);
+        }
+
+        const response = await fetch('/api/products', {
+          method: 'POST',
+          body: formData
+        });
+
+        if (!response.ok) {
+          alert('Failed to save product.');
+          return false;
+        }
+
+        const result = await response.json();
+        if (result.product && result.product.image) {
+          document.getElementById('product-image').value = result.product.image;
+        }
+
+        const wasEdit = Boolean(currentEditId);
+        await loadIntoTextarea();
+        clearForm();
+        alert(wasEdit ? 'Product updated successfully!' : 'Product added successfully!');
+        return true;
+      }
+
+      // Tab switching
+      document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.addEventListener('click', () => switchTab(btn.dataset.tab));
+      });
+
+      // Form submission
+      document.getElementById('product-form').addEventListener('submit', async function (e) {
+        e.preventDefault();
+        await saveProduct();
       });
 
       // Image upload handling
-      document.getElementById('image-upload').addEventListener('change', function(e) {
+      document.getElementById('image-upload').addEventListener('change', function (e) {
         const file = e.target.files[0];
         if (!file) return;
-        
+
         // Validate file type
         if (!file.type.startsWith('image/')) {
           alert('Please select an image file.');
           return;
         }
-        
+
         // Validate file size (max 5MB)
         if (file.size > 5 * 1024 * 1024) {
           alert('Image size should be less than 5MB.');
           return;
         }
-        
-        // Generate filename
-        const fileExtension = file.name.split('.').pop();
-        const timestamp = Date.now();
-        const fileName = `spice-${timestamp}.${fileExtension}`;
-        const imagePath = `assets/images/${fileName}`;
-        
-        // Update the image path input
-        document.getElementById('product-image').value = imagePath;
-        
+
         // Show preview
         const reader = new FileReader();
-        reader.onload = function(e) {
+        reader.onload = function (e) {
           const preview = document.getElementById('image-preview');
           preview.innerHTML = `<img src="${e.target.result}" alt="Preview">`;
         };
         reader.readAsDataURL(file);
-        
-        // Note: In a real implementation, you would need server-side code
-        // to actually save the file to the assets/images folder
-        alert(`Image "${fileName}" will be saved to ${imagePath}. Note: In a production environment, server-side code is needed to actually save the file.`);
       });
 
       // Clear form button
@@ -536,18 +737,25 @@
         try {
           var data = JSON.parse(raw);
           if (!data || !Array.isArray(data.products)) throw new Error('JSON must contain a "products" array.');
-          localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-          alert('Saved to this browser. Shop pages will use this until you clear the override.');
-          renderProductsGrid(data.products);
+          fetch('/api/products/bulk', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+          }).then(function (res) {
+            if (!res.ok) throw new Error('Save failed');
+            alert('Saved to server.');
+            renderProductsGrid(data.products);
+          }).catch(function (err) {
+            alert('Failed to save: ' + err.message);
+          });
         } catch (e) {
           alert('Invalid JSON: ' + e.message);
         }
       });
 
       document.getElementById('admin-reset').addEventListener('click', function () {
-        localStorage.removeItem(STORAGE_KEY);
         loadIntoTextarea();
-        alert('Browser override cleared. Reload the shop to pull from data/products.json only.');
+        alert('Reloaded from server.');
       });
 
       document.getElementById('admin-download').addEventListener('click', function () {
@@ -591,4 +799,5 @@
     })();
   </script>
 </body>
+
 </html>

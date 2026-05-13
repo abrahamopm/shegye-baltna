@@ -170,15 +170,7 @@ function setupAnimations() {
     });
   });
 
-  document.querySelectorAll('.btn-magnetic').forEach(btn => {
-    btn.addEventListener('mousemove', e => {
-      const rect = btn.getBoundingClientRect();
-      const x = e.clientX - rect.left - rect.width / 2;
-      const y = e.clientY - rect.top - rect.height / 2;
-      btn.style.transform = `translate(${x * 0.3}px, ${y * 0.3}px)`;
-    });
-    btn.addEventListener('mouseleave', () => btn.style.transform = 'translate(0, 0)');
-  });
+  // Removed magnetic button hover transform to keep buttons stable.
 
   document.querySelectorAll('.card-tilt').forEach(card => {
     card.addEventListener('mousemove', e => {
@@ -746,24 +738,33 @@ function setupContactForm() {
     submitBtn.style.opacity = '0.7';
 
     try {
-      // Simulate API call
-      await simulateApiCall();
-      
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify({ name, email, message })
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.error || 'Failed to send message.');
+      }
+
       showToast(
         currentLang === 'en' ? 'Thanks — your message has been sent successfully!' : 'እናመሰግናለን — መልእክትዎ በተሳካ ሁኔታ ተልኳል!',
         'success'
       );
-      
-      // Clear form and draft
+
       form.reset();
       clearFormDraft();
       clearFieldErrors(nameInput, emailInput, messageInput);
-      
     } catch (error) {
-      showToast(
-        currentLang === 'en' ? 'Sorry, something went wrong. Please try again.' : 'ይቅርታ፣ ስህተት ተፈጥሯል። እባክዎ በድጋሜ ይሞክሩ።',
-        'error'
-      );
+      const messageText = currentLang === 'en'
+        ? error.message || 'Sorry, something went wrong. Please try again.'
+        : 'ይቅርታ፣ ስህተት ተፈጥሯል። እባክዎ በድጋሜ ይሞክሩ።';
+      showToast(messageText, 'error');
     } finally {
       // Reset button state
       submitBtn.disabled = false;
@@ -871,12 +872,6 @@ function loadFormDraft(form) {
 
 function clearFormDraft() {
   localStorage.removeItem('contactFormDraft');
-}
-
-function simulateApiCall() {
-  return new Promise((resolve) => {
-    setTimeout(resolve, 1500); // Simulate network delay
-  });
 }
 
 function debounce(func, wait) {
@@ -1020,6 +1015,8 @@ function setupCheckoutFlow() {
     cart = [];
     saveCart();
   };
+
+  window.submitManualOrder = submitManualOrder;
 }
 
 function renderCheckoutSummary() {
@@ -1294,6 +1291,89 @@ function calculateOrderTotal() {
     tax: tax,
     total: total
   };
+}
+
+function buildOrderPayload(shippingDetails, paymentMethod, paymentEmail, paymentPhone) {
+  return {
+    userId: shippingDetails.email,
+    user: {
+      name: shippingDetails.full_name,
+      email: paymentEmail || shippingDetails.email,
+      phone: paymentPhone || '',
+      address: shippingDetails.address
+    },
+    shipping: shippingDetails,
+    items: cart.map(item => ({
+      id: item.id || item.name,
+      name: item.name,
+      price: parseFloat(item.price) || 0,
+      qty: parseInt(item.qty, 10) || 0,
+      total: (parseFloat(item.price) || 0) * (parseInt(item.qty, 10) || 0)
+    })),
+    totals: calculateOrderTotal(),
+    payment: {
+      status: 'pending',
+      method: paymentMethod || ''
+    },
+    createdAt: Date.now()
+  };
+}
+
+async function submitManualOrder() {
+  if (cart.length === 0) {
+    showToast(currentLang === 'en' ? 'Your basket is empty.' : 'ቅርጫትዎ ባዶ ነው።', 'warning');
+    return;
+  }
+
+  const shippingDetails = getShippingDetails();
+  if (!shippingDetails) {
+    showToast(currentLang === 'en' ? 'Please complete shipping details first.' : 'እባክዎ የማጓጓዣ ዝርዝሮችን ይሙሉ።', 'warning');
+    return;
+  }
+
+  const emailElement = document.getElementById('payment-email');
+  const phoneElement = document.getElementById('payment-phone');
+  const selectedMethodElement = document.querySelector('input[name="payment_method"]:checked');
+  const proofElement = document.getElementById('payment-proof');
+
+  const paymentEmail = emailElement ? sanitizeEmail(emailElement.value) : '';
+  const paymentPhone = phoneElement ? sanitizePhone(phoneElement.value) : '';
+  const paymentMethod = selectedMethodElement ? selectedMethodElement.value : '';
+  const proofFile = proofElement && proofElement.files ? proofElement.files[0] : null;
+
+  if (!paymentEmail) {
+    showToast(currentLang === 'en' ? 'Please enter a valid email for payment.' : 'ትክክለኛ የክፍያ ኢሜል ያስገቡ።', 'warning');
+    return;
+  }
+
+  if (!proofFile) {
+    showToast(currentLang === 'en' ? 'Please upload your payment proof.' : 'የክፍያ ማስረጃ ያክሉ።', 'warning');
+    return;
+  }
+
+  const orderPayload = buildOrderPayload(shippingDetails, paymentMethod, paymentEmail, paymentPhone);
+  const formData = new FormData();
+  formData.append('order', JSON.stringify(orderPayload));
+  formData.append('paymentProof', proofFile);
+
+  try {
+    const response = await fetch('/api/orders', {
+      method: 'POST',
+      body: formData
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}));
+      const message = errorData.error || 'Order submission failed.';
+      throw new Error(message);
+    }
+
+    showToast(currentLang === 'en' ? 'Order submitted for approval.' : 'ትዕዛዝዎ ለማረጋገጥ ተልኳል።', 'success');
+    completeOrder();
+  } catch (error) {
+    console.error('Manual order error:', error);
+    showToast(currentLang === 'en' ? error.message : 'ትዕዛዝ መላክ አልተሳካም።', 'error');
+  }
 }
 
 // Generate secure transaction reference

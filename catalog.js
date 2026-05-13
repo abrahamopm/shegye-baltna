@@ -1,8 +1,7 @@
 /**
- * Catalog: loads data/products.json and merges optional admin override from localStorage (shegye_products_catalog).
+ * Catalog: loads products from the backend only.
  */
 (function () {
-  const OVERRIDE_KEY = 'shegye_products_catalog';
 
   function esc(str) {
     if (str == null) return '';
@@ -11,28 +10,6 @@
     return d.innerHTML;
   }
 
-  function mergeById(baseList, overrideList) {
-    const map = new Map();
-    (baseList || []).forEach((p) => map.set(p.id, JSON.parse(JSON.stringify(p))));
-    (overrideList || []).forEach((p) => {
-      if (!p || !p.id) return;
-      const cur = map.get(p.id) || {};
-      map.set(p.id, deepMerge(cur, p));
-    });
-    return Array.from(map.values());
-  }
-
-  function deepMerge(a, b) {
-    const out = Array.isArray(a) ? [...a] : { ...a };
-    for (const k of Object.keys(b)) {
-      const bv = b[k];
-      const av = a[k];
-      if (bv && typeof bv === 'object' && !Array.isArray(bv) && bv !== null && typeof av === 'object' && av !== null && !Array.isArray(av)) {
-        out[k] = deepMerge(av, bv);
-      } else if (bv !== undefined) out[k] = bv;
-    }
-    return out;
-  }
 
   function cardHtml(p) {
     const href = `product.html?id=${encodeURIComponent(p.id)}`;
@@ -54,20 +31,11 @@
     async load() {
       let base = { products: [] };
       try {
-        const res = await fetch('data/products.json', { cache: 'no-store' });
+        const res = await fetch('/products', { cache: 'no-store' });
         if (res.ok) base = await res.json();
       } catch (_) {}
 
-      let merged = base.products || [];
-      try {
-        const raw = localStorage.getItem(OVERRIDE_KEY);
-        if (raw) {
-          const o = JSON.parse(raw);
-          if (o && Array.isArray(o.products)) merged = mergeById(merged, o.products);
-        }
-      } catch (_) {}
-
-      this.products = merged;
+      this.products = base.products || [];
       return this.products;
     },
 

@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Checkout | Shegye Baltna</title>
   <link rel="stylesheet" href="index.css">
 </head>
+
 <body>
 
   <div class="page-overlay"></div>
@@ -26,23 +28,33 @@
         <span class="lang-label lang-am">አማ</span>
       </div>
       <a href="cart.html" class="cart-icon" aria-label="Basket">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+          stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="9" cy="21" r="1"></circle>
+          <circle cx="20" cy="21" r="1"></circle>
+          <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+        </svg>
         <div class="cart-badge" style="display:none">0</div>
       </a>
     </div>
   </nav>
 
-  <section class="section-padding container checkout-flow-root" style="padding-top: 120px;" id="main-content" tabindex="-1">
-    <h1 class="display reveal-up" style="font-size: 2.5rem; margin-bottom: 1rem;" data-en="Checkout" data-am="ክፍያ">Checkout</h1>
+  <section class="section-padding container checkout-flow-root" style="padding-top: 120px;" id="main-content"
+    tabindex="-1">
+    <h1 class="display reveal-up" style="font-size: 2.5rem; margin-bottom: 1rem;" data-en="Checkout" data-am="ክፍያ">
+      Checkout</h1>
     <div id="checkout-cart-alert" class="checkout-cart-alert" hidden role="alert">
-      <p data-en="Your basket is empty. Add spices from the shop before you continue." data-am="ቅርጫትዎ ባዶ ነው። ከመቀጠልዎ በፊት ቅመሞችን ይጨምሩ።">Your basket is empty. Add spices from the shop before you continue.</p>
-      <a href="shop.html" class="btn-secondary btn-magnetic checkout-cart-alert-btn" data-en="Browse spices" data-am="ቅመሞችን ይመልከቱ">Browse spices</a>
+      <p data-en="Your basket is empty. Add spices from the shop before you continue."
+        data-am="ቅርጫትዎ ባዶ ነው። ከመቀጠልዎ በፊት ቅመሞችን ይጨምሩ።">Your basket is empty. Add spices from the shop before you
+        continue.</p>
+      <a href="shop.html" class="btn-secondary btn-magnetic checkout-cart-alert-btn" data-en="Browse spices"
+        data-am="ቅመሞችን ይመልከቱ">Browse spices</a>
     </div>
-    
+
     <div class="checkout-layout">
       <!-- LEFT COLUMN: FLOW -->
       <div class="checkout-flow">
-        
+
         <!-- STEP 1 -->
         <div class="checkout-step-panel active reveal-up">
           <div class="checkout-step-header">
@@ -65,7 +77,8 @@
               <label class="form-label" data-en="Delivery Address" data-am="የማድረሻ አድራሻ">Delivery Address</label>
               <div class="form-line"></div>
             </div>
-            <button class="btn-primary btn-magnetic" onclick="nextCheckoutStep(1)" data-en="Continue to Payment" data-am="ወደ ክፍያ ይቀጥሉ">Continue to Payment</button>
+            <button class="btn-primary btn-magnetic" onclick="nextCheckoutStep(1)" data-en="Continue to Payment"
+              data-am="ወደ ክፍያ ይቀጥሉ">Continue to Payment</button>
           </div>
         </div>
 
@@ -81,14 +94,16 @@
               <div class="payment-provider-header">
                 <div class="payment-provider-logo" role="img" aria-label="Chapa">
                   <svg width="40" height="40" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
-                    <rect width="40" height="40" rx="8" fill="#1a1a1a"/>
-                    <text x="20" y="28" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="white" text-anchor="middle">CHAPA</text>
+                    <rect width="40" height="40" rx="8" fill="#1a1a1a" />
+                    <text x="20" y="28" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="white"
+                      text-anchor="middle">CHAPA</text>
                   </svg>
                 </div>
                 <h4 data-en="Secure Payment by Chapa" data-am="በቻፓ ደህንነቱ የተጠበቀ ክፍያ">Secure Payment by Chapa</h4>
-                <p class="payment-provider-desc" data-en="Choose your preferred payment method below" data-am="ከዚህ ታች የምትመርጡትን የክፍያ ዘዴ ይምረጡ">Choose your preferred payment method below</p>
+                <p class="payment-provider-desc" data-en="Choose your preferred payment method below"
+                  data-am="ከዚህ ታች የምትመርጡትን የክፍያ ዘዴ ይምረጡ">Choose your preferred payment method below</p>
               </div>
-              
+
               <!-- Payment Methods Grid -->
               <div class="payment-methods-grid">
                 <label class="payment-method-card">
@@ -96,7 +111,8 @@
                   <div class="payment-method-content">
                     <div class="payment-method-icon">
                       <svg width="40" height="40" viewBox="0 0 24 24" fill="#00A651">
-                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                        <path
+                          d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
                       </svg>
                     </div>
                     <div class="payment-method-info">
@@ -111,8 +127,8 @@
                   <div class="payment-method-content">
                     <div class="payment-method-icon">
                       <svg width="40" height="40" viewBox="0 0 24 24" fill="#0066CC">
-                        <rect x="3" y="8" width="18" height="8" rx="1"/>
-                        <path d="M6 12h12" stroke="white" stroke-width="2"/>
+                        <rect x="3" y="8" width="18" height="8" rx="1" />
+                        <path d="M6 12h12" stroke="white" stroke-width="2" />
                       </svg>
                     </div>
                     <div class="payment-method-info">
@@ -127,8 +143,8 @@
                   <div class="payment-method-content">
                     <div class="payment-method-icon">
                       <svg width="40" height="40" viewBox="0 0 24 24" fill="#FF6B35">
-                        <circle cx="12" cy="12" r="10"/>
-                        <path d="M8 12h8M12 8v8" stroke="white" stroke-width="2"/>
+                        <circle cx="12" cy="12" r="10" />
+                        <path d="M8 12h8M12 8v8" stroke="white" stroke-width="2" />
                       </svg>
                     </div>
                     <div class="payment-method-info">
@@ -143,7 +159,7 @@
                   <div class="payment-method-content">
                     <div class="payment-method-icon">
                       <svg width="40" height="40" viewBox="0 0 24 24" fill="#7C4DFF">
-                        <path d="M12 2L2 7v10c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-10-5z"/>
+                        <path d="M12 2L2 7v10c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-10-5z" />
                       </svg>
                     </div>
                     <div class="payment-method-info">
@@ -158,9 +174,9 @@
                   <div class="payment-method-content">
                     <div class="payment-method-icon">
                       <svg width="40" height="40" viewBox="0 0 24 24" fill="#2E7D32">
-                        <rect x="3" y="5" width="18" height="14" rx="2"/>
-                        <circle cx="8" cy="12" r="2" fill="white"/>
-                        <circle cx="16" cy="12" r="2" fill="white"/>
+                        <rect x="3" y="5" width="18" height="14" rx="2" />
+                        <circle cx="8" cy="12" r="2" fill="white" />
+                        <circle cx="16" cy="12" r="2" fill="white" />
                       </svg>
                     </div>
                     <div class="payment-method-info">
@@ -175,7 +191,8 @@
                   <div class="payment-method-content">
                     <div class="payment-method-icon">
                       <svg width="40" height="40" viewBox="0 0 24 24" fill="#D32F2F">
-                        <path d="M19 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.11 0 2-.9 2-2V5c0-1.1-.89-2-2-2zm-7 14l-5-5 1.41-1.41L12 14.17l3.59-3.58L17 12l-5 5z"/>
+                        <path
+                          d="M19 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.11 0 2-.9 2-2V5c0-1.1-.89-2-2-2zm-7 14l-5-5 1.41-1.41L12 14.17l3.59-3.58L17 12l-5 5z" />
                       </svg>
                     </div>
                     <div class="payment-method-info">
@@ -200,24 +217,48 @@
                 <div class="form-line"></div>
               </div>
               <div class="payment-notice">
-                <p data-en="You will be redirected to complete your payment securely." data-am="ለክፍያዎን በደህንነት ለማጠናቀቅ ይዳሰሱዎታል።">You will be redirected to complete your payment securely.</p>
+                <p data-en="You will be redirected to complete your payment securely."
+                  data-am="ለክፍያዎን በደህንነት ለማጠናቀቅ ይዳሰሱዎታል።">You will be redirected to complete your payment securely.</p>
               </div>
             </div>
 
-            <div style="display:flex; gap:1rem; margin-top:2rem">
+            <div class="payment-form-fields" style="margin-top: 2rem;">
+              <div class="form-group">
+                <input type="file" class="form-input" id="payment-proof" accept="image/*,.pdf">
+                <label class="form-label" data-en="Upload Payment Proof" data-am="የክፍያ ማስረጃ ይስቀሉ">Upload Payment
+                  Proof</label>
+                <div class="form-line"></div>
+              </div>
+              <p style="margin: 0; color: #666; font-size: 0.9rem;"
+                data-en="Upload a screenshot or receipt if you paid by bank transfer."
+                data-am="በባንክ ማስተላለፊያ ከከፈሉ ስክሪንሻት ወይም ደረሰኝ ያክሉ።">Upload a screenshot or receipt if you paid by bank
+                transfer.</p>
+            </div>
+
+            <div style="display:flex; gap:1rem; margin-top:2rem; flex-wrap: wrap;">
               <button class="btn-secondary" onclick="nextCheckoutStep(0)" data-en="Back" data-am="ተመለስ">Back</button>
-              <button class="btn-primary btn-magnetic" onclick="initiateChapaPayment()" data-en="Proceed to Payment" data-am="ወደ ክፍያ ይቀጥሉ">Proceed to Payment</button>
+              <button class="btn-primary btn-magnetic" onclick="initiateChapaPayment()" data-en="Proceed to Payment"
+                data-am="ወደ ክፍያ ይቀጥሉ">Proceed to Payment</button>
+              <button class="btn-primary btn-magnetic" onclick="submitManualOrder()" data-en="Submit Order for Approval"
+                data-am="ለማረጋገጥ ትዕዛዝ ይላኩ">Submit Order for Approval</button>
             </div>
           </div>
         </div>
 
         <!-- SUCCESS -->
         <div class="checkout-step-panel" id="checkout-success" style="border:none; text-align:center;">
-          <div class="checkout-step-content" style="display:block; padding: 4rem 2rem; position:relative; overflow:hidden">
-            <div style="width:80px; height:80px; background:var(--clr-gold); color:white; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:3rem; margin:0 auto 2rem;">✓</div>
-            <h2 class="display" style="font-size:2.5rem; margin-bottom:1rem" data-en="Order Confirmed!" data-am="ትዕዛዙ ተረጋግጧል!">Order Confirmed!</h2>
-            <p style="color:#666; margin-bottom:2rem" data-en="Thank you for your purchase. We are preparing your spices." data-am="ስለገዙን እናመሰግናለን። ቅመሞችዎን እያዘጋጀን ነው።">Thank you for your purchase. We are preparing your spices.</p>
-            <a href="shop.html" class="btn-primary btn-magnetic" data-en="Continue Shopping" data-am="ግዢዎን ይቀጥሉ">Continue Shopping</a>
+          <div class="checkout-step-content"
+            style="display:block; padding: 4rem 2rem; position:relative; overflow:hidden">
+            <div
+              style="width:80px; height:80px; background:var(--clr-gold); color:white; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:3rem; margin:0 auto 2rem;">
+              ✓</div>
+            <h2 class="display" style="font-size:2.5rem; margin-bottom:1rem" data-en="Order Confirmed!"
+              data-am="ትዕዛዙ ተረጋግጧል!">Order Confirmed!</h2>
+            <p style="color:#666; margin-bottom:2rem"
+              data-en="Thank you for your purchase. We are preparing your spices."
+              data-am="ስለገዙን እናመሰግናለን። ቅመሞችዎን እያዘጋጀን ነው።">Thank you for your purchase. We are preparing your spices.</p>
+            <a href="shop.html" class="btn-primary btn-magnetic" data-en="Continue Shopping"
+              data-am="ግዢዎን ይቀጥሉ">Continue Shopping</a>
           </div>
         </div>
 
@@ -225,9 +266,11 @@
 
       <!-- RIGHT COLUMN: SUMMARY -->
       <div class="checkout-summary-sidebar reveal-left">
-        <h3 class="display" style="margin-bottom: 1.5rem; border-bottom: 1px solid var(--clr-gold-light); padding-bottom: 0.5rem;" data-en="Order Summary" data-am="የትዕዛዝ ማጠቃለያ">Order Summary</h3>
+        <h3 class="display"
+          style="margin-bottom: 1.5rem; border-bottom: 1px solid var(--clr-gold-light); padding-bottom: 0.5rem;"
+          data-en="Order Summary" data-am="የትዕዛዝ ማጠቃለያ">Order Summary</h3>
         <div id="checkout-summary-items"></div>
-        
+
         <div style="margin-top: 2rem;">
           <div class="summary-line">
             <span data-en="Subtotal" data-am="ንዑስ ድምር">Subtotal</span><span id="checkout-sub">0 ETB</span>
@@ -253,7 +296,11 @@
           <img src="logo.jpg" alt="Shegye Baltna Logo">
           <span data-en="Shegye Baltna" data-am="ሸግዬ ባልትና">Shegye Baltna</span>
         </a>
-        <p class="footer-description" data-en="Bringing authentic Ethiopian spices from our heritage to your table. Experience the rich flavors and traditions passed down through generations." data-am="እውነተኛ የኢትዮጵያ ቅመማ ቅመሞችን ከቅርሳችን ወደ ማዕዳትዎ በማምጣት። በትውልድ የተላለፉ የጣዕም ጣዕሞችን እና ባህሎቶችን ይሞክሩ።">Bringing authentic Ethiopian spices from our heritage to your table. Experience the rich flavors and traditions passed down through generations.</p>
+        <p class="footer-description"
+          data-en="Bringing authentic Ethiopian spices from our heritage to your table. Experience the rich flavors and traditions passed down through generations."
+          data-am="እውነተኛ የኢትዮጵያ ቅመማ ቅመሞችን ከቅርሳችን ወደ ማዕዳትዎ በማምጣት። በትውልድ የተላለፉ የጣዕም ጣዕሞችን እና ባህሎቶችን ይሞክሩ።">Bringing
+          authentic Ethiopian spices from our heritage to your table. Experience the rich flavors and traditions passed
+          down through generations.</p>
         <div class="footer-social">
           <a href="#" class="social-link" aria-label="Facebook">f</a>
           <a href="#" class="social-link" aria-label="Instagram">i</a>
@@ -271,13 +318,16 @@
         </div>
       </div>
 
-      
+
       <div class="footer-cta">
         <h3 data-en="Join Our Table" data-am="ማዕዳችንን ይቀላቀሉ">Join Our Table</h3>
-        <p data-en="Subscribe for exclusive recipes, new blends, and stories from Ethiopia." data-am="ለልዩ የምግብ አዘገጃጀቶች፣ አዳዲስ ቅልቅሎች እና ከኢትዮጵያ ለሚመጡ ታሪኮች ይመዝገቡ።">Subscribe for exclusive recipes, new blends, and stories from Ethiopia.</p>
+        <p data-en="Subscribe for exclusive recipes, new blends, and stories from Ethiopia."
+          data-am="ለልዩ የምግብ አዘገጃጀቶች፣ አዳዲስ ቅልቅሎች እና ከኢትዮጵያ ለሚመጡ ታሪኮች ይመዝገቡ።">Subscribe for exclusive recipes, new blends,
+          and stories from Ethiopia.</p>
         <div class="footer-newsletter">
           <form class="footer-newsletter-form" novalidate>
-            <input type="email" placeholder="Your email" data-en-placeholder="Your email" data-am-placeholder="ኢሜይልዎ" required>
+            <input type="email" placeholder="Your email" data-en-placeholder="Your email" data-am-placeholder="ኢሜይልዎ"
+              required>
             <button type="submit" data-en="Subscribe" data-am="ይመዝገቡ">Subscribe</button>
           </form>
         </div>
@@ -291,4 +341,5 @@
 
   <script src="app.js"></script>
 </body>
+
 </html>

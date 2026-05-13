@@ -1,0 +1,109 @@
+[
+  {
+    "id": "order-1778600319132-0d887dc2",
+    "createdAt": "2026-05-12T15:38:39.480Z",
+    "updatedAt": "2026-05-12T15:42:52.195Z",
+    "status": "approved",
+    "userId": "kalmulmath@gmail.com",
+    "user": {
+      "name": "Kaleab Mulugeta",
+      "email": "kalmulmath@gmail.com",
+      "phone": "0911223344",
+      "address": "Addis Ababa"
+    },
+    "items": [
+      {
+        "id": "berbere",
+        "name": "Berbere",
+        "price": 158,
+        "qty": 1,
+        "total": 158
+      }
+    ],
+    "totals": {
+      "subtotal": 158,
+      "shipping": 10,
+      "tax": 3.95,
+      "total": 171.95
+    },
+    "payment": {
+      "status": "pending",
+      "method": "cbe-birr",
+      "proof": {
+        "fieldName": "paymentProof",
+        "originalName": "Purple and Black Metallic Blob Tech Company Presentation.pdf",
+        "storedName": "1778600319141-f12ee2-Purple and Black Metallic Blob Tech Company Presentation.pdf",
+        "relativePath": "data/uploads/order-1778600319132-0d887dc2/1778600319141-f12ee2-Purple and Black Metallic Blob Tech Company Presentation.pdf",
+        "size": 12362637,
+        "mimeType": "application/pdf"
+      },
+      "note": ""
+    },
+    "shipping": {
+      "full_name": "Kaleab Mulugeta",
+      "email": "kalmulmath@gmail.com",
+      "address": "Addis Ababa"
+    },
+    "meta": {
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36",
+      "referrer": "http://localhost:3000/checkout.html"
+    }
+  },
+  {
+    "id": "order-1778659558573-747e6c72",
+    "createdAt": "2026-05-13T08:05:59.008Z",
+    "updatedAt": "2026-05-13T08:05:59.008Z",
+    "status": "pending",
+    "userId": "kalmulmath@gmail.com",
+    "user": {
+      "name": "Kaleab Mulugeta",
+      "email": "kalmulmath@gmail.com",
+      "phone": "0911220732",
+      "address": "Addis Ababa"
+    },
+    "items": [
+      {
+        "id": "shiro",
+        "name": "Shiro",
+        "price": 120,
+        "qty": 1,
+        "total": 120
+      },
+      {
+        "id": "Shiro",
+        "name": "Shiro",
+        "price": 120,
+        "qty": 3,
+        "total": 360
+      }
+    ],
+    "totals": {
+      "subtotal": 480,
+      "shipping": 10,
+      "tax": 12,
+      "total": 502
+    },
+    "payment": {
+      "status": "pending",
+      "method": "boa",
+      "proof": {
+        "fieldName": "paymentProof",
+        "originalName": "1778600319141-f12ee2-Purple and Black Metallic Blob Tech Company Presentation.pdf",
+        "storedName": "1778659558609-0e40e2-1778600319141-f12ee2-Purple and Black Metallic Blob Tech Company Presentation.pdf",
+        "relativePath": "data/uploads/order-1778659558573-747e6c72/1778659558609-0e40e2-1778600319141-f12ee2-Purple and Black Metallic Blob Tech Company Presentation.pdf",
+        "size": 12362637,
+        "mimeType": "application/pdf"
+      },
+      "note": ""
+    },
+    "shipping": {
+      "full_name": "Kaleab Mulugeta",
+      "email": "kalmulmath@gmail.com",
+      "address": "Addis Ababa"
+    },
+    "meta": {
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36",
+      "referrer": "http://localhost:3000/checkout.html"
+    }
+  }
+]
