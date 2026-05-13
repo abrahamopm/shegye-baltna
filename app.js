@@ -1,4 +1,22 @@
+document.documentElement.classList.add('js-animations');
+
 let currentLang = localStorage.getItem('shegye_lang') || 'en';
+const scrollLocks = new Set();
+
+function getPageType() {
+  return document.body?.dataset.pageType || 'brand';
+}
+
+function isCommercePage() {
+  return getPageType() === 'commerce';
+}
+
+function setScrollLock(reason, locked) {
+  if (!reason) return;
+  if (locked) scrollLocks.add(reason);
+  else scrollLocks.delete(reason);
+  document.body?.classList.toggle('is-scroll-locked', scrollLocks.size > 0);
+}
 
 document.addEventListener('DOMContentLoaded', async () => {
   if (window.Catalog) await Catalog.load();
@@ -152,6 +170,13 @@ function updateToggleUI() {
 
 /* --- ANIMATION MODULE --- */
 function setupAnimations() {
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    document.querySelectorAll('.reveal-up, .reveal-left, .reveal-right, .reveal-scale').forEach((el) => {
+      el.classList.add('active');
+    });
+    return;
+  }
+
   const observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('active'); });
   }, { threshold: 0.1 });
@@ -230,8 +255,10 @@ function revealHero() {
 
 function setupCursor() {
   if (document.body.classList.contains('admin-page')) return;
+  if (isCommercePage()) return;
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
   if (window.matchMedia("(max-width: 768px)").matches) return;
+  document.body.classList.add('custom-cursor-active');
   const dot = document.createElement('div'); dot.className = 'cursor-dot';
   const ring = document.createElement('div'); ring.className = 'cursor-ring';
   document.body.appendChild(dot); document.body.appendChild(ring);
@@ -288,24 +315,31 @@ function setupMobileNav() {
   btn.setAttribute('data-am', 'ሜኑ');
   btn.textContent = currentLang === 'en' ? 'Menu' : 'ሜኑ';
 
+  const closeNav = () => {
+    nav.classList.remove('nav-mobile-open');
+    btn.setAttribute('aria-expanded', 'false');
+    setScrollLock('nav', false);
+  };
+
   btn.addEventListener('click', () => {
     const open = nav.classList.toggle('nav-mobile-open');
     btn.setAttribute('aria-expanded', open ? 'true' : 'false');
-    document.body.style.overflow = open ? 'hidden' : '';
+    setScrollLock('nav', open);
   });
 
   nav.insertBefore(btn, links);
 
   links.querySelectorAll('a').forEach((a) => {
-    a.addEventListener('click', () => {
-      nav.classList.remove('nav-mobile-open');
-      btn.setAttribute('aria-expanded', 'false');
-      document.body.style.overflow = '';
-    });
+    a.addEventListener('click', closeNav);
+  });
+
+  window.addEventListener('resize', () => {
+    if (window.innerWidth > 900) closeNav();
   });
 }
 
 function setupPageTransitions() {
+  if (isCommercePage()) return;
   document.querySelectorAll('a[href]:not([target="_blank"]):not([href^="#"]):not([href^="javascript"])').forEach(link => {
     link.addEventListener('click', e => {
       e.preventDefault();
@@ -471,7 +505,7 @@ function toggleCartDrawer(show) {
   drawer.setAttribute('aria-hidden', show ? 'false' : 'true');
 
   updateDrawerCheckoutState();
-  document.body.style.overflow = show ? 'hidden' : '';
+  setScrollLock('cart', show);
 }
 
 function addToCart(item) {
@@ -1057,6 +1091,213 @@ function renderCheckoutSummary() {
   if (shipEl) shipEl.textContent = ship.toFixed(2) + ' ETB';
   if (taxEl) taxEl.textContent = tax.toFixed(2) + ' ETB';
   if (totalEl) totalEl.textContent = (sub + ship + tax).toFixed(2) + ' ETB';
+}
+
+function setupCheckoutFlow() {
+  const root = document.querySelector('.checkout-flow-root');
+  if (!root) return;
+
+  const stepPanels = Array.from(root.querySelectorAll('.checkout-step-panel[data-step]'));
+  const shippingFields = root.querySelectorAll('#fname, #femail, #faddr');
+  const paymentMethodInputs = root.querySelectorAll('input[name="payment_method"]');
+  const paymentProofInput = document.getElementById('payment-proof');
+  const paymentProofName = document.getElementById('payment-proof-name');
+  const paymentModeNote = document.getElementById('payment-mode-note')?.querySelector('p');
+
+  function flagField(field, invalid) {
+    const group = field?.closest('.form-group');
+    if (!group) return;
+    group.classList.toggle('has-error', invalid);
+    if (invalid) {
+      group.style.animation = 'shake 0.4s';
+      setTimeout(() => {
+        group.style.animation = '';
+      }, 400);
+    }
+  }
+
+  function activateCheckoutStep(stepIndex) {
+    stepPanels.forEach((panel) => {
+      const panelIndex = Number(panel.dataset.step);
+      panel.classList.toggle('active', panelIndex === stepIndex);
+      panel.classList.toggle('is-complete', panelIndex < stepIndex && panelIndex < 2);
+    });
+
+    if (stepIndex === 1) setupPaymentForm();
+    root.querySelector('.checkout-flow')?.scrollIntoView({ block: 'start', behavior: 'smooth' });
+  }
+
+  function validateShippingStep() {
+    if (cart.length === 0) {
+      showToast(
+        currentLang === 'en' ? 'Your basket is empty. Add spices before continuing.' : 'ቅርጫትዎ ባዶ ነው።',
+        'warning'
+      );
+      return false;
+    }
+
+    let firstInvalid = null;
+    shippingFields.forEach((field) => {
+      const isBlank = !field.value.trim();
+      flagField(field, isBlank);
+      if (isBlank && !firstInvalid) firstInvalid = field;
+    });
+
+    const emailField = document.getElementById('femail');
+    if (emailField && emailField.value.trim() && !sanitizeEmail(emailField.value)) {
+      flagField(emailField, true);
+      if (!firstInvalid) firstInvalid = emailField;
+      showToast(currentLang === 'en' ? 'Please enter a valid email.' : 'ትክክለኛ ኢሜል ያስገቡ።', 'warning');
+    }
+
+    if (firstInvalid) {
+      firstInvalid.focus();
+      return false;
+    }
+
+    return true;
+  }
+
+  function syncPaymentModeUI() {
+    const selectedMethod = root.querySelector('input[name="payment_method"]:checked');
+    const isManual = selectedMethod?.dataset.paymentMode === 'manual';
+    const manualButton = root.querySelector('[data-manual-submit]');
+    const onlineButton = root.querySelector('[data-payment-submit]');
+    const proofPanel = document.getElementById('payment-proof-panel');
+
+    if (proofPanel) proofPanel.hidden = !isManual;
+    if (paymentProofInput) paymentProofInput.required = isManual;
+    if (manualButton) manualButton.hidden = !isManual;
+    if (onlineButton) onlineButton.hidden = isManual;
+
+    if (paymentModeNote) {
+      paymentModeNote.textContent = isManual
+        ? (currentLang === 'en'
+          ? 'After you complete a bank transfer, upload your receipt and send the order for approval.'
+          : 'የባንክ ማስተላለፊያውን ከጨረሱ በኋላ ደረሰኙን ያክሉ እና ትዕዛዙን ለማረጋገጥ ይላኩ።')
+        : (currentLang === 'en'
+          ? 'You will be redirected to Chapa to complete this payment securely.'
+          : 'ይህን ክፍያ በደህንነት ለማጠናቀቅ ወደ Chapa ይተላለፋሉ።');
+    }
+  }
+
+  function syncProofFileName() {
+    if (!paymentProofInput || !paymentProofName) return;
+    const file = paymentProofInput.files && paymentProofInput.files[0];
+    paymentProofName.textContent = file
+      ? file.name
+      : (currentLang === 'en' ? 'No file selected' : 'ምንም ፋይል አልተመረጠም');
+  }
+
+  renderCheckoutSummary();
+
+  shippingFields.forEach((field) => {
+    field.addEventListener('input', () => flagField(field, false));
+  });
+
+  paymentMethodInputs.forEach((input) => {
+    input.addEventListener('change', syncPaymentModeUI);
+  });
+  paymentProofInput?.addEventListener('change', syncProofFileName);
+
+  root.addEventListener('click', (event) => {
+    const nextButton = event.target.closest('[data-checkout-next]');
+    if (nextButton) {
+      if (validateShippingStep()) activateCheckoutStep(Number(nextButton.dataset.checkoutNext));
+      return;
+    }
+
+    const backButton = event.target.closest('[data-checkout-back]');
+    if (backButton) {
+      activateCheckoutStep(Number(backButton.dataset.checkoutBack));
+      return;
+    }
+
+    if (event.target.closest('[data-payment-submit]')) {
+      initiateChapaPayment();
+      return;
+    }
+
+    if (event.target.closest('[data-manual-submit]')) {
+      submitManualOrder();
+    }
+  });
+
+  window.completeOrder = function () {
+    if (cart.length === 0) {
+      showToast(currentLang === 'en' ? 'Nothing to order. Your basket is empty.' : 'ቅርጫትዎ ባዶ ነው።', 'warning');
+      return;
+    }
+
+    activateCheckoutStep(2);
+    const container = document.getElementById('checkout-success').querySelector('.checkout-step-content');
+    for (let i = 0; i < 40; i++) {
+      const c = document.createElement('div');
+      c.className = 'confetti';
+      c.style.left = Math.random() * 100 + '%';
+      c.style.top = Math.random() * 100 + '%';
+      c.style.backgroundColor = Math.random() > 0.5 ? 'var(--clr-gold)' : 'var(--clr-berbere)';
+      const x = (Math.random() - 0.5) * 200;
+      const y = (Math.random() - 0.5) * 200;
+      c.style.animation = 'float 1s ease-out forwards';
+      c.style.transform = `translate(${x}px, ${y}px) rotate(${Math.random() * 360}deg)`;
+      container.appendChild(c);
+    }
+
+    cart = [];
+    saveCart();
+  };
+
+  syncPaymentModeUI();
+  syncProofFileName();
+}
+
+function renderCheckoutSummary() {
+  const list = document.getElementById('checkout-summary-items');
+  if (!list) return;
+
+  const alertBox = document.getElementById('checkout-cart-alert');
+  if (alertBox) alertBox.hidden = cart.length > 0;
+
+  document.querySelectorAll('[data-checkout-next], [data-payment-submit], [data-manual-submit]').forEach((button) => {
+    const disable = cart.length === 0;
+    button.classList.toggle('is-disabled', disable);
+    button.toggleAttribute('disabled', disable);
+    button.setAttribute('aria-disabled', disable ? 'true' : 'false');
+  });
+
+  if (cart.length === 0) {
+    list.innerHTML = `<p data-en="Basket is empty" data-am="ቅርጫት ባዶ ነው">${currentLang === 'en' ? 'Basket is empty' : 'ቅርጫት ባዶ ነው'}</p>`;
+    const sub = document.getElementById('checkout-sub');
+    const ship = document.getElementById('checkout-ship');
+    const tax = document.getElementById('checkout-tax');
+    const total = document.getElementById('checkout-total');
+    if (sub) sub.textContent = '0 ETB';
+    if (ship) ship.textContent = '0 ETB';
+    if (tax) tax.textContent = '0 ETB';
+    if (total) total.textContent = '0 ETB';
+    return;
+  }
+
+  list.innerHTML = cart.map(item => `
+    <div class="checkout-summary-item">
+      <div class="checkout-summary-item-name">
+        <span>${escapeHtml(item.name)}</span>
+        <span class="checkout-summary-item-qty">${item.qty} ${currentLang === 'en' ? 'item(s)' : 'እቃ'}</span>
+      </div>
+      <span>${(item.price * item.qty).toFixed(2)} ETB</span>
+    </div>
+  `).join('');
+
+  const { sub, ship, tax, total } = cartTotalsDetailed();
+  const subEl = document.getElementById('checkout-sub');
+  const shipEl = document.getElementById('checkout-ship');
+  const taxEl = document.getElementById('checkout-tax');
+  const totalEl = document.getElementById('checkout-total');
+  if (subEl) subEl.textContent = sub.toFixed(2) + ' ETB';
+  if (shipEl) shipEl.textContent = ship.toFixed(2) + ' ETB';
+  if (taxEl) taxEl.textContent = tax.toFixed(2) + ' ETB';
+  if (totalEl) totalEl.textContent = total.toFixed(2) + ' ETB';
 }
 
 /* --- CHAPA PAYMENT MODULE --- */
@@ -1749,6 +1990,125 @@ function setupPaymentForm() {
       phoneInput.style.borderColor = isValid ? '' : '#e74c3c';
     };
     
+    addPaymentEventListener(phoneInput, 'input', phoneHandler);
+    addPaymentEventListener(phoneInput, 'blur', phoneHandler);
+  }
+}
+
+function setButtonBusy(button, busy, fallbackLabel) {
+  if (!button) return;
+  if (!button.dataset.originalLabel) {
+    button.dataset.originalLabel = button.textContent.trim();
+  }
+  button.classList.toggle('is-loading', busy);
+  button.disabled = busy;
+  button.setAttribute('aria-disabled', busy ? 'true' : 'false');
+  button.textContent = busy
+    ? (currentLang === 'en' ? 'Processing...' : 'በሂደት ላይ...')
+    : (button.getAttribute(`data-${currentLang}`) || fallbackLabel || button.dataset.originalLabel);
+}
+
+function updatePaymentUI(isProcessing) {
+  const paymentButton = document.querySelector('[data-payment-submit]');
+  const paymentForm = document.querySelector('.payment-form-fields');
+  setButtonBusy(paymentButton, isProcessing, currentLang === 'en' ? 'Proceed to Payment' : 'ወደ ክፍያ ይቀጥሉ');
+  paymentForm?.classList.toggle('payment-processing', isProcessing);
+}
+
+async function submitManualOrder() {
+  const submitButton = document.querySelector('[data-manual-submit]');
+  setButtonBusy(submitButton, true, currentLang === 'en' ? 'Submit Order for Approval' : 'ለማረጋገጥ ትዕዛዝ ይላኩ');
+
+  try {
+    if (cart.length === 0) {
+      showToast(currentLang === 'en' ? 'Your basket is empty.' : 'ቅርጫትዎ ባዶ ነው።', 'warning');
+      return;
+    }
+
+    const shippingDetails = getShippingDetails();
+    if (!shippingDetails) {
+      showToast(currentLang === 'en' ? 'Please complete shipping details first.' : 'እባክዎ የማጓጓዣ ዝርዝሮችን ይሙሉ።', 'warning');
+      return;
+    }
+
+    const emailElement = document.getElementById('payment-email');
+    const phoneElement = document.getElementById('payment-phone');
+    const selectedMethodElement = document.querySelector('input[name="payment_method"]:checked');
+    const proofElement = document.getElementById('payment-proof');
+
+    const paymentEmail = emailElement ? sanitizeEmail(emailElement.value) : '';
+    const paymentPhone = phoneElement ? sanitizePhone(phoneElement.value) : '';
+    const paymentMethod = selectedMethodElement ? selectedMethodElement.value : '';
+    const proofFile = proofElement && proofElement.files ? proofElement.files[0] : null;
+
+    if (!paymentEmail) {
+      showToast(currentLang === 'en' ? 'Please enter a valid email for payment.' : 'ትክክለኛ የክፍያ ኢሜል ያስገቡ።', 'warning');
+      emailElement?.focus();
+      return;
+    }
+
+    if (!proofFile) {
+      showToast(currentLang === 'en' ? 'Please upload your payment proof.' : 'የክፍያ ማስረጃ ያክሉ።', 'warning');
+      proofElement?.focus();
+      return;
+    }
+
+    const orderPayload = buildOrderPayload(shippingDetails, paymentMethod, paymentEmail, paymentPhone);
+    const formData = new FormData();
+    formData.append('order', JSON.stringify(orderPayload));
+    formData.append('paymentProof', proofFile);
+
+    const response = await fetch('/api/orders', {
+      method: 'POST',
+      body: formData
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}));
+      throw new Error(errorData.error || 'Order submission failed.');
+    }
+
+    showToast(currentLang === 'en' ? 'Order submitted for approval.' : 'ትዕዛዝዎ ለማረጋገጥ ተልኳል።', 'success');
+    completeOrder();
+  } catch (error) {
+    console.error('Manual order error:', error);
+    showToast(currentLang === 'en' ? error.message : 'ትዕዛዝ መላክ አልተሳካም።', 'error');
+  } finally {
+    setButtonBusy(submitButton, false, currentLang === 'en' ? 'Submit Order for Approval' : 'ለማረጋገጥ ትዕዛዝ ይላኩ');
+  }
+}
+
+function setupPaymentForm() {
+  cleanupPaymentEventListeners();
+  autoPopulatePaymentForm();
+
+  const emailInput = document.getElementById('payment-email');
+  const phoneInput = document.getElementById('payment-phone');
+  const shippingEmail = document.getElementById('femail');
+
+  if (shippingEmail && emailInput && !emailInput.value) {
+    emailInput.value = shippingEmail.value.trim();
+  }
+
+  if (emailInput) {
+    const emailHandler = () => {
+      const group = emailInput.closest('.form-group');
+      const isValid = !emailInput.value.trim() || !!sanitizeEmail(emailInput.value);
+      group?.classList.toggle('has-error', !isValid);
+    };
+
+    addPaymentEventListener(emailInput, 'input', emailHandler);
+    addPaymentEventListener(emailInput, 'blur', emailHandler);
+  }
+
+  if (phoneInput) {
+    const phoneHandler = () => {
+      const group = phoneInput.closest('.form-group');
+      const value = phoneInput.value.replace(/\s/g, '');
+      const isValid = !value || /^\+2519[0-9]{8}$|^09[0-9]{8}$/.test(value);
+      group?.classList.toggle('has-error', !isValid);
+    };
+
     addPaymentEventListener(phoneInput, 'input', phoneHandler);
     addPaymentEventListener(phoneInput, 'blur', phoneHandler);
   }

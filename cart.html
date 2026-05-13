@@ -1,25 +1,17 @@
 <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Basket | Shegye Baltna</title>
   <link rel="stylesheet" href="index.css">
-  <style>
-    .nav { background: rgba(44, 24, 16, 0.95); backdrop-filter: blur(20px); }
-    body { padding-top: 120px; }
-    .cart-layout { display: flex; gap: 4rem; flex-wrap: wrap; margin-bottom: 4rem; }
-    .cart-items { flex: 2; min-width: 300px; }
-    .cart-summary { flex: 1; min-width: 300px; background: white; padding: 2rem; border-radius: 8px; border: 1px solid var(--clr-gold-light); height: fit-content; }
-    .summary-line { display: flex; justify-content: space-between; margin-bottom: 1rem; }
-    .summary-total { font-size: 1.5rem; font-weight: bold; border-top: 2px solid var(--clr-espresso); padding-top: 1rem; margin-top: 1rem; }
-  </style>
 </head>
-<body>
+<body data-page-type="commerce">
 
   <div class="page-overlay"></div>
 
-  <nav class="nav">
+  <nav class="nav nav-solid">
     <a href="index.html" class="nav-logo">
       <img src="logo.jpg" alt="Shegye Baltna Logo">
       <span data-en="Shegye Baltna" data-am="ሸግዬ ባልትና">Shegye Baltna</span>
@@ -43,7 +35,7 @@
     </div>
   </nav>
 
-  <section class="container" id="main-content" tabindex="-1">
+  <section class="container" id="main-content" tabindex="-1" style="padding-top: 120px;">
     <h1 class="reveal-up" style="margin-bottom: 2rem" data-en="Basket" data-am="ቅርጫት">Basket</h1>
     
     <div class="cart-layout">
@@ -51,7 +43,7 @@
         <!-- Rendered by JS -->
       </div>
       
-      <div class="cart-summary reveal-left">
+      <div class="cart-summary summary-card reveal-left">
         <h3 style="margin-bottom:1.5rem" data-en="Order Summary" data-am="የትዕዛዝ ማጠቃለያ">Order Summary</h3>
         <div class="summary-line">
           <span data-en="Subtotal" data-am="ንዑስ ድምር">Subtotal</span>
@@ -70,7 +62,7 @@
           <span id="cart-total" style="color:var(--clr-berbere)">0.00 ETB</span>
         </div>
         
-        <a href="checkout.html" class="btn-primary btn-magnetic" style="display:block; text-align:center; margin-top:2rem;" data-en="Continue to Payment" data-am="ወደ ክፍያ ይቀጥሉ">Continue to Payment</a>
+        <a href="checkout.html" class="btn-primary btn-magnetic" style="display:flex; margin-top:2rem;" data-en="Continue to Payment" data-am="ወደ ክፍያ ይቀጥሉ">Continue to Payment</a>
       </div>
     </div>
   </section>
