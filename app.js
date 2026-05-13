@@ -195,8 +195,6 @@ function setupAnimations() {
     });
   });
 
-  // Removed magnetic button hover transform to keep buttons stable.
-
   document.querySelectorAll('.card-tilt').forEach(card => {
     card.addEventListener('mousemove', e => {
       const rect = card.getBoundingClientRect();
@@ -731,27 +729,22 @@ function setupContactForm() {
   if (!form || form.dataset.bound) return;
   form.dataset.bound = '1';
 
-  // Load form draft from localStorage
   loadFormDraft(form);
 
-  // Real-time validation
   const nameInput = form.querySelector('[name="name"]');
   const emailInput = form.querySelector('[name="email"]');
   const messageInput = form.querySelector('[name="message"]');
   const submitBtn = form.querySelector('button[type="submit"]');
 
-  // Add input event listeners for real-time validation
   nameInput?.addEventListener('input', () => validateField(nameInput, 'name'));
   emailInput?.addEventListener('input', () => validateField(emailInput, 'email'));
   messageInput?.addEventListener('input', () => validateField(messageInput, 'message'));
 
-  // Save form draft on input
   form.addEventListener('input', debounce(() => saveFormDraft(form), 500));
 
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
     
-    // Validate all fields
     const name = nameInput?.value.trim();
     const email = emailInput?.value.trim();
     const message = messageInput?.value.trim();
@@ -765,7 +758,6 @@ function setupContactForm() {
       return;
     }
 
-    // Show loading state
     const originalText = submitBtn.textContent;
     submitBtn.disabled = true;
     submitBtn.innerHTML = currentLang === 'en' ? 'Sending...' : 'በማስተላለፍ ላይ...';
@@ -800,7 +792,6 @@ function setupContactForm() {
         : 'ይቅርታ፣ ስህተት ተፈጥሯል። እባክዎ በድጋሜ ይሞክሩ።';
       showToast(messageText, 'error');
     } finally {
-      // Reset button state
       submitBtn.disabled = false;
       submitBtn.textContent = originalText;
       submitBtn.style.opacity = '1';
@@ -813,7 +804,6 @@ function validateField(field, fieldType) {
   const formGroup = field?.closest('.form-group');
   if (!field || !formGroup) return false;
 
-  // Remove existing error
   const existingError = formGroup.querySelector('.field-error');
   if (existingError) existingError.remove();
 
@@ -892,11 +882,10 @@ function loadFormDraft(form) {
     const draft = localStorage.getItem('contactFormDraft');
     if (draft) {
       const formData = JSON.parse(draft);
-      // Only load if draft is less than 1 hour old
       if (Date.now() - formData.timestamp < 3600000) {
-        form.querySelector('[name="name"]').value = formData.name || '';
-        form.querySelector('[name="email"]').value = formData.email || '';
-        form.querySelector('[name="message"]').value = formData.message || '';
+        if (form.querySelector('[name="name"]')) form.querySelector('[name="name"]').value = formData.name || '';
+        if (form.querySelector('[name="email"]')) form.querySelector('[name="email"]').value = formData.email || '';
+        if (form.querySelector('[name="message"]')) form.querySelector('[name="message"]').value = formData.message || '';
       }
     }
   } catch (error) {
@@ -921,7 +910,6 @@ function debounce(func, wait) {
 }
 
 function setupNewsletter() {
-  // Handle both main newsletter form and footer newsletter forms
   const forms = document.querySelectorAll('.newsletter-form, .footer-newsletter-form');
   forms.forEach(form => {
     if (form.dataset.bound) return;
@@ -943,7 +931,6 @@ function setupNewsletter() {
   });
 }
 
-/* --- ACCORDION MODULE --- */
 function setupAccordions() {
   if (document.body.dataset.accordionsDelegated) return;
   document.body.dataset.accordionsDelegated = '1';
@@ -973,136 +960,10 @@ function setupCheckoutFlow() {
   const root = document.querySelector('.checkout-flow-root');
   if (!root) return;
 
-  renderCheckoutSummary();
-
-  const steps = root.querySelectorAll('.checkout-step-panel');
-
-  window.nextCheckoutStep = function (currentStepNum) {
-    if (currentStepNum === 1 && cart.length === 0) {
-      showToast(
-        currentLang === 'en'
-          ? 'Your basket is empty — add spices before continuing.'
-          : 'ቅርጫትዎ ባዶ ነው።',
-        'warning'
-      );
-      return;
-    }
-    if (currentStepNum === 1) {
-      const inputs = steps[0].querySelectorAll('input[required]');
-      let valid = true;
-      inputs.forEach((i) => {
-        if (!i.value.trim()) {
-          i.parentElement.style.animation = 'shake 0.4s';
-          setTimeout(() => (i.parentElement.style.animation = ''), 400);
-          valid = false;
-        }
-      });
-      const email = document.getElementById('femail');
-      if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value.trim())) {
-        email.parentElement.style.animation = 'shake 0.4s';
-        setTimeout(() => (email.parentElement.style.animation = ''), 400);
-        showToast(
-          currentLang === 'en' ? 'Please enter a valid email.' : 'ትክክለኛ ኢሜል ያስገቡ።',
-          'warning'
-        );
-        valid = false;
-      }
-      if (!valid) return;
-    }
-
-    steps.forEach((s) => s.classList.remove('active'));
-    steps[currentStepNum].classList.add('active');
-    
-    // Setup payment form when moving to payment step
-    if (currentStepNum === 1) {
-      setTimeout(() => setupPaymentForm(), 100);
-    }
-  };
-
-  window.completeOrder = function () {
-    if (cart.length === 0) {
-      showToast(
-        currentLang === 'en' ? 'Nothing to order — your basket is empty.' : 'ቅርጫትዎ ባዶ ነው።',
-        'warning'
-      );
-      return;
-    }
-    steps.forEach((s) => s.classList.remove('active'));
-    document.getElementById('checkout-success').classList.add('active');
-    
-    // Confetti
-    const container = document.getElementById('checkout-success').querySelector('.checkout-step-content');
-    for(let i=0; i<40; i++) {
-      const c = document.createElement('div');
-      c.className = 'confetti';
-      c.style.left = Math.random() * 100 + '%';
-      c.style.top = Math.random() * 100 + '%';
-      c.style.backgroundColor = Math.random() > 0.5 ? 'var(--clr-gold)' : 'var(--clr-berbere)';
-      const x = (Math.random() - 0.5) * 200;
-      const y = (Math.random() - 0.5) * 200;
-      c.style.animation = `float 1s ease-out forwards`;
-      c.style.transform = `translate(${x}px, ${y}px) rotate(${Math.random()*360}deg)`;
-      container.appendChild(c);
-    }
-    
-    // Clear cart
-    cart = [];
-    saveCart();
-  };
-
-  window.submitManualOrder = submitManualOrder;
-}
-
-function renderCheckoutSummary() {
-  const list = document.getElementById('checkout-summary-items');
-  if(!list) return;
-
-  const alertBox = document.getElementById('checkout-cart-alert');
-  if (alertBox) alertBox.hidden = cart.length > 0;
-
-  if(cart.length === 0) {
-    list.innerHTML = `<p data-en="Basket is empty" data-am="ቅርጫት ባዶ ነው">${currentLang==='en'?'Basket is empty':'ቅርጫት ባዶ ነው'}</p>`;
-    const sub = document.getElementById('checkout-sub');
-    const ship = document.getElementById('checkout-ship');
-    const tax = document.getElementById('checkout-tax');
-    const total = document.getElementById('checkout-total');
-    if (sub) sub.textContent = '0 ETB';
-    if (ship) ship.textContent = '0 ETB';
-    if (tax) tax.textContent = '0 ETB';
-    if (total) total.textContent = '0 ETB';
-    return;
-  }
-
-  list.innerHTML = cart.map(item => `
-    <div style="display:flex; justify-content:space-between; margin-bottom:1rem; font-size:0.9rem">
-      <span>${item.qty}x ${item.name}</span>
-      <span>${(item.price * item.qty).toFixed(2)} ETB</span>
-    </div>
-  `).join('');
-
-  const sub = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
-  const ship = 10;
-  const tax = sub * 0.025;
-  const subEl = document.getElementById('checkout-sub');
-  const shipEl = document.getElementById('checkout-ship');
-  const taxEl = document.getElementById('checkout-tax');
-  const totalEl = document.getElementById('checkout-total');
-  if (subEl) subEl.textContent = sub.toFixed(2) + ' ETB';
-  if (shipEl) shipEl.textContent = ship.toFixed(2) + ' ETB';
-  if (taxEl) taxEl.textContent = tax.toFixed(2) + ' ETB';
-  if (totalEl) totalEl.textContent = (sub + ship + tax).toFixed(2) + ' ETB';
-}
-
-function setupCheckoutFlow() {
-  const root = document.querySelector('.checkout-flow-root');
-  if (!root) return;
-
   const stepPanels = Array.from(root.querySelectorAll('.checkout-step-panel[data-step]'));
   const shippingFields = root.querySelectorAll('#fname, #femail, #faddr');
-  const paymentMethodInputs = root.querySelectorAll('input[name="payment_method"]');
   const paymentProofInput = document.getElementById('payment-proof');
   const paymentProofName = document.getElementById('payment-proof-name');
-  const paymentModeNote = document.getElementById('payment-mode-note')?.querySelector('p');
 
   function flagField(field, invalid) {
     const group = field?.closest('.form-group');
@@ -1110,9 +971,7 @@ function setupCheckoutFlow() {
     group.classList.toggle('has-error', invalid);
     if (invalid) {
       group.style.animation = 'shake 0.4s';
-      setTimeout(() => {
-        group.style.animation = '';
-      }, 400);
+      setTimeout(() => { group.style.animation = ''; }, 400);
     }
   }
 
@@ -1121,18 +980,46 @@ function setupCheckoutFlow() {
       const panelIndex = Number(panel.dataset.step);
       panel.classList.toggle('active', panelIndex === stepIndex);
       panel.classList.toggle('is-complete', panelIndex < stepIndex && panelIndex < 2);
+      
+      // Logical Flow: Hide previous steps entirely if we are on the Success page
+      if (stepIndex === 2 && panelIndex < 2) {
+        panel.style.display = 'none';
+      } else {
+        panel.style.display = '';
+      }
     });
 
-    if (stepIndex === 1) setupPaymentForm();
+    // The sidebar is now hidden until the very end, or we can just keep it hidden 
+    // as we've integrated the summary into the success step.
+    const sidebar = document.getElementById('checkout-sidebar');
+    if (sidebar) {
+      // Per user request, we move the summary to "after payment is confirmed" (Step 2)
+      const shouldShowSidebar = stepIndex === 2; 
+      sidebar.classList.toggle('sidebar-hidden', !shouldShowSidebar);
+      sidebar.classList.toggle('sidebar-visible', shouldShowSidebar);
+
+      // Update sidebar heading to "Receipt" if on success step
+      const heading = sidebar.querySelector('h3');
+      if (heading) {
+        if (stepIndex === 2) {
+          heading.dataset.en = "Order Receipt";
+          heading.dataset.am = "የትዕዛዝ ደረሰኝ";
+          heading.textContent = currentLang === 'en' ? "Order Receipt" : "የትዕዛዝ ደረሰኝ";
+        } else {
+          heading.dataset.en = "Order Summary";
+          heading.dataset.am = "የትዕዛዝ ማጠቃለያ";
+          heading.textContent = currentLang === 'en' ? "Order Summary" : "የትዕዛዝ ማጠቃለያ";
+        }
+      }
+    }
+
+    if (stepIndex === 1) autoPopulatePaymentForm();
     root.querySelector('.checkout-flow')?.scrollIntoView({ block: 'start', behavior: 'smooth' });
   }
 
   function validateShippingStep() {
     if (cart.length === 0) {
-      showToast(
-        currentLang === 'en' ? 'Your basket is empty. Add spices before continuing.' : 'ቅርጫትዎ ባዶ ነው።',
-        'warning'
-      );
+      showToast(currentLang === 'en' ? 'Your basket is empty. Add spices before continuing.' : 'ቅርጫትዎ ባዶ ነው።', 'warning');
       return false;
     }
 
@@ -1154,39 +1041,13 @@ function setupCheckoutFlow() {
       firstInvalid.focus();
       return false;
     }
-
     return true;
-  }
-
-  function syncPaymentModeUI() {
-    const selectedMethod = root.querySelector('input[name="payment_method"]:checked');
-    const isManual = selectedMethod?.dataset.paymentMode === 'manual';
-    const manualButton = root.querySelector('[data-manual-submit]');
-    const onlineButton = root.querySelector('[data-payment-submit]');
-    const proofPanel = document.getElementById('payment-proof-panel');
-
-    if (proofPanel) proofPanel.hidden = !isManual;
-    if (paymentProofInput) paymentProofInput.required = isManual;
-    if (manualButton) manualButton.hidden = !isManual;
-    if (onlineButton) onlineButton.hidden = isManual;
-
-    if (paymentModeNote) {
-      paymentModeNote.textContent = isManual
-        ? (currentLang === 'en'
-          ? 'After you complete a bank transfer, upload your receipt and send the order for approval.'
-          : 'የባንክ ማስተላለፊያውን ከጨረሱ በኋላ ደረሰኙን ያክሉ እና ትዕዛዙን ለማረጋገጥ ይላኩ።')
-        : (currentLang === 'en'
-          ? 'You will be redirected to Chapa to complete this payment securely.'
-          : 'ይህን ክፍያ በደህንነት ለማጠናቀቅ ወደ Chapa ይተላለፋሉ።');
-    }
   }
 
   function syncProofFileName() {
     if (!paymentProofInput || !paymentProofName) return;
     const file = paymentProofInput.files && paymentProofInput.files[0];
-    paymentProofName.textContent = file
-      ? file.name
-      : (currentLang === 'en' ? 'No file selected' : 'ምንም ፋይል አልተመረጠም');
+    paymentProofName.textContent = file ? file.name : (currentLang === 'en' ? 'No file selected' : 'ምንም ፋይል አልተመረጠም');
   }
 
   renderCheckoutSummary();
@@ -1195,9 +1056,6 @@ function setupCheckoutFlow() {
     field.addEventListener('input', () => flagField(field, false));
   });
 
-  paymentMethodInputs.forEach((input) => {
-    input.addEventListener('change', syncPaymentModeUI);
-  });
   paymentProofInput?.addEventListener('change', syncProofFileName);
 
   root.addEventListener('click', (event) => {
@@ -1213,11 +1071,6 @@ function setupCheckoutFlow() {
       return;
     }
 
-    if (event.target.closest('[data-payment-submit]')) {
-      initiateChapaPayment();
-      return;
-    }
-
     if (event.target.closest('[data-manual-submit]')) {
       submitManualOrder();
     }
@@ -1229,7 +1082,30 @@ function setupCheckoutFlow() {
       return;
     }
 
+    // Capture shipping info for the receipt
+    const name = document.getElementById('fname')?.value || '';
+    const email = document.getElementById('femail')?.value || '';
+    const address = document.getElementById('faddr')?.value || '';
+    const shippingHtml = `<strong>${escapeHtml(name)}</strong><br>${escapeHtml(email)}<br>${escapeHtml(address)}`;
+    
+    const shippingEl = document.getElementById('receipt-shipping-info');
+    if (shippingEl) shippingEl.innerHTML = shippingHtml;
+    
+    const dateEl = document.getElementById('receipt-date');
+    if (dateEl) {
+      const now = new Date();
+      dateEl.textContent = now.toLocaleDateString(currentLang === 'en' ? 'en-US' : 'am-ET', { 
+        year: 'numeric', month: 'long', day: 'numeric' 
+      });
+    }
+
+    // Snapshot cart for the success receipt before clearing
+    const cartSnapshot = [...cart];
+    const totalsSnapshot = cartTotalsDetailed();
+
     activateCheckoutStep(2);
+    renderCheckoutSummary(cartSnapshot, totalsSnapshot);
+
     const container = document.getElementById('checkout-success').querySelector('.checkout-step-content');
     for (let i = 0; i < 40; i++) {
       const c = document.createElement('div');
@@ -1244,42 +1120,41 @@ function setupCheckoutFlow() {
       container.appendChild(c);
     }
 
+    // Clear actual cart state
     cart = [];
     saveCart();
+    if (typeof syncBadge === 'function') syncBadge();
   };
 
-  syncPaymentModeUI();
   syncProofFileName();
 }
 
-function renderCheckoutSummary() {
+function renderCheckoutSummary(itemsOverride, totalsOverride) {
   const list = document.getElementById('checkout-summary-items');
+  const successList = document.getElementById('success-summary-items');
   if (!list) return;
 
-  const alertBox = document.getElementById('checkout-cart-alert');
-  if (alertBox) alertBox.hidden = cart.length > 0;
+  const items = itemsOverride || cart;
+  const totals = totalsOverride || cartTotalsDetailed();
 
-  document.querySelectorAll('[data-checkout-next], [data-payment-submit], [data-manual-submit]').forEach((button) => {
-    const disable = cart.length === 0;
+  const alertBox = document.getElementById('checkout-cart-alert');
+  if (alertBox) alertBox.hidden = items.length > 0;
+
+  document.querySelectorAll('[data-checkout-next], [data-manual-submit]').forEach((button) => {
+    const disable = items.length === 0;
     button.classList.toggle('is-disabled', disable);
     button.toggleAttribute('disabled', disable);
     button.setAttribute('aria-disabled', disable ? 'true' : 'false');
   });
 
-  if (cart.length === 0) {
-    list.innerHTML = `<p data-en="Basket is empty" data-am="ቅርጫት ባዶ ነው">${currentLang === 'en' ? 'Basket is empty' : 'ቅርጫት ባዶ ነው'}</p>`;
-    const sub = document.getElementById('checkout-sub');
-    const ship = document.getElementById('checkout-ship');
-    const tax = document.getElementById('checkout-tax');
-    const total = document.getElementById('checkout-total');
-    if (sub) sub.textContent = '0 ETB';
-    if (ship) ship.textContent = '0 ETB';
-    if (tax) tax.textContent = '0 ETB';
-    if (total) total.textContent = '0 ETB';
+  if (items.length === 0) {
+    const emptyMsg = `<p data-en="Basket is empty" data-am="ቅርጫት ባዶ ነው">${currentLang==='en'?'Basket is empty':'ቅርጫት ባዶ ነው'}</p>`;
+    list.innerHTML = emptyMsg;
+    if (successList) successList.innerHTML = emptyMsg;
     return;
   }
 
-  list.innerHTML = cart.map(item => `
+  const itemsHtml = items.map(item => `
     <div class="checkout-summary-item">
       <div class="checkout-summary-item-name">
         <span>${escapeHtml(item.name)}</span>
@@ -1289,7 +1164,12 @@ function renderCheckoutSummary() {
     </div>
   `).join('');
 
-  const { sub, ship, tax, total } = cartTotalsDetailed();
+  list.innerHTML = itemsHtml;
+  if (successList) successList.innerHTML = itemsHtml;
+
+  const { sub, ship, tax, total } = totals;
+  
+  // Sidebar totals
   const subEl = document.getElementById('checkout-sub');
   const shipEl = document.getElementById('checkout-ship');
   const taxEl = document.getElementById('checkout-tax');
@@ -1298,243 +1178,62 @@ function renderCheckoutSummary() {
   if (shipEl) shipEl.textContent = ship.toFixed(2) + ' ETB';
   if (taxEl) taxEl.textContent = tax.toFixed(2) + ' ETB';
   if (totalEl) totalEl.textContent = total.toFixed(2) + ' ETB';
+
+  // Integrated totals for Payment step and Success step
+  const manualTotalDisplay = document.getElementById('manual-total-display');
+  const successTotalDisplay = document.getElementById('success-total-display');
+  if (manualTotalDisplay) manualTotalDisplay.textContent = total.toFixed(2) + ' ETB';
+  if (successTotalDisplay) successTotalDisplay.textContent = total.toFixed(2) + ' ETB';
 }
 
-/* --- CHAPA PAYMENT MODULE --- */
-
-// Environment-based configuration
-const CHAPA_CONFIG = {
-  // Determine environment
-  isProduction: window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1',
-  
-  // Backend endpoints
-  get backendUrl() {
-    return this.isProduction 
-      ? '/api/chapa/initialize' 
-      : 'https://api.chapa.co/v1/transaction/initialize'; // Test endpoint
-  },
-  
-  get verifyUrl() {
-    return this.isProduction 
-      ? '/api/chapa/verify' 
-      : 'https://api.chapa.co/v1/transaction/verify';
-  },
-  
-  // Test mode based on environment
-  testMode: window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1',
-  
-  // API keys (should be moved to environment variables in production)
-  get secretKey() {
-    return this.isProduction 
-      ? '' // Production key should come from backend
-      : 'CHASECK_TEST-xxxxxxxxxxxx'; // Test key
-  },
-  
-  supportedMethods: ['telebirr', 'cbe-birr', 'dashen', 'awash', 'boa', 'zemen'],
-  currency: 'ETB',
-  
-  // Security settings
-  timeout: 30000, // 30 seconds timeout
-  maxRetries: 3,
-  retryDelay: 1000 // 1 second between retries
-};
-
-// Enhanced payment state management
-let paymentState = {
-  isProcessing: false,
-  currentOrder: null,
-  transactionRef: null,
-  paymentId: null, // Unique payment session ID
-  startTime: null,
-  retryCount: 0,
-  
-  // Atomic state management
-  setProcessing(processing) {
-    if (processing && this.isProcessing) {
-      return false; // Already processing
-    }
-    this.isProcessing = processing;
-    if (processing) {
-      this.startTime = Date.now();
-      this.retryCount = 0;
-    } else {
-      this.startTime = null;
-    }
-    return true;
-  },
-  
-  reset() {
-    this.isProcessing = false;
-    this.currentOrder = null;
-    this.transactionRef = null;
-    this.paymentId = null;
-    this.startTime = null;
-    this.retryCount = 0;
+function autoPopulatePaymentForm() {
+  const emailElement = document.getElementById('femail');
+  const paymentEmailElement = document.getElementById('payment-email');
+  if (emailElement && paymentEmailElement && !paymentEmailElement.value) {
+    paymentEmailElement.value = emailElement.value.trim();
   }
-};
+}
 
-// Payment event listeners registry for cleanup
-const paymentEventListeners = new Map();
-
-// Input sanitization utilities
 function sanitizeInput(input) {
   if (typeof input !== 'string') return '';
-  return input
-    .trim()
-    .replace(/[<>]/g, '') // Remove potential XSS characters
-    .replace(/[\x00-\x1f\x7f]/g, '') // Remove control characters
-    .substring(0, 500); // Limit length
+  return input.trim().replace(/[<>]/g, '').replace(/[\x00-\x1f\x7f]/g, '').substring(0, 500);
 }
 
 function sanitizeEmail(email) {
   const sanitized = sanitizeInput(email);
-  // Basic email validation after sanitization
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(sanitized) ? sanitized : '';
 }
 
 function sanitizePhone(phone) {
   const sanitized = sanitizeInput(phone);
-  // Remove all non-digit characters except +
   return sanitized.replace(/[^0-9+]/g, '');
 }
 
-// Initialize Chapa payment
-async function initiateChapaPayment() {
-  // Atomic state check
-  if (!paymentState.setProcessing(true)) {
-    showToast(currentLang === 'en' ? 'Payment is already processing...' : 'ክፍያው በሂደት ላይ ነው...', 'warning');
-    return;
-  }
-
-  try {
-    // Validate cart is not empty
-    if (!cart || cart.length === 0) {
-      throw new Error(currentLang === 'en' ? 'Your cart is empty' : 'ቅርጫትዎ ባዶ ነው');
-    }
-
-    // Validate and sanitize form fields
-    const emailElement = document.getElementById('payment-email');
-    const phoneElement = document.getElementById('payment-phone');
-    const selectedMethodElement = document.querySelector('input[name="payment_method"]:checked');
-
-    if (!emailElement || !phoneElement || !selectedMethodElement) {
-      throw new Error(currentLang === 'en' ? 'Payment form not properly loaded' : 'የክፍያ ቅጽ በትክክል አልተጫነም');
-    }
-
-    const email = sanitizeEmail(emailElement.value);
-    const phone = sanitizePhone(phoneElement.value);
-    const selectedMethod = selectedMethodElement.value;
-
-    if (!email || !phone || !selectedMethod) {
-      throw new Error(currentLang === 'en' ? 'Please fill in all payment details correctly' : 'እባክዎ ሁሉንም የክፍያ ዝርዝሮችን በትክክል ይሙሉ');
-    }
-
-    // Validate phone format (Ethiopian phone numbers) - corrected regex
-    if (!/^\+2519[0-9]{8}$|^09[0-9]{8}$/.test(phone)) {
-      throw new Error(currentLang === 'en' ? 'Please enter a valid Ethiopian phone number' : 'እባክዎ ትክክለኛ የኢትዮጵያ ስልክ ቁጥር ያስገቡ');
-    }
-
-    // Get and validate shipping details
-    const shippingDetails = getShippingDetails();
-    if (!shippingDetails) {
-      throw new Error(currentLang === 'en' ? 'Please complete shipping details first' : 'እባክዎ የማጓጓዣ ዝርዝሮችን ይሙሉ በመጀመር');
-    }
-
-    // Generate unique payment session ID
-    paymentState.paymentId = generatePaymentId();
-    
-    // Calculate order total
-    const orderTotal = calculateOrderTotal();
-    
-    // Generate secure transaction reference
-    const transactionRef = generateTransactionRef();
-    paymentState.transactionRef = transactionRef;
-
-    // Prepare sanitized order data
-    const orderData = {
-      payment_id: paymentState.paymentId,
-      email: email,
-      phone: phone,
-      amount: orderTotal.total,
-      currency: CHAPA_CONFIG.currency,
-      payment_method: selectedMethod,
-      transaction_ref: transactionRef,
-      shipping: {
-        full_name: sanitizeInput(shippingDetails.full_name),
-        email: sanitizeEmail(shippingDetails.email),
-        address: sanitizeInput(shippingDetails.address)
-      },
-      items: cart.map(item => ({
-        name: sanitizeInput(item.name),
-        quantity: parseInt(item.qty) || 0,
-        price: parseFloat(item.price) || 0,
-        total: (parseFloat(item.price) || 0) * (parseInt(item.qty) || 0)
-      })),
-      callback_url: `${window.location.origin}/payment-callback.html`,
-      return_url: `${window.location.origin}/payment-success.html`,
-      customization: {
-        title: sanitizeInput('Shegye Baltna Order'),
-        description: sanitizeInput(`Payment for ${cart.length} item${cart.length > 1 ? 's' : ''}`)
-      },
-      timestamp: Date.now()
-    };
-
-    paymentState.currentOrder = orderData;
-    updatePaymentUI(true);
-
-    // Process payment with timeout and retry
-    await processPaymentWithRetry(orderData);
-
-  } catch (error) {
-    console.error('Payment initialization error:', error);
-    handlePaymentError(error);
-  } finally {
-    paymentState.setProcessing(false);
-    updatePaymentUI(false);
-  }
-}
-
-// Get shipping details from form
 function getShippingDetails() {
   const fnameElement = document.getElementById('fname');
   const femailElement = document.getElementById('femail');
   const faddrElement = document.getElementById('faddr');
 
-  if (!fnameElement || !femailElement || !faddrElement) {
-    return null;
-  }
+  if (!fnameElement || !femailElement || !faddrElement) return null;
 
   const fname = sanitizeInput(fnameElement.value);
   const femail = sanitizeEmail(femailElement.value);
   const faddr = sanitizeInput(faddrElement.value);
 
-  if (!fname || !femail || !faddr) {
-    return null;
-  }
+  if (!fname || !femail || !faddr) return null;
 
-  return {
-    full_name: fname,
-    email: femail,
-    address: faddr
-  };
+  return { full_name: fname, email: femail, address: faddr };
 }
 
-// Calculate order total
 function calculateOrderTotal() {
   const sub = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
   const ship = cart.length ? 10 : 0;
   const tax = sub * 0.025;
   const total = sub + ship + tax;
-
-  return {
-    subtotal: sub,
-    shipping: ship,
-    tax: tax,
-    total: total
-  };
+  return { subtotal: sub, shipping: ship, tax: tax, total: total };
 }
 
-function buildOrderPayload(shippingDetails, paymentMethod, paymentEmail, paymentPhone) {
+function buildOrderPayload(shippingDetails, paymentEmail, paymentPhone) {
   return {
     userId: shippingDetails.email,
     user: {
@@ -1552,447 +1251,8 @@ function buildOrderPayload(shippingDetails, paymentMethod, paymentEmail, payment
       total: (parseFloat(item.price) || 0) * (parseInt(item.qty, 10) || 0)
     })),
     totals: calculateOrderTotal(),
-    payment: {
-      status: 'pending',
-      method: paymentMethod || ''
-    },
     createdAt: Date.now()
   };
-}
-
-async function submitManualOrder() {
-  if (cart.length === 0) {
-    showToast(currentLang === 'en' ? 'Your basket is empty.' : 'ቅርጫትዎ ባዶ ነው።', 'warning');
-    return;
-  }
-
-  const shippingDetails = getShippingDetails();
-  if (!shippingDetails) {
-    showToast(currentLang === 'en' ? 'Please complete shipping details first.' : 'እባክዎ የማጓጓዣ ዝርዝሮችን ይሙሉ።', 'warning');
-    return;
-  }
-
-  const emailElement = document.getElementById('payment-email');
-  const phoneElement = document.getElementById('payment-phone');
-  const selectedMethodElement = document.querySelector('input[name="payment_method"]:checked');
-  const proofElement = document.getElementById('payment-proof');
-
-  const paymentEmail = emailElement ? sanitizeEmail(emailElement.value) : '';
-  const paymentPhone = phoneElement ? sanitizePhone(phoneElement.value) : '';
-  const paymentMethod = selectedMethodElement ? selectedMethodElement.value : '';
-  const proofFile = proofElement && proofElement.files ? proofElement.files[0] : null;
-
-  if (!paymentEmail) {
-    showToast(currentLang === 'en' ? 'Please enter a valid email for payment.' : 'ትክክለኛ የክፍያ ኢሜል ያስገቡ።', 'warning');
-    return;
-  }
-
-  if (!proofFile) {
-    showToast(currentLang === 'en' ? 'Please upload your payment proof.' : 'የክፍያ ማስረጃ ያክሉ።', 'warning');
-    return;
-  }
-
-  const orderPayload = buildOrderPayload(shippingDetails, paymentMethod, paymentEmail, paymentPhone);
-  const formData = new FormData();
-  formData.append('order', JSON.stringify(orderPayload));
-  formData.append('paymentProof', proofFile);
-
-  try {
-    const response = await fetch('/api/orders', {
-      method: 'POST',
-      body: formData
-    });
-
-    if (!response.ok) {
-      const errorData = await response.json().catch(() => ({}));
-      const message = errorData.error || 'Order submission failed.';
-      throw new Error(message);
-    }
-
-    showToast(currentLang === 'en' ? 'Order submitted for approval.' : 'ትዕዛዝዎ ለማረጋገጥ ተልኳል።', 'success');
-    completeOrder();
-  } catch (error) {
-    console.error('Manual order error:', error);
-    showToast(currentLang === 'en' ? error.message : 'ትዕዛዝ መላክ አልተሳካም።', 'error');
-  }
-}
-
-// Generate secure transaction reference
-function generateTransactionRef() {
-  const timestamp = Date.now();
-  const randomBytes = new Uint8Array(8);
-  crypto.getRandomValues(randomBytes);
-  const randomHex = Array.from(randomBytes, byte => byte.toString(16).padStart(2, '0')).join('');
-  return `SHEGYE${timestamp}${randomHex}`;
-}
-
-// Generate unique payment session ID
-function generatePaymentId() {
-  const timestamp = Date.now();
-  const randomBytes = new Uint8Array(16);
-  crypto.getRandomValues(randomBytes);
-  const randomHex = Array.from(randomBytes, byte => byte.toString(16).padStart(2, '0')).join('');
-  return `PAY_${timestamp}_${randomHex}`;
-}
-
-// Process payment with timeout and retry mechanism
-async function processPaymentWithRetry(orderData) {
-  const maxRetries = CHAPA_CONFIG.maxRetries;
-  let lastError;
-  
-  for (let attempt = 0; attempt <= maxRetries; attempt++) {
-    try {
-      paymentState.retryCount = attempt;
-      
-      if (attempt > 0) {
-        showToast(
-          currentLang === 'en' ? `Retrying payment... (${attempt}/${maxRetries})` : `ክፍያው በድጋሜ በሂደት ላይ... (${attempt}/${maxRetries})`,
-          'info'
-        );
-        
-        // Exponential backoff
-        await new Promise(resolve => setTimeout(resolve, CHAPA_CONFIG.retryDelay * Math.pow(2, attempt - 1)));
-      }
-      
-      let result;
-      if (CHAPA_CONFIG.testMode) {
-        result = await simulateChapaPayment(orderData);
-      } else {
-        result = await callChapaBackend(orderData);
-      }
-      
-      return result;
-      
-    } catch (error) {
-      lastError = error;
-      console.error(`Payment attempt ${attempt + 1} failed:`, error);
-      
-      // Don't retry on certain errors
-      if (error.message.includes('validation') || error.message.includes('invalid')) {
-        throw error;
-      }
-    }
-  }
-  
-  throw lastError || new Error('Payment failed after maximum retries');
-}
-
-// Update payment UI states
-function updatePaymentUI(isProcessing) {
-  const button = document.querySelector('button[onclick="initiateChapaPayment()"]');
-  const paymentForm = document.querySelector('.payment-form-fields');
-  
-  if (isProcessing) {
-    button.disabled = true;
-    button.innerHTML = currentLang === 'en' ? 'Processing...' : 'በሂደት ላይ...';
-    paymentForm?.classList.add('payment-processing');
-  } else {
-    button.disabled = false;
-    button.innerHTML = currentLang === 'en' ? 'Proceed to Payment' : 'ወደ ክፍያ ይቀጥሉ';
-    paymentForm?.classList.remove('payment-processing');
-  }
-}
-
-// Secure localStorage utilities
-const secureStorage = {
-  set(key, data) {
-    try {
-      const encrypted = btoa(JSON.stringify(data));
-      localStorage.setItem(key, encrypted);
-      return true;
-    } catch (error) {
-      console.error('Storage error:', error);
-      return false;
-    }
-  },
-  
-  get(key) {
-    try {
-      const encrypted = localStorage.getItem(key);
-      if (!encrypted) return null;
-      return JSON.parse(atob(encrypted));
-    } catch (error) {
-      console.error('Storage retrieval error:', error);
-      return null;
-    }
-  },
-  
-  remove(key) {
-    try {
-      localStorage.removeItem(key);
-      return true;
-    } catch (error) {
-      console.error('Storage removal error:', error);
-      return false;
-    }
-  },
-  
-  clear() {
-    try {
-      const keys = Object.keys(localStorage).filter(key => key.startsWith('chapa_'));
-      keys.forEach(key => localStorage.removeItem(key));
-      return true;
-    } catch (error) {
-      console.error('Storage clear error:', error);
-      return false;
-    }
-  }
-};
-
-// Simulate Chapa payment (for development)
-async function simulateChapaPayment(orderData) {
-  // Show loading state
-  showToast(
-    currentLang === 'en' ? 'Initializing payment...' : 'ክፍያው በማስጀመር ላይ...',
-    'info'
-  );
-
-  // Simulate API delay with timeout
-  await Promise.race([
-    new Promise(resolve => setTimeout(resolve, 2000)),
-    new Promise((_, reject) => 
-      setTimeout(() => reject(new Error('Payment timeout')), CHAPA_CONFIG.timeout)
-    )
-  ]);
-
-  // Simulate successful payment initialization
-  const paymentUrl = `https://checkout.chapa.co/pay/${orderData.transaction_ref}`;
-  
-  // Store order data securely
-  secureStorage.set('chapa_order_data', orderData);
-  
-  // Redirect to Chapa payment page
-  window.location.href = paymentUrl;
-  return { success: true, url: paymentUrl };
-}
-
-// Call Chapa backend API (for production)
-async function callChapaBackend(orderData) {
-  const controller = new AbortController();
-  const timeoutId = setTimeout(() => controller.abort(), CHAPA_CONFIG.timeout);
-  
-  try {
-    const response = await fetch(CHAPA_CONFIG.backendUrl, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'X-Requested-With': 'XMLHttpRequest',
-      },
-      body: JSON.stringify(orderData),
-      signal: controller.signal
-    });
-
-    clearTimeout(timeoutId);
-
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-
-    const result = await response.json();
-    
-    if (result.success && result.checkout_url) {
-      // Store order data securely
-      secureStorage.set('chapa_order_data', orderData);
-      
-      // Redirect to payment
-      window.location.href = result.checkout_url;
-      return result;
-    } else {
-      throw new Error(result.message || 'Payment initialization failed');
-    }
-  } catch (error) {
-    clearTimeout(timeoutId);
-    
-    if (error.name === 'AbortError') {
-      throw new Error('Payment request timed out');
-    }
-    throw new Error(`Backend error: ${error.message}`);
-  }
-}
-
-// Handle payment errors
-function handlePaymentError(error) {
-  console.error('Payment error:', error);
-  
-  let errorMessage = currentLang === 'en' 
-    ? 'Payment failed. Please try again.' 
-    : 'ክፍያው አልተሳካም። እባክዎ በድጋሜ ይሞክሩ።';
-
-  if (error.message.includes('network')) {
-    errorMessage = currentLang === 'en' 
-      ? 'Network error. Please check your connection.' 
-      : 'የኔትወርክ ስህተት። እባክዎ ግንኙነትዎን ይመርምጡ።';
-  }
-
-  showToast(errorMessage, 'error');
-}
-
-// Payment callback handler (called from callback page)
-function handlePaymentCallback() {
-  const urlParams = new URLSearchParams(window.location.search);
-  const status = urlParams.get('status');
-  const tx_ref = urlParams.get('tx_ref');
-  const transaction_id = urlParams.get('transaction_id');
-
-  // Validate required parameters
-  if (!tx_ref) {
-    console.error('Missing transaction reference in callback');
-    window.location.href = 'checkout.html';
-    return;
-  }
-
-  // Sanitize inputs
-  const sanitizedStatus = sanitizeInput(status);
-  const sanitizedTxRef = sanitizeInput(tx_ref);
-  const sanitizedTransactionId = sanitizeInput(transaction_id);
-
-  // Get stored order data securely
-  const orderData = secureStorage.get('chapa_order_data');
-  
-  if (!orderData || orderData.transaction_ref !== sanitizedTxRef) {
-    console.error('Invalid or missing order data');
-    secureStorage.remove('chapa_order_data');
-    window.location.href = 'checkout.html';
-    return;
-  }
-
-  // Verify payment with backend (don't trust callback status)
-  verifyPaymentWithBackend(sanitizedTxRef, sanitizedTransactionId)
-    .then(isValid => {
-      // Clear stored data
-      secureStorage.remove('chapa_order_data');
-      
-      if (isValid && sanitizedStatus === 'success') {
-        // Payment successful
-        window.location.href = `payment-success.html?tx_ref=${encodeURIComponent(sanitizedTxRef)}`;
-      } else {
-        // Payment failed or invalid
-        window.location.href = `payment-failed.html?tx_ref=${encodeURIComponent(sanitizedTxRef)}`;
-      }
-    })
-    .catch(error => {
-      console.error('Payment verification error:', error);
-      secureStorage.remove('chapa_order_data');
-      window.location.href = `payment-failed.html?tx_ref=${encodeURIComponent(sanitizedTxRef)}`;
-    });
-}
-
-// Verify payment with backend
-async function verifyPaymentWithBackend(tx_ref, transaction_id) {
-  const controller = new AbortController();
-  const timeoutId = setTimeout(() => controller.abort(), CHAPA_CONFIG.timeout);
-  
-  try {
-    const response = await fetch(CHAPA_CONFIG.verifyUrl, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'X-Requested-With': 'XMLHttpRequest',
-      },
-      body: JSON.stringify({ 
-        tx_ref: tx_ref,
-        transaction_id: transaction_id
-      }),
-      signal: controller.signal
-    });
-
-    clearTimeout(timeoutId);
-
-    if (!response.ok) {
-      throw new Error(`Verification failed: ${response.status}`);
-    }
-
-    const result = await response.json();
-    return result.success && result.status === 'success';
-    
-  } catch (error) {
-    clearTimeout(timeoutId);
-    
-    if (error.name === 'AbortError') {
-      throw new Error('Verification timeout');
-    }
-    
-    // In test mode, simulate verification
-    if (CHAPA_CONFIG.testMode) {
-      console.log('Test mode: simulating payment verification');
-      return true; // Simulate success for testing
-    }
-    
-    throw error;
-  }
-}
-
-// Auto-populate payment form with shipping details
-function autoPopulatePaymentForm() {
-  const emailElement = document.getElementById('femail');
-  const paymentEmailElement = document.getElementById('payment-email');
-  
-  if (emailElement && paymentEmailElement && !paymentEmailElement.value) {
-    const sanitizedEmail = sanitizeEmail(emailElement.value);
-    if (sanitizedEmail) {
-      paymentEmailElement.value = sanitizedEmail;
-    }
-  }
-}
-
-// Clean up payment event listeners
-function cleanupPaymentEventListeners() {
-  paymentEventListeners.forEach((listener, element) => {
-    if (element && typeof element.removeEventListener === 'function') {
-      element.removeEventListener(listener.type, listener.handler);
-    }
-  });
-  paymentEventListeners.clear();
-}
-
-// Add event listener with cleanup tracking
-function addPaymentEventListener(element, eventType, handler) {
-  if (!element || typeof element.addEventListener !== 'function') {
-    return;
-  }
-  
-  const wrappedHandler = handler;
-  element.addEventListener(eventType, wrappedHandler);
-  
-  // Track for cleanup
-  paymentEventListeners.set(element, {
-    type: eventType,
-    handler: wrappedHandler
-  });
-}
-
-// Initialize payment form when checkout step 2 is shown
-function setupPaymentForm() {
-  // Clean up previous listeners
-  cleanupPaymentEventListeners();
-  
-  autoPopulatePaymentForm();
-  
-  // Add real-time validation with proper cleanup
-  const emailInput = document.getElementById('payment-email');
-  const phoneInput = document.getElementById('payment-phone');
-  
-  if (emailInput) {
-    const emailHandler = () => {
-      const value = emailInput.value.trim();
-      const isValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
-      emailInput.style.borderColor = isValid ? '' : '#e74c3c';
-    };
-    
-    addPaymentEventListener(emailInput, 'input', emailHandler);
-    addPaymentEventListener(emailInput, 'blur', emailHandler);
-  }
-  
-  if (phoneInput) {
-    const phoneHandler = () => {
-      const value = phoneInput.value.replace(/\s/g, '');
-      const isValid = /^\+2519[0-9]{8}$|^09[0-9]{8}$/.test(value);
-      phoneInput.style.borderColor = isValid ? '' : '#e74c3c';
-    };
-    
-    addPaymentEventListener(phoneInput, 'input', phoneHandler);
-    addPaymentEventListener(phoneInput, 'blur', phoneHandler);
-  }
 }
 
 function setButtonBusy(button, busy, fallbackLabel) {
@@ -2006,13 +1266,6 @@ function setButtonBusy(button, busy, fallbackLabel) {
   button.textContent = busy
     ? (currentLang === 'en' ? 'Processing...' : 'በሂደት ላይ...')
     : (button.getAttribute(`data-${currentLang}`) || fallbackLabel || button.dataset.originalLabel);
-}
-
-function updatePaymentUI(isProcessing) {
-  const paymentButton = document.querySelector('[data-payment-submit]');
-  const paymentForm = document.querySelector('.payment-form-fields');
-  setButtonBusy(paymentButton, isProcessing, currentLang === 'en' ? 'Proceed to Payment' : 'ወደ ክፍያ ይቀጥሉ');
-  paymentForm?.classList.toggle('payment-processing', isProcessing);
 }
 
 async function submitManualOrder() {
@@ -2033,12 +1286,10 @@ async function submitManualOrder() {
 
     const emailElement = document.getElementById('payment-email');
     const phoneElement = document.getElementById('payment-phone');
-    const selectedMethodElement = document.querySelector('input[name="payment_method"]:checked');
     const proofElement = document.getElementById('payment-proof');
 
     const paymentEmail = emailElement ? sanitizeEmail(emailElement.value) : '';
     const paymentPhone = phoneElement ? sanitizePhone(phoneElement.value) : '';
-    const paymentMethod = selectedMethodElement ? selectedMethodElement.value : '';
     const proofFile = proofElement && proofElement.files ? proofElement.files[0] : null;
 
     if (!paymentEmail) {
@@ -2053,7 +1304,7 @@ async function submitManualOrder() {
       return;
     }
 
-    const orderPayload = buildOrderPayload(shippingDetails, paymentMethod, paymentEmail, paymentPhone);
+    const orderPayload = buildOrderPayload(shippingDetails, paymentEmail, paymentPhone);
     const formData = new FormData();
     formData.append('order', JSON.stringify(orderPayload));
     formData.append('paymentProof', proofFile);
@@ -2077,91 +1328,3 @@ async function submitManualOrder() {
     setButtonBusy(submitButton, false, currentLang === 'en' ? 'Submit Order for Approval' : 'ለማረጋገጥ ትዕዛዝ ይላኩ');
   }
 }
-
-function setupPaymentForm() {
-  cleanupPaymentEventListeners();
-  autoPopulatePaymentForm();
-
-  const emailInput = document.getElementById('payment-email');
-  const phoneInput = document.getElementById('payment-phone');
-  const shippingEmail = document.getElementById('femail');
-
-  if (shippingEmail && emailInput && !emailInput.value) {
-    emailInput.value = shippingEmail.value.trim();
-  }
-
-  if (emailInput) {
-    const emailHandler = () => {
-      const group = emailInput.closest('.form-group');
-      const isValid = !emailInput.value.trim() || !!sanitizeEmail(emailInput.value);
-      group?.classList.toggle('has-error', !isValid);
-    };
-
-    addPaymentEventListener(emailInput, 'input', emailHandler);
-    addPaymentEventListener(emailInput, 'blur', emailHandler);
-  }
-
-  if (phoneInput) {
-    const phoneHandler = () => {
-      const group = phoneInput.closest('.form-group');
-      const value = phoneInput.value.replace(/\s/g, '');
-      const isValid = !value || /^\+2519[0-9]{8}$|^09[0-9]{8}$/.test(value);
-      group?.classList.toggle('has-error', !isValid);
-    };
-
-    addPaymentEventListener(phoneInput, 'input', phoneHandler);
-    addPaymentEventListener(phoneInput, 'blur', phoneHandler);
-  }
-}
-
-// Handle browser back button during payment
-window.addEventListener('popstate', function(event) {
-  // If we're in payment processing state, warn user
-  if (paymentState.isProcessing) {
-    const message = currentLang === 'en' 
-      ? 'Payment is in progress. Are you sure you want to leave?' 
-      : 'ክፍያው በሂደት ላይ ነው። መልሱ እርግጠኛ ነዎት?';
-    
-    if (confirm(message)) {
-      // Reset payment state
-      paymentState.reset();
-      secureStorage.remove('chapa_order_data');
-      cleanupPaymentEventListeners();
-    } else {
-      // Push state back to prevent navigation
-      history.pushState(null, null, location.href);
-    }
-  }
-});
-
-// Handle page unload during payment
-window.addEventListener('beforeunload', function(event) {
-  if (paymentState.isProcessing) {
-    const message = currentLang === 'en' 
-      ? 'Payment is in progress. Your order may be lost if you leave.' 
-      : 'ክፍያው በሂደት ላይ ነው። ትዕዛዝዎ ሊጠፋ ይችላል።';
-    
-    event.preventDefault();
-    event.returnValue = message;
-    return message;
-  }
-});
-
-// Initialize payment state on page load
-document.addEventListener('DOMContentLoaded', function() {
-  // Check for any interrupted payment sessions
-  const storedPayment = secureStorage.get('chapa_order_data');
-  if (storedPayment && storedPayment.timestamp) {
-    const sessionAge = Date.now() - storedPayment.timestamp;
-    const maxSessionAge = 30 * 60 * 1000; // 30 minutes
-    
-    if (sessionAge > maxSessionAge) {
-      // Session expired, clean up
-      secureStorage.remove('chapa_order_data');
-      console.log('Expired payment session cleaned up');
-    }
-  }
-  
-  // Reset payment state
-  paymentState.reset();
-});

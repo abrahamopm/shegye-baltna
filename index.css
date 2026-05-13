@@ -554,7 +554,27 @@ body.nav-over-media .nav.scrolled {
 /* Checkout Layout */
 .checkout-layout { display: flex; gap: 4rem; flex-wrap: wrap; margin-bottom: 4rem; align-items: flex-start; }
 .checkout-flow { flex: 2; min-width: 300px; }
-.checkout-summary-sidebar { flex: 1; min-width: 300px; position: sticky; top: 120px; }
+.checkout-summary-sidebar { 
+  flex: 1; 
+  min-width: 300px; 
+  position: sticky; 
+  top: 120px; 
+  transition: opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1), transform 0.5s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.5s;
+}
+
+.checkout-summary-sidebar.sidebar-hidden {
+  opacity: 0;
+  transform: translateX(20px);
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.checkout-summary-sidebar.sidebar-visible {
+  opacity: 1;
+  transform: translateX(0);
+  visibility: visible;
+  pointer-events: auto;
+}
 .summary-card {
   background: white;
   padding: 2rem;

@@ -7,5 +7,14 @@
     "address": "Addis Ababa",
     "createdAt": "2026-05-12T15:38:39.482Z",
     "updatedAt": "2026-05-13T08:05:59.011Z"
+  },
+  {
+    "id": "john@example.com",
+    "email": "john@example.com",
+    "name": "John Doe",
+    "phone": "0912345678",
+    "address": "123 Spice St, Addis Ababa",
+    "createdAt": "2026-05-13T10:14:15.555Z",
+    "updatedAt": "2026-05-13T10:14:15.555Z"
   }
 ]

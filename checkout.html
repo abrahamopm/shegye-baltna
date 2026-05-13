@@ -83,134 +83,41 @@
         <div class="checkout-step-panel reveal-up" style="transition-delay:0.1s" data-step="1">
           <div class="checkout-step-header">
             <div class="step-num">2</div>
-            <span data-en="Payment Method" data-am="የመክፈያ ዘዴ">Payment Method</span>
+            <span data-en="Payment & Verification" data-am="ክፍያ እና ማረጋገጫ">Payment & Verification</span>
           </div>
           <div class="checkout-step-content">
             <section class="payment-section">
-              <div class="payment-provider payment-panel">
-                <div class="payment-provider-header">
-                  <div class="payment-provider-logo" role="img" aria-label="Chapa">
-                    <svg width="40" height="40" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
-                      <rect width="40" height="40" rx="8" fill="#1a1a1a" />
-                      <text x="20" y="28" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="white"
-                        text-anchor="middle">CHAPA</text>
-                    </svg>
+              <div class="manual-payment-card payment-panel">
+                <div class="manual-payment-header">
+                  <div class="payment-brand-logo">
+                    <img src="assets/telebirr-logo-01_telebirr.webp" alt="Telebirr Logo">
                   </div>
-                  <h4 data-en="Secure Payment by Chapa" data-am="በቻፓ የተጠበቀ ክፍያ">Secure Payment by Chapa</h4>
-                  <p class="payment-provider-desc"
-                    data-en="Choose the payment path that fits how you want to finish this order."
-                    data-am="ይህን ትዕዛዝ ለማጠናቀቅ የሚስማማዎትን የክፍያ መንገድ ይምረጡ።">Choose the payment path that fits how you want to finish this order.</p>
+                  <div class="payment-brand-details">
+                    <h4 data-en="Pay via Telebirr" data-am="በቴሌብር ይክፈሉ">Pay via Telebirr</h4>
+                    <div class="account-info-grid">
+                      <div class="account-info-item">
+                        <span class="label" data-en="Recipient Name" data-am="ተቀባይ ስም">Recipient Name</span>
+                        <strong class="value">Shegye Baltna</strong>
+                      </div>
+                      <div class="account-info-item">
+                        <span class="label" data-en="Telebirr Number" data-am="የቴሌብር ቁጥር">Telebirr Number</span>
+                        <strong class="value">0911223344</strong>
+                      </div>
+                    </div>
+                  </div>
                 </div>
-
-                <div class="payment-methods-grid">
-                  <label class="payment-method-card">
-                    <input type="radio" name="payment_method" value="telebirr" data-payment-mode="online" checked>
-                    <div class="payment-method-content">
-                      <div class="payment-method-icon">
-                        <svg width="40" height="40" viewBox="0 0 24 24" fill="#00A651">
-                          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
-                        </svg>
-                      </div>
-                      <div class="payment-method-info">
-                        <strong data-en="Telebirr" data-am="ቴሌብር">Telebirr</strong>
-                        <span data-en="Mobile Wallet" data-am="ሞባይል ዋሌት">Mobile Wallet</span>
-                      </div>
-                    </div>
-                  </label>
-
-                  <label class="payment-method-card">
-                    <input type="radio" name="payment_method" value="cbe-birr" data-payment-mode="online">
-                    <div class="payment-method-content">
-                      <div class="payment-method-icon">
-                        <svg width="40" height="40" viewBox="0 0 24 24" fill="#0066CC">
-                          <rect x="3" y="8" width="18" height="8" rx="1" />
-                          <path d="M6 12h12" stroke="white" stroke-width="2" />
-                        </svg>
-                      </div>
-                      <div class="payment-method-info">
-                        <strong data-en="CBE Birr" data-am="ሲቢኢ ቢር">CBE Birr</strong>
-                        <span data-en="Bank Mobile" data-am="የባንክ ሞባይል">Bank Mobile</span>
-                      </div>
-                    </div>
-                  </label>
-
-                  <label class="payment-method-card">
-                    <input type="radio" name="payment_method" value="dashen" data-payment-mode="manual">
-                    <div class="payment-method-content">
-                      <div class="payment-method-icon">
-                        <svg width="40" height="40" viewBox="0 0 24 24" fill="#FF6B35">
-                          <circle cx="12" cy="12" r="10" />
-                          <path d="M8 12h8M12 8v8" stroke="white" stroke-width="2" />
-                        </svg>
-                      </div>
-                      <div class="payment-method-info">
-                        <strong data-en="Dashen Bank" data-am="ዳሽን ባንክ">Dashen Bank</strong>
-                        <span data-en="Bank Transfer" data-am="የባንክ ማስተላለፊያ">Bank Transfer</span>
-                      </div>
-                    </div>
-                  </label>
-
-                  <label class="payment-method-card">
-                    <input type="radio" name="payment_method" value="awash" data-payment-mode="manual">
-                    <div class="payment-method-content">
-                      <div class="payment-method-icon">
-                        <svg width="40" height="40" viewBox="0 0 24 24" fill="#7C4DFF">
-                          <path d="M12 2L2 7v10c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-10-5z" />
-                        </svg>
-                      </div>
-                      <div class="payment-method-info">
-                        <strong data-en="Awash Bank" data-am="አዋሽ ባንክ">Awash Bank</strong>
-                        <span data-en="Bank Transfer" data-am="የባንክ ማስተላለፊያ">Bank Transfer</span>
-                      </div>
-                    </div>
-                  </label>
-
-                  <label class="payment-method-card">
-                    <input type="radio" name="payment_method" value="boa" data-payment-mode="manual">
-                    <div class="payment-method-content">
-                      <div class="payment-method-icon">
-                        <svg width="40" height="40" viewBox="0 0 24 24" fill="#2E7D32">
-                          <rect x="3" y="5" width="18" height="14" rx="2" />
-                          <circle cx="8" cy="12" r="2" fill="white" />
-                          <circle cx="16" cy="12" r="2" fill="white" />
-                        </svg>
-                      </div>
-                      <div class="payment-method-info">
-                        <strong data-en="Bank of Africa" data-am="የአፍሪካ ባንክ">Bank of Africa</strong>
-                        <span data-en="Bank Transfer" data-am="የባንክ ማስተላለፊያ">Bank Transfer</span>
-                      </div>
-                    </div>
-                  </label>
-
-                  <label class="payment-method-card">
-                    <input type="radio" name="payment_method" value="zemen" data-payment-mode="manual">
-                    <div class="payment-method-content">
-                      <div class="payment-method-icon">
-                        <svg width="40" height="40" viewBox="0 0 24 24" fill="#D32F2F">
-                          <path d="M19 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.11 0 2-.9 2-2V5c0-1.1-.89-2-2-2zm-7 14l-5-5 1.41-1.41L12 14.17l3.59-3.58L17 12l-5 5z" />
-                        </svg>
-                      </div>
-                      <div class="payment-method-info">
-                        <strong data-en="Zemen Bank" data-am="ዜመን ባንክ">Zemen Bank</strong>
-                        <span data-en="Bank Transfer" data-am="የባንክ ማስተላለፊያ">Bank Transfer</span>
-                      </div>
-                    </div>
-                  </label>
+                <p class="payment-instruction" data-en="Please send the total amount to the Telebirr number above, then upload a screenshot of your transaction below for verification." data-am="እባክዎን ጠቅላላውን መጠን ከላይ ወዳለው የቴሌብር ቁጥር ይላኩ፣ ከዚያ ለማረጋገጫ የክፍያውን ስክሪንሻት ከታች ያክሉ።">Please send the total amount to the Telebirr number above, then upload a screenshot of your transaction below for verification.</p>
+                <div class="payment-total-amount" style="margin-top: 1.5rem; padding: 1.5rem; background: var(--clr-espresso); color: white; border-radius: 12px; text-align: center; border: 2px solid var(--clr-gold);">
+                  <div style="font-size: 0.9rem; opacity: 0.8; margin-bottom: 0.5rem;" data-en="Amount Due" data-am="የሚከፈል መጠን">Amount Due</div>
+                  <div style="font-size: 2rem; font-weight: 800; font-family: var(--font-display);" id="manual-total-display">0.00 ETB</div>
                 </div>
-
-                <div id="payment-mode-note" class="payment-mode-note">
-                  <p data-en="You will be redirected to Chapa to complete this payment securely."
-                    data-am="ይህን ክፍያ በደህንነት ለማጠናቀቅ ወደ Chapa ይተላለፋሉ።">You will be redirected to Chapa to complete this payment securely.</p>
-                </div>
+                <input type="hidden" name="payment_method" value="telebirr" data-payment-mode="manual">
               </div>
             </section>
 
             <section class="payment-section">
               <div class="payment-form-fields">
-                <h3 class="payment-panel-title" data-en="Payment Contact" data-am="የክፍያ መረጃ">Payment Contact</h3>
-                <p class="payment-panel-copy"
-                  data-en="We use these details for payment confirmation and delivery updates."
-                  data-am="ይህን መረጃ ለክፍያ ማረጋገጫ እና ለማድረስ ማሳወቂያ እንጠቀማለን።">We use these details for payment confirmation and delivery updates.</p>
+                <h3 class="payment-panel-title" data-en="Contact Details" data-am="የግንኙነት ዝርዝሮች">Contact Details</h3>
                 <div class="form-group">
                   <input type="email" class="form-input" required id="payment-email" placeholder=" ">
                   <label class="form-label" data-en="Email Address" data-am="የኢሜል አድራሻ">Email Address</label>
@@ -224,49 +131,71 @@
               </div>
             </section>
 
-            <section id="payment-proof-panel" class="payment-section payment-proof-panel" hidden>
+            <section id="payment-proof-panel" class="payment-section payment-proof-panel">
               <div class="payment-panel">
                 <div class="upload-field">
-                  <span class="upload-field-label" data-en="Payment Proof" data-am="የክፍያ ማስረጃ">Payment Proof</span>
+                  <span class="upload-field-label" data-en="Transaction Screenshot" data-am="የክፍያ ስክሪንሻት">Transaction Screenshot</span>
                   <div class="upload-field-shell">
-                    <input type="file" id="payment-proof" accept="image/*,.pdf">
-                    <span id="payment-proof-name" class="upload-field-name" data-en="No file selected"
-                      data-am="ምንም ፋይል አልተመረጠም">No file selected</span>
+                    <input type="file" id="payment-proof" accept="image/*" required>
+                    <div class="upload-placeholder">
+                      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg>
+                      <span id="payment-proof-name" class="upload-field-name" data-en="Select or drop screenshot" data-am="ስክሪንሻቱን ይምረጡ ወይም እዚህ ይጣሉ">Select or drop screenshot</span>
+                    </div>
                   </div>
-                  <p class="upload-field-help"
-                    data-en="Upload a screenshot or receipt after you complete a bank transfer."
-                    data-am="በባንክ ማስተላለፊያ ክፍያ ከጨረሱ በኋላ ስክሪንሻት ወይም ደረሰኝ ያክሉ።">Upload a screenshot or receipt after you complete a bank transfer.</p>
                 </div>
               </div>
             </section>
 
             <div class="checkout-actions">
-              <button type="button" class="btn-secondary" data-checkout-back="0" data-en="Back"
-                data-am="ተመለስ">Back</button>
-              <button type="button" class="btn-primary btn-magnetic checkout-action-primary" data-payment-submit
-                data-en="Proceed to Payment" data-am="ወደ ክፍያ ይቀጥሉ">Proceed to Payment</button>
-              <button type="button" class="btn-primary btn-magnetic checkout-action-primary" data-manual-submit
-                data-en="Submit Order for Approval" data-am="ለማረጋገጥ ትዕዛዝ ይላኩ" hidden>Submit Order for Approval</button>
+              <button type="button" class="btn-secondary" data-checkout-back="0" data-en="Back" data-am="ተመለስ">Back</button>
+              <button type="button" class="btn-primary btn-magnetic checkout-action-primary" data-manual-submit data-en="Submit Order for Verification" data-am="ለማረጋገጫ ትዕዛዙን ይላኩ">Submit Order for Verification</button>
             </div>
           </div>
         </div>
 
+
         <div class="checkout-step-panel" id="checkout-success" data-step="2">
-          <div class="checkout-step-content status-card" style="display:block; padding: 3rem 2rem; position:relative; overflow:hidden">
+          <div class="checkout-step-content status-card" style="padding: 3rem 2rem; position:relative; overflow:hidden">
             <div class="status-icon status-icon--success">✓</div>
             <h2 class="display" style="font-size:2.5rem; margin-bottom:1rem" data-en="Order Confirmed!"
               data-am="ትዕዛዙ ተረጋግጧል!">Order Confirmed!</h2>
             <p class="status-lead" data-en="Thank you for your purchase. We are preparing your spices."
               data-am="ስለግዢዎ እናመሰግናለን። ቅመሞችዎን እያዘጋጀን ነው።">Thank you for your purchase. We are preparing your spices.</p>
-            <div class="status-actions">
+            <div class="status-actions" style="margin-bottom: 2rem;">
               <a href="shop.html" class="btn-primary btn-magnetic" data-en="Continue Shopping"
                 data-am="ግዢዎን ይቀጥሉ">Continue Shopping</a>
+            </div>
+
+            <!-- Receipt Section integrated into success panel -->
+            <div id="success-receipt-container" class="status-section receipt-card" style="border-top: 1px solid var(--clr-gold-light); padding-top: 2.5rem; text-align: left; margin-top: 3rem;">
+              <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 1.5rem;">
+                <h3 class="display" data-en="Order Receipt" data-am="የትዕዛዝ ደረሰኝ">Order Receipt</h3>
+                <span id="receipt-date" style="font-size: 0.9rem; color: #888;"></span>
+              </div>
+              
+              <div class="receipt-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 2rem; margin-bottom: 2rem;">
+                <div>
+                  <h4 style="font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--clr-gold); margin-bottom: 0.5rem;" data-en="Deliver To" data-am="ለዚህ ሰው ይላካል">Deliver To</h4>
+                  <div id="receipt-shipping-info" style="line-height: 1.6; color: #555;"></div>
+                </div>
+                <div>
+                  <h4 style="font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--clr-gold); margin-bottom: 0.5rem;" data-en="Payment Method" data-am="የክፍያ ዘዴ">Payment Method</h4>
+                  <div style="line-height: 1.6; color: #555;">Telebirr (Manual)</div>
+                </div>
+              </div>
+
+              <div id="success-summary-items" class="checkout-summary-items" style="margin-bottom: 1.5rem; background: var(--clr-parchment); padding: 1.5rem; border-radius: 12px;"></div>
+              
+              <div class="summary-line summary-total" style="border-top: 2px solid var(--clr-espresso); padding-top: 1.5rem; font-size: 1.5rem;">
+                <span data-en="Total Amount Paid" data-am="ጠቅላላ የተከፈለ መጠን">Total Amount Paid</span>
+                <strong id="success-total-display" style="color: var(--clr-berbere);">0.00 ETB</strong>
+              </div>
             </div>
           </div>
         </div>
       </div>
 
-      <aside class="checkout-summary-sidebar reveal-left">
+      <aside id="checkout-sidebar" class="checkout-summary-sidebar reveal-left sidebar-hidden">
         <div class="summary-card">
           <h3 class="display"
             style="margin-bottom: 1.5rem; border-bottom: 1px solid var(--clr-gold-light); padding-bottom: 0.5rem;"
