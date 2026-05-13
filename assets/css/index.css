@@ -440,27 +440,25 @@ body.nav-over-media .nav {
 
 .hero-image-wrapper {
   position: absolute;
-  bottom: 0;
-  right: -5%;
-  width: 70%;
-  height: 120%;
+  inset: 0;
+  width: 100%;
+  height: 100%;
   z-index: 1;
   pointer-events: none;
-  mask-image: linear-gradient(to left, black 60%, transparent 100%),
-              linear-gradient(to top, black 60%, transparent 100%);
-  -webkit-mask-image: linear-gradient(to left, black 60%, transparent 100%),
-                      linear-gradient(to top, black 60%, transparent 100%);
-  mask-composite: intersect;
-  -webkit-mask-composite: source-in;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: var(--clr-espresso); /* Ensure background is dark for the fade */
 }
 
 .hero-img {
   width: 100%;
   height: 100%;
-  object-fit: contain;
-  object-position: right bottom;
-  transform: scale(1.1);
-  transform-origin: right bottom;
+  object-fit: cover;
+  object-position: center;
+  filter: brightness(0.5);
+  mask-image: radial-gradient(circle at center, black 15%, transparent 85%);
+  -webkit-mask-image: radial-gradient(circle at center, black 15%, transparent 85%);
 }
 
 .hero-pillars {
@@ -573,13 +571,21 @@ body.nav-over-media .lang-label {
     justify-content: center;
   }
   .hero-image-wrapper {
-    height: 45vh;
+    position: absolute;
+    inset: 0;
     width: 100%;
-    border-radius: 0;
-    box-shadow: none;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
-  .hero-image-wrapper::after {
-    box-shadow: inset 0 0 60px rgba(44, 24, 16, 0.9);
+  .hero-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: brightness(0.5);
+    mask-image: radial-gradient(circle at center, black 20%, transparent 90%);
+    -webkit-mask-image: radial-gradient(circle at center, black 20%, transparent 90%);
   }
   .hero-pillars {
     grid-template-columns: 1fr;
