@@ -4,14 +4,19 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Payment Failed | Shegye Baltna</title>
-  <link rel="stylesheet" href="index.css">
+  <link rel="icon" type="image/png" href="/assets/favicons/favicon-96x96.png" sizes="96x96" />
+  <link rel="shortcut icon" href="/assets/favicons/favicon.ico" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/assets/favicons/apple-touch-icon.png" />
+  <meta name="apple-mobile-web-app-title" content="Shegye Baltna" />
+  <link rel="manifest" href="/assets/favicons/site.webmanifest" />
+  <link rel="stylesheet" href="/assets/css/index.css">
 </head>
-<body>
+<body data-page-type="commerce">
   <div class="page-overlay"></div>
 
-  <nav class="nav">
+  <nav class="nav nav-solid">
     <a href="index.html" class="nav-logo">
-      <img src="logo.jpg" alt="Shegye Baltna Logo">
+      <img src="/assets/images/logo.jpg" alt="Shegye Baltna Logo">
       <span data-en="Shegye Baltna" data-am="ሸግዬ ባልትና">Shegye Baltna</span>
     </a>
     <div class="nav-links">
@@ -28,45 +33,42 @@
     </div>
   </nav>
 
-  <section class="section-padding container" style="padding-top: 120px; text-align: center;" id="main-content" tabindex="-1">
-    <div class="reveal-up" style="max-width: 600px; margin: 0 auto;">
-      <!-- Error Icon -->
-      <div style="width:100px; height:100px; background: linear-gradient(135deg, #f44336, #d32f2f); color:white; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:3rem; margin:0 auto 2rem; box-shadow: 0 10px 30px rgba(244, 67, 54, 0.3);">
-        ✕
-      </div>
+  <section class="section-padding container status-page" id="main-content" tabindex="-1">
+    <div class="status-card reveal-up">
+      <div class="status-icon status-icon--failure">×</div>
+      <h1 class="display" style="font-size: 2.5rem; margin-bottom: 1rem; color: #f44336;" data-en="Payment Failed"
+        data-am="ክፍያው አልተሳካም">Payment Failed</h1>
+      <p class="status-lead"
+        data-en="We couldn't process your payment. Please try again or contact support if the problem persists."
+        data-am="ክፍያዎን ማስኬድ አልቻልንም። እባክዎ በድጋሜ ይሞክሩ ወይም ችግሩ ከቀጠለ ድጋፍ ይግኙ።">We couldn't process your payment. Please try again or contact support if the problem persists.</p>
 
-      <!-- Error Message -->
-      <h1 class="display" style="font-size: 2.5rem; margin-bottom: 1rem; color: #f44336;" data-en="Payment Failed" data-am="ክፍያው አልተሳካም">Payment Failed</h1>
-      <p style="font-size: 1.2rem; color: #666; margin-bottom: 2rem;" data-en="We're sorry, but your payment could not be processed. Please try again or contact support if the problem persists." data-am="ይቅርታ፣ ክፍያዎን ማስኬድ አልተቻልን። እባክዎ በድጋሜ ይሞክሩ ወይም ችግሩን ከቀጠለ ድጋፍ ይግኙ።">We're sorry, but your payment could not be processed. Please try again or contact support if the problem persists.</p>
-
-      <!-- Error Details -->
-      <div class="payment-error-details" style="background: #fee; padding: 2rem; border-radius: 12px; border: 1px solid #fcc; margin-bottom: 2rem; text-align: left;">
-        <h3 style="margin-bottom: 1rem; color: #d32f2f;" data-en="What might have happened?" data-am="ምን ይሆን ይሆናል?">What might have happened?</h3>
-        <ul style="color: #666; line-height: 1.6; padding-left: 1.5rem;">
-          <li data-en="Payment was cancelled or timed out" data-am="ክፍያው ተሰርዟል ወይም ጊዜው አልፎታል">Payment was cancelled or timed out</li>
-          <li data-en="Insufficient funds in your account" data-am="በአካውንትዎ ውስጥ በጣም ዝቅተኛ ገንዘብ ነበር">Insufficient funds in your account</li>
+      <div class="status-section summary-card payment-error-details">
+        <h3 data-en="What might have happened?" data-am="ምን ሊሆን ይችላል?">What might have happened?</h3>
+        <ul class="status-list">
+          <li data-en="Payment was cancelled or timed out" data-am="ክፍያው ተሰርዟል ወይም ጊዜው አልፏል">Payment was cancelled or timed out</li>
+          <li data-en="Insufficient funds in your account" data-am="በአካውንትዎ ውስጥ በቂ ገንዘብ አልነበረም">Insufficient funds in your account</li>
           <li data-en="Network connectivity issues" data-am="የኔትወርክ ግንኙነት ችግሮች">Network connectivity issues</li>
           <li data-en="Bank or payment provider issues" data-am="የባንክ ወይም የክፍያ አቅራቢ ችግሮች">Bank or payment provider issues</li>
         </ul>
       </div>
 
-      <!-- Transaction Reference -->
-      <div id="transaction-info" style="background: var(--clr-cream); padding: 1.5rem; border-radius: 8px; margin-bottom: 2rem;">
-        <p data-en="Transaction reference will appear here if available" data-am="የግብይት ማመለክያ ክፍሉ ይታይ ይሆናል">Transaction reference will appear here if available</p>
+      <div id="transaction-info" class="status-section summary-card">
+        <p data-en="Transaction reference will appear here if available"
+          data-am="የግብይት ማመለኪያ ካለ እዚህ ይታያል">Transaction reference will appear here if available</p>
       </div>
 
-      <!-- Action Buttons -->
-      <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+      <div class="status-actions">
         <a href="checkout.html" class="btn-primary btn-magnetic" data-en="Try Again" data-am="በድጋሜ ይሞክሩ">Try Again</a>
         <a href="contact.html" class="btn-secondary" data-en="Contact Support" data-am="ድጋፍ ይግኙ">Contact Support</a>
         <a href="shop.html" class="btn-secondary" data-en="Continue Shopping" data-am="ግዢዎን ይቀጥሉ">Continue Shopping</a>
       </div>
 
-      <!-- Help Section -->
-      <div style="margin-top: 3rem; padding: 2rem; background: rgba(197, 165, 90, 0.1); border-radius: 12px;">
-        <h3 style="margin-bottom: 1rem; color: var(--clr-espresso);" data-en="Need Help?" data-am="እርዳታ ይፈልጋሉ?">Need Help?</h3>
-        <p style="color: #666; margin-bottom: 1rem;" data-en="Our customer support team is here to assist you with any payment issues." data-am="የደንበኛ ድጋፍ ቡድናችን ማንኛውም የክፍያ ችግሮችን ለመርዳት እዚህ ነው።">Our customer support team is here to assist you with any payment issues.</p>
-        <div style="display: flex; gap: 2rem; justify-content: center; flex-wrap: wrap; font-size: 0.9rem;">
+      <div class="status-section payment-mode-note">
+        <h3 data-en="Need Help?" data-am="እርዳታ ይፈልጋሉ?">Need Help?</h3>
+        <p class="status-lead" style="margin-bottom: 1rem;"
+          data-en="Our customer support team is here to assist you with any payment issues."
+          data-am="የደንበኛ ድጋፍ ቡድናችን በማንኛውም የክፍያ ችግር ለመርዳት እዚህ ነው።">Our customer support team is here to assist you with any payment issues.</p>
+        <div class="status-help-grid">
           <div>
             <strong data-en="Email:" data-am="ኢሜል:">Email:</strong>
             <span>support@shegye.com</span>
@@ -88,10 +90,11 @@
     <div class="footer-content">
       <div class="footer-brand">
         <a href="index.html" class="footer-logo">
-          <img src="logo.jpg" alt="Shegye Baltna Logo">
+          <img src="/assets/images/logo.jpg" alt="Shegye Baltna Logo">
           <span data-en="Shegye Baltna" data-am="ሸግዬ ባልትና">Shegye Baltna</span>
         </a>
-        <p class="footer-description" data-en="Bringing authentic Ethiopian spices from our heritage to your table." data-am="እውነተኛ የኢትዮጵያ ቅመማ ቅመሞችን ከቅርሳችን ወደ ማዕዳትዎ በማምጣት።">Bringing authentic Ethiopian spices from our heritage to your table.</p>
+        <p class="footer-description" data-en="Bringing authentic Ethiopian spices from our heritage to your table."
+          data-am="እውነተኛ የኢትዮጵያ ቅመሞችን ከቅርሳችን ወደ ማዕድዎ እናመጣለን።">Bringing authentic Ethiopian spices from our heritage to your table.</p>
       </div>
     </div>
     <div class="footer-bottom">
@@ -99,14 +102,11 @@
     </div>
   </footer>
 
-  <script src="app.js"></script>
+  <script src="/assets/js/app.js"></script>
   <script>
     document.addEventListener('DOMContentLoaded', () => {
-      // Initialize language
       currentLang = localStorage.getItem('shegye_lang') || 'en';
       applyLanguage();
-
-      // Load transaction info
       loadTransactionInfo();
     });
 
@@ -117,9 +117,10 @@
 
       if (tx_ref) {
         transactionInfo.innerHTML = `
-          <h4 style="margin-bottom: 0.5rem; color: var(--clr-espresso);" data-en="Transaction Reference:" data-am="የግብይት ማመለክያ:">Transaction Reference:</h4>
-          <p style="font-family: monospace; font-size: 1.1rem; color: #666;">${tx_ref}</p>
-          <p style="font-size: 0.9rem; color: #999; margin-top: 0.5rem;" data-en="Please save this reference for your records" data-am="እባክዎ ይህንን ማመለክያ ለመዝገብ ያስቱታል">Please save this reference for your records</p>
+          <h4 data-en="Transaction Reference:" data-am="የግብይት ማመለኪያ:">Transaction Reference:</h4>
+          <p class="status-ref">${tx_ref}</p>
+          <p class="upload-field-help" data-en="Please save this reference for your records"
+            data-am="ይህን ማመለኪያ ለመዝገብዎ ያስቀምጡ">Please save this reference for your records</p>
         `;
       }
     }

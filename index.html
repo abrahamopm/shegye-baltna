@@ -4,12 +4,17 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Shegye Baltna | Her Legacy, Your Table</title>
-  <link rel="stylesheet" href="index.css">
+  <link rel="icon" type="image/png" href="/assets/favicons/favicon-96x96.png" sizes="96x96" />
+  <link rel="shortcut icon" href="/assets/favicons/favicon.ico" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/assets/favicons/apple-touch-icon.png" />
+  <meta name="apple-mobile-web-app-title" content="Shegye Baltna" />
+  <link rel="manifest" href="/assets/favicons/site.webmanifest" />
+  <link rel="stylesheet" href="/assets/css/index.css">
 </head>
 <body class="nav-over-media">
 
   <div class="loading-screen">
-    <img src="logo.jpg" alt="Logo" class="loading-logo">
+    <img src="/assets/images/logo.jpg" alt="Logo" class="loading-logo">
     <div class="loading-text">
       <span class="loading-char">S</span><span class="loading-char">h</span><span class="loading-char">e</span><span class="loading-char">g</span><span class="loading-char">y</span><span class="loading-char">e</span>
       <span class="loading-char">&nbsp;</span>
@@ -21,42 +26,76 @@
 
   <nav class="nav">
     <a href="index.html" class="nav-logo">
-      <img src="logo.jpg" alt="Shegye Baltna Logo">
+      <img src="/assets/images/logo.jpg" alt="Shegye Baltna Logo">
       <span data-en="Shegye Baltna" data-am="ሸግዬ ባልትና">Shegye Baltna</span>
     </a>
+    
     <div class="nav-links">
       <a href="index.html" class="nav-link nav-link--current" data-en="Home" data-am="ዋና ገፅ">Home</a>
       <a href="story.html" class="nav-link" data-en="Story" data-am="ታሪካችን">Story</a>
-      <a href="shop.html" class="nav-link" data-en="Spices Shop" data-am="የቅመማ ሱቅ">Spices Shop</a>
+      <a href="shop.html" class="nav-link" data-en="Shop" data-am="ሱቅ">Shop</a>
       <a href="contact.html" class="nav-link" data-en="Contact" data-am="ያግኙን">Contact</a>
     </div>
-    <div style="display: flex; align-items: center; gap: 2rem;">
+
+    <div style="display: flex; align-items: center; gap: 1.5rem;">
+      <button class="cart-icon" aria-label="Search" style="background:none; border:none; padding:0; cursor:pointer;">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+      </button>
+      <a href="cart.html" class="cart-icon" aria-label="Basket">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
+        <div class="cart-badge" style="display:none">0</div>
+      </a>
       <div class="lang-toggle">
         <div class="lang-toggle-indicator"></div>
         <span class="lang-label lang-en">EN</span>
         <span class="lang-label lang-am">አማ</span>
       </div>
-      <a href="cart.html" class="cart-icon" aria-label="Basket">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
-        <div class="cart-badge" style="display:none">0</div>
-      </a>
     </div>
   </nav>
 
   <section class="hero" id="main-content" tabindex="-1">
-    <img src="assets/images/hero-portrait.png" alt="Ethiopian Woman" class="hero-bg" data-parallax="0.4">
-    <div class="hero-overlay"></div>
-    <div class="hero-content">
-      <h1 data-en="HER LEGACY, YOUR TABLE" data-am="የሴ ቅርስ ፣ ያንተ ማዕድ">HER LEGACY, YOUR TABLE</h1>
-      <p class="hero-subtitle" data-en="Discover authentic Ethiopian spices directly from the source." data-am="እውነተኛ የኢትዮጵያ ቅመማ ቅመሞችን ከምንጩ ያግኙ።">Discover authentic Ethiopian spices directly from the source.</p>
-      <a href="shop.html" class="btn-primary btn-magnetic" data-en="EXPLORE" data-am="ቃኙ">EXPLORE</a>
+    <div class="hero-container">
+      <div class="hero-content">
+        <p class="hero-tagline reveal-up" data-en="HANDCRAFTED HERITAGE" data-am="ባህላዊ ቅርስ">HANDCRAFTED HERITAGE</p>
+        <h1 class="hero-title reveal-up" data-en="HER LEGACY, YOUR TABLE" data-am="የሴ ቅርስ ፣ ያንተ ማዕድ">HER LEGACY, YOUR TABLE</h1>
+        <p class="hero-subtitle reveal-up" data-en="Discover authentic Ethiopian spices directly from the source." data-am="እውነተኛ የኢትዮጵያ ቅመማ ቅመሞችን ከምንጩ ያግኙ።">Discover authentic Ethiopian spices directly from the source.</p>
+        <div class="hero-buttons reveal-up">
+          <a href="shop.html" class="btn-primary" data-en="EXPLORE" data-am="ቃኙ">EXPLORE</a>
+          <a href="story.html" class="btn-secondary" data-en="OUR STORY" data-am="ታሪካችን">OUR STORY</a>
+        </div>
+        <div class="hero-signature reveal-up">For Shegye</div>
+      </div>
+      <div class="hero-image-wrapper reveal-scale">
+        <img src="assets/images/hero.jpg" alt="Shegye" class="hero-img">
+      </div>
     </div>
-    <div class="scroll-indicator">
-      <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+    
+    <div class="hero-pillars reveal-stagger">
+      <div class="pillar reveal-up">
+        <div class="pillar-icon">🤲</div>
+        <div class="pillar-text">
+          <strong data-en="ETHICALLY MADE" data-am="በታማኝነት የተዘጋጀ">ETHICALLY MADE</strong>
+          <span data-en="Sustainable practices, honest craftsmanship." data-am="ዘላቂ አሰራር፣ ታማኝ የእጅ ስራ።">Sustainable practices, honest craftsmanship.</span>
+        </div>
+      </div>
+      <div class="pillar reveal-up">
+        <div class="pillar-icon">🏺</div>
+        <div class="pillar-text">
+          <strong data-en="ROOTED IN CULTURE" data-am="በባህል ስር የሰደደ">ROOTED IN CULTURE</strong>
+          <span data-en="Inspired by tradition, made for today." data-am="በባህል ተመስጦ፣ ለዛሬ የተሰራ።">Inspired by tradition, made for today.</span>
+        </div>
+      </div>
+      <div class="pillar reveal-up">
+        <div class="pillar-icon">🤍</div>
+        <div class="pillar-text">
+          <strong data-en="MADE WITH PURPOSE" data-am="ለዓላማ የተሰራ">MADE WITH PURPOSE</strong>
+          <span data-en="Every purchase empowers a greater story." data-am="እያንዳንዱ ግዢ ትልቅ ታሪክን ያበረታታል።">Every purchase empowers a greater story.</span>
+        </div>
+      </div>
     </div>
   </section>
 
-  <section class="section-padding container" style="margin-top:-60px; position:relative; z-index:10;">
+  <section class="section-padding container" style="position:relative; z-index:10;">
     <div class="product-grid reveal-stagger" id="catalog-featured"></div>
   </section>
 
@@ -108,7 +147,7 @@
     <div class="footer-content">
       <div class="footer-brand">
         <a href="index.html" class="footer-logo">
-          <img src="logo.jpg" alt="Shegye Baltna Logo">
+          <img src="/assets/images/logo.jpg" alt="Shegye Baltna Logo">
           <span data-en="Shegye Baltna" data-am="ሸግዬ ባልትና">Shegye Baltna</span>
         </a>
         <p class="footer-description" data-en="Bringing authentic Ethiopian spices from our heritage to your table. Experience the rich flavors and traditions passed down through generations." data-am="እውነተኛ የኢትዮጵያ ቅመማ ቅመሞችን ከቅርሳችን ወደ ማዕዳትዎ በማምጣት። በትውልድ የተላለፉ የጣዕም ጣዕሞችን እና ባህሎቶችን ይሞክሩ።">Bringing authentic Ethiopian spices from our heritage to your table. Experience the rich flavors and traditions passed down through generations.</p>
@@ -147,7 +186,7 @@
     </div>
   </footer>
 
-  <script src="catalog.js"></script>
-  <script src="app.js"></script>
+  <script src="/assets/js/catalog.js"></script>
+  <script src="/assets/js/app.js"></script>
 </body>
 </html>

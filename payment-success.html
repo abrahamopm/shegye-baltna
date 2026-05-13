@@ -4,14 +4,19 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Payment Successful | Shegye Baltna</title>
-  <link rel="stylesheet" href="index.css">
+  <link rel="icon" type="image/png" href="/assets/favicons/favicon-96x96.png" sizes="96x96" />
+  <link rel="shortcut icon" href="/assets/favicons/favicon.ico" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/assets/favicons/apple-touch-icon.png" />
+  <meta name="apple-mobile-web-app-title" content="Shegye Baltna" />
+  <link rel="manifest" href="/assets/favicons/site.webmanifest" />
+  <link rel="stylesheet" href="/assets/css/index.css">
 </head>
-<body>
+<body data-page-type="commerce">
   <div class="page-overlay"></div>
 
-  <nav class="nav">
+  <nav class="nav nav-solid">
     <a href="index.html" class="nav-logo">
-      <img src="logo.jpg" alt="Shegye Baltna Logo">
+      <img src="/assets/images/logo.jpg" alt="Shegye Baltna Logo">
       <span data-en="Shegye Baltna" data-am="ሸግዬ ባልትና">Shegye Baltna</span>
     </a>
     <div class="nav-links">
@@ -28,41 +33,35 @@
     </div>
   </nav>
 
-  <section class="section-padding container" style="padding-top: 120px; text-align: center;" id="main-content" tabindex="-1">
-    <div class="reveal-up" style="max-width: 600px; margin: 0 auto;">
-      <!-- Success Icon -->
-      <div style="width:100px; height:100px; background: linear-gradient(135deg, #4caf50, #45a049); color:white; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:3rem; margin:0 auto 2rem; box-shadow: 0 10px 30px rgba(76, 175, 80, 0.3);">
-        ✓
-      </div>
+  <section class="section-padding container status-page" id="main-content" tabindex="-1">
+    <div class="status-card reveal-up">
+      <div class="status-icon status-icon--success">✓</div>
+      <h1 class="display" style="font-size: 2.5rem; margin-bottom: 1rem; color: #4caf50;" data-en="Payment Successful!"
+        data-am="ክፍያው ተሳካ!">Payment Successful!</h1>
+      <p class="status-lead" data-en="Thank you for your order. Your payment has been processed successfully."
+        data-am="ስለትዕዛዝዎ እናመሰግናለን። ክፍያዎ በተሳካ ሁኔታ ተከናውኗል።">Thank you for your order. Your payment has been processed successfully.</p>
 
-      <!-- Success Message -->
-      <h1 class="display" style="font-size: 2.5rem; margin-bottom: 1rem; color: #4caf50;" data-en="Payment Successful!" data-am="ክፍያው ተሳካ!">Payment Successful!</h1>
-      <p style="font-size: 1.2rem; color: #666; margin-bottom: 2rem;" data-en="Thank you for your order! Your payment has been processed successfully." data-am="ስለትዕዛዝዎ እናመሰግናለን! ክፍያዎ በተሳካ ሁኔታ ተከናውሏል።">Thank you for your order! Your payment has been processed successfully.</p>
-
-      <!-- Order Details -->
-      <div class="payment-success-details" style="background: var(--clr-cream); padding: 2rem; border-radius: 12px; border: 1px solid var(--clr-gold-light); margin-bottom: 2rem; text-align: left;">
-        <h3 style="margin-bottom: 1rem; color: var(--clr-espresso);" data-en="Order Details" data-am="የትዕዛዝ ዝርዝሮች">Order Details</h3>
+      <div class="status-section summary-card payment-success-details">
+        <h3 data-en="Order Details" data-am="የትዕዛዝ ዝርዝሮች">Order Details</h3>
         <div id="order-details-content">
           <div class="payment-loading">
             <div class="payment-spinner"></div>
-            <p data-en="Loading order details..." data-am="የትዕዛዝ ዝርዝሮችን በመጠባበቅ ላይ...">Loading order details...</p>
+            <p data-en="Loading order details..." data-am="የትዕዛዝ ዝርዝሮችን በመጫን ላይ...">Loading order details...</p>
           </div>
         </div>
       </div>
 
-      <!-- Next Steps -->
-      <div style="background: rgba(197, 165, 90, 0.1); padding: 1.5rem; border-radius: 8px; border-left: 4px solid var(--clr-gold); margin-bottom: 2rem;">
-        <h4 style="margin-bottom: 0.5rem; color: var(--clr-espresso);" data-en="What's Next?" data-am="የሚቀጥለው ምንድን ነው?">What's Next?</h4>
-        <ul style="text-align: left; color: #666; line-height: 1.6;">
-          <li data-en="You'll receive an email confirmation shortly" data-am="በቅርብ ጊዜ ውስጥ የኢሜል ማረጋገጫ ይደርስዎታል">You'll receive an email confirmation shortly</li>
-          <li data-en="We'll prepare your spices with care" data-am="ቅመሞችዎን በጥንቃቄ እንዘጋጃለን">We'll prepare your spices with care</li>
-          <li data-en="Delivery within Addis Ababa: 1-2 days" data-am="ወደ አዲስ አበባ ድርሻ: 1-2 ቀናት">Delivery within Addis Ababa: 1-2 days</li>
-          <li data-en="You can track your order status" data-am="የትዕዛዝዎን ሁኔታ መከታተል ይችላሉ">You can track your order status</li>
+      <div class="status-section payment-mode-note">
+        <h4 data-en="What's Next?" data-am="ቀጣዩ ምንድን ነው?">What's Next?</h4>
+        <ul class="status-list">
+          <li data-en="You'll receive an email confirmation shortly" data-am="በቅርቡ የኢሜል ማረጋገጫ ይደርስዎታል">You'll receive an email confirmation shortly</li>
+          <li data-en="We'll prepare your spices with care" data-am="ቅመሞችዎን በጥንቃቄ እናዘጋጃለን">We'll prepare your spices with care</li>
+          <li data-en="Delivery within Addis Ababa: 1-2 days" data-am="ወደ አዲስ አበባ ማድረስ: 1-2 ቀናት">Delivery within Addis Ababa: 1-2 days</li>
+          <li data-en="You can contact us if you need an order update" data-am="የትዕዛዝ ሁኔታ ከፈለጉ ሊያግኙን ይችላሉ">You can contact us if you need an order update</li>
         </ul>
       </div>
 
-      <!-- Action Buttons -->
-      <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+      <div class="status-actions">
         <a href="shop.html" class="btn-primary btn-magnetic" data-en="Continue Shopping" data-am="ግዢዎን ይቀጥሉ">Continue Shopping</a>
         <a href="contact.html" class="btn-secondary" data-en="Contact Support" data-am="ድጋፍ ይግኙ">Contact Support</a>
       </div>
@@ -73,10 +72,11 @@
     <div class="footer-content">
       <div class="footer-brand">
         <a href="index.html" class="footer-logo">
-          <img src="logo.jpg" alt="Shegye Baltna Logo">
+          <img src="/assets/images/logo.jpg" alt="Shegye Baltna Logo">
           <span data-en="Shegye Baltna" data-am="ሸግዬ ባልትና">Shegye Baltna</span>
         </a>
-        <p class="footer-description" data-en="Bringing authentic Ethiopian spices from our heritage to your table." data-am="እውነተኛ የኢትዮጵያ ቅመማ ቅመሞችን ከቅርሳችን ወደ ማዕዳትዎ በማምጣት።">Bringing authentic Ethiopian spices from our heritage to your table.</p>
+        <p class="footer-description" data-en="Bringing authentic Ethiopian spices from our heritage to your table."
+          data-am="እውነተኛ የኢትዮጵያ ቅመሞችን ከቅርሳችን ወደ ማዕድዎ እናመጣለን።">Bringing authentic Ethiopian spices from our heritage to your table.</p>
       </div>
     </div>
     <div class="footer-bottom">
@@ -84,14 +84,11 @@
     </div>
   </footer>
 
-  <script src="app.js"></script>
+  <script src="/assets/js/app.js"></script>
   <script>
     document.addEventListener('DOMContentLoaded', () => {
-      // Initialize language
       currentLang = localStorage.getItem('shegye_lang') || 'en';
       applyLanguage();
-
-      // Load order details
       loadOrderDetails();
     });
 
@@ -106,59 +103,56 @@
       }
 
       try {
-        // In production, verify with backend
-        const orderData = JSON.parse(localStorage.getItem('chapa_order_data') || '{}');
-        
+        const orderData = secureStorage.get('chapa_order_data') || JSON.parse(localStorage.getItem('chapa_order_data') || '{}');
+
         if (orderData.items && orderData.shipping) {
           detailsContent.innerHTML = `
-            <div class="order-summary">
-              <div class="summary-line">
-                <strong data-en="Transaction Reference:" data-am="የግብይት ማመለክያ:">Transaction Reference:</strong>
-                <span>${tx_ref}</span>
-              </div>
-              <div class="summary-line">
-                <strong data-en="Payment Method:" data-am="የክፍያ ዘዴ:">Payment Method:</strong>
-                <span>${getPaymentMethodName(orderData.payment_method)}</span>
-              </div>
-              <div class="summary-line">
-                <strong data-en="Amount Paid:" data-am="የተከፈለው ገንዘብ:">Amount Paid:</strong>
-                <span>${orderData.amount.toFixed(2)} ${orderData.currency}</span>
-              </div>
-              <div class="summary-line">
-                <strong data-en="Customer:" data-am="ደንበኛ:">Customer:</strong>
-                <span>${orderData.shipping.full_name}</span>
-              </div>
-              <div class="summary-line">
-                <strong data-en="Email:" data-am="ኢሜል:">Email:</strong>
-                <span>${orderData.email}</span>
-              </div>
-              <div class="summary-line">
-                <strong data-en="Delivery Address:" data-am="የማድረሻ አድራሻ:">Delivery Address:</strong>
-                <span>${orderData.shipping.address}</span>
-              </div>
-              <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--clr-gold-light);">
-                <strong data-en="Items Ordered:" data-am="የተዘዙ እቃዎች:">Items Ordered:</strong>
-                ${orderData.items.map(item => `
-                  <div style="display: flex; justify-content: space-between; margin-top: 0.5rem; font-size: 0.9rem;">
-                    <span>${item.quantity}x ${item.name}</span>
-                    <span>${item.total.toFixed(2)} ${orderData.currency}</span>
-                  </div>
-                `).join('')}
-              </div>
+            <div class="summary-line">
+              <strong data-en="Transaction Reference:" data-am="የግብይት ማመለኪያ:">Transaction Reference:</strong>
+              <span class="status-ref">${tx_ref}</span>
+            </div>
+            <div class="summary-line">
+              <strong data-en="Payment Method:" data-am="የክፍያ ዘዴ:">Payment Method:</strong>
+              <span>${getPaymentMethodName(orderData.payment_method)}</span>
+            </div>
+            <div class="summary-line">
+              <strong data-en="Amount Paid:" data-am="የተከፈለው ገንዘብ:">Amount Paid:</strong>
+              <span>${orderData.amount.toFixed(2)} ${orderData.currency}</span>
+            </div>
+            <div class="summary-line">
+              <strong data-en="Customer:" data-am="ደንበኛ:">Customer:</strong>
+              <span>${orderData.shipping.full_name}</span>
+            </div>
+            <div class="summary-line">
+              <strong data-en="Email:" data-am="ኢሜል:">Email:</strong>
+              <span>${orderData.email}</span>
+            </div>
+            <div class="summary-line">
+              <strong data-en="Delivery Address:" data-am="የማድረሻ አድራሻ:">Delivery Address:</strong>
+              <span>${orderData.shipping.address}</span>
+            </div>
+            <div class="status-section">
+              <strong data-en="Items Ordered:" data-am="የታዘዙ እቃዎች:">Items Ordered:</strong>
+              ${orderData.items.map(item => `
+                <div class="summary-line" style="margin-top: 0.5rem;">
+                  <span>${item.quantity}x ${item.name}</span>
+                  <span>${item.total.toFixed(2)} ${orderData.currency}</span>
+                </div>
+              `).join('')}
             </div>
           `;
         } else {
           detailsContent.innerHTML = `
             <div class="summary-line">
-              <strong data-en="Transaction Reference:" data-am="የግብይት ማመለክያ:">Transaction Reference:</strong>
-              <span>${tx_ref}</span>
+              <strong data-en="Transaction Reference:" data-am="የግብይት ማመለኪያ:">Transaction Reference:</strong>
+              <span class="status-ref">${tx_ref}</span>
             </div>
             <p data-en="Order details are being processed" data-am="የትዕዛዝ ዝርዝሮች በሂደት ላይ ናቸው">Order details are being processed</p>
           `;
         }
       } catch (error) {
         console.error('Error loading order details:', error);
-        detailsContent.innerHTML = '<p data-en="Unable to load order details" data-am="የትዕዛዝ ዝርዝሮችን መጠባበቅ አልተቻለም">Unable to load order details</p>';
+        detailsContent.innerHTML = '<p data-en="Unable to load order details" data-am="የትዕዛዝ ዝርዝሮችን መጫን አልተቻለም">Unable to load order details</p>';
       }
     }
 
