@@ -446,7 +446,7 @@ function renderAdminDashboard(messages, orders) {
     }
   </script>
 </body>
-</html>\`;
+</html>`;
 }
 
 module.exports = {
