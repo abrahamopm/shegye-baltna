@@ -106,8 +106,8 @@ function setupSkipLink() {
 /* --- LANGUAGE MODULE --- */
 
 function setupLanguage() {
-  const toggle = document.querySelector('.lang-toggle');
-  if (toggle) {
+  const toggles = document.querySelectorAll('.lang-toggle');
+  toggles.forEach(toggle => {
     toggle.addEventListener('keydown', (e) => {
       if (e.key === 'Enter' || e.key === ' ') {
         e.preventDefault();
@@ -139,7 +139,7 @@ function setupLanguage() {
         updateToggleUI();
       }
     });
-  }
+  });
   applyLanguage();
   updateToggleUI();
 }
@@ -158,14 +158,14 @@ function applyLanguage() {
 }
 
 function updateToggleUI() {
-  const toggle = document.querySelector('.lang-toggle');
-  if (toggle) {
+  const toggles = document.querySelectorAll('.lang-toggle');
+  toggles.forEach(toggle => {
     toggle.classList.toggle('am-active', currentLang === 'am');
     toggle.setAttribute('role', 'switch');
     toggle.setAttribute('aria-checked', currentLang === 'am' ? 'true' : 'false');
     toggle.setAttribute('aria-label', currentLang === 'en' ? 'Switch language to Amharic' : 'Switch language to English');
     toggle.tabIndex = 0;
-  }
+  });
 }
 
 /* --- ANIMATION MODULE --- */
@@ -300,18 +300,21 @@ function setupNav() {
 function setupMobileNav() {
   const nav = document.querySelector('.nav');
   const links = nav?.querySelector('.nav-links');
-  if (!nav || !links || nav.querySelector('.nav-toggle')) return;
+  if (!nav || !links) return;
 
-  links.id = links.id || 'primary-navigation';
-
-  const btn = document.createElement('button');
-  btn.type = 'button';
-  btn.className = 'nav-toggle';
-  btn.setAttribute('aria-expanded', 'false');
-  btn.setAttribute('aria-controls', links.id);
-  btn.setAttribute('data-en', 'Menu');
-  btn.setAttribute('data-am', 'ሜኑ');
-  btn.textContent = currentLang === 'en' ? 'Menu' : 'ሜኑ';
+  let btn = nav.querySelector('.nav-toggle');
+  
+  if (!btn) {
+    btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'nav-toggle';
+    btn.setAttribute('aria-expanded', 'false');
+    btn.setAttribute('aria-controls', links.id || 'primary-navigation');
+    btn.setAttribute('data-en', 'Menu');
+    btn.setAttribute('data-am', 'ሜኑ');
+    btn.textContent = currentLang === 'en' ? 'Menu' : 'ሜኑ';
+    nav.insertBefore(btn, links);
+  }
 
   const closeNav = () => {
     nav.classList.remove('nav-mobile-open');
@@ -324,8 +327,6 @@ function setupMobileNav() {
     btn.setAttribute('aria-expanded', open ? 'true' : 'false');
     setScrollLock('nav', open);
   });
-
-  nav.insertBefore(btn, links);
 
   links.querySelectorAll('a').forEach((a) => {
     a.addEventListener('click', closeNav);

@@ -393,16 +393,29 @@ body.nav-over-media .nav {
 
 .nav-logo img {
   height: 45px;
-  filter: grayscale(1) invert(1) brightness(2);
-  transition: filter 0.3s ease;
+  filter: none; /* Removing problematic filter */
+  transition: all 0.3s ease;
+  border-radius: 4px;
 }
 
 .nav.scrolled .nav-logo img {
-  filter: grayscale(1) contrast(1.2);
+  filter: none;
 }
 
 .nav-logo:hover img {
-  filter: none;
+  filter: brightness(1.1);
+}
+
+.nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.nav-tools {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
 }
 
 .nav-links {
@@ -430,53 +443,124 @@ body.nav-over-media .nav {
   display: none;
   align-items: center;
   justify-content: center;
-  width: 44px;
-  height: 44px;
-  padding: 0;
-  border: 2px solid rgba(250, 248, 245, 0.35);
-  border-radius: 8px;
-  background: rgba(44, 24, 16, 0.45);
+  width: auto;
+  height: 40px;
+  padding: 0 1rem;
+  border: 1px solid rgba(250, 248, 245, 0.3);
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.1);
   color: var(--clr-parchment);
   font-family: var(--font-display);
   font-weight: 600;
-  font-size: 0.75rem;
-  letter-spacing: 0.06em;
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.nav-toggle:hover {
+  background: var(--clr-gold);
+  border-color: var(--clr-gold);
+}
+
+.nav.scrolled .nav-toggle {
+  background: rgba(44, 24, 16, 0.05);
+  border-color: rgba(44, 24, 16, 0.1);
+  color: var(--clr-espresso);
 }
 
 @media (max-width: 900px) {
+  .nav {
+    padding: 0 1.5rem;
+  }
+
   .nav-toggle {
     display: inline-flex;
+    order: 3;
+  }
+
+  .nav-logo {
+    font-size: 1.1rem;
+  }
+
+  .nav-logo img {
+    height: 38px;
+  }
+
+  .nav-logo span {
+    display: none; /* Hide text on small screens if it overlaps */
   }
 
   .nav-links {
     position: fixed;
-    top: var(--nav-height);
+    top: 0;
     left: 0;
     right: 0;
+    bottom: 0;
+    height: 100vh;
     flex-direction: column;
-    gap: 0;
-    padding: 1rem 1.5rem 2rem;
-    background: rgba(44, 24, 16, 0.98);
+    justify-content: center;
+    gap: 2rem;
+    padding: 2rem;
+    background: var(--clr-espresso);
     backdrop-filter: blur(16px);
-    transform: translateY(-120%);
+    transform: translateX(100%);
     opacity: 0;
     visibility: hidden;
-    transition: transform 0.35s ease, opacity 0.35s ease, visibility 0.35s;
-    border-bottom: 1px solid rgba(197, 165, 90, 0.25);
+    transition: all 0.5s cubic-bezier(0.77, 0, 0.175, 1);
     z-index: 999;
   }
 
   .nav-mobile-open .nav-links {
-    transform: translateY(0);
+    transform: translateX(0);
     opacity: 1;
     visibility: visible;
   }
 
+.mobile-menu-tools {
+  display: none;
+  margin-top: 2rem;
+  padding-top: 2rem;
+  border-top: 1px solid rgba(250, 248, 245, 0.1);
+  width: 100%;
+  justify-content: center;
+}
+
+@media (max-width: 900px) {
+  .mobile-menu-tools {
+    display: flex;
+  }
+}
+
   .nav-links .nav-link {
+    font-size: 1.5rem;
     padding: 1rem 0;
-    border-bottom: 1px solid rgba(250, 248, 245, 0.08);
+    border-bottom: 1px solid rgba(250, 248, 245, 0.1);
     width: 100%;
+    text-align: center;
+  }
+
+  .nav-tools {
+    gap: 1rem;
+  }
+
+  .search-trigger {
+    display: none; /* Hide search on mobile header to save space */
+  }
+
+  .nav-tools .lang-toggle {
+    display: none !important;
+  }
+}
+
+@media (max-width: 600px) {
+  .nav-logo span {
+    display: none;
+  }
+
+  .lang-toggle {
+    display: none; /* Move to menu later if needed, for now hide to fix overlap */
   }
 }
 
@@ -724,6 +808,8 @@ body.nav-over-media .nav {
   color: var(--clr-parchment);
   font-weight: 400;
   font-family: var(--font-display);
+  position: relative;
+  z-index: 2;
 }
 
 .hero-subtitle {
@@ -844,7 +930,7 @@ body.nav-over-media .nav-logo {
 }
 
 body.nav-over-media .nav-logo img {
-  filter: brightness(0) invert(1);
+  filter: none;
 }
 
 body.nav-over-media .nav-link::after {
@@ -899,22 +985,66 @@ body.nav-over-media .lang-label {
 }
 
 @media (max-width: 900px) {
+  .hero {
+    padding-top: 0;
+    min-height: 100svh; /* Use SVH for better mobile support */
+  }
+
   .hero-container {
-    grid-template-columns: 1fr;
+    flex-direction: column;
+    justify-content: flex-end !important; /* Force push to bottom */
+    padding-bottom: 0;
+    height: 100%;
+    position: relative;
   }
 
   .hero-content {
-    padding: 100px 2rem 40px;
+    padding: 30px 1.5rem 40px;
     text-align: center;
     margin: 0 auto;
+    z-index: 10;
+    width: 100%;
+    background: linear-gradient(to top, rgba(26, 14, 8, 0.95) 0%, rgba(26, 14, 8, 0.8) 50%, rgba(26, 14, 8, 0.4) 80%, transparent 100%);
+    border-radius: 0;
+    position: relative;
+  }
+
+  .hero-tagline {
+    font-size: 0.75rem;
+    margin-bottom: 0.75rem;
+    color: var(--clr-gold-light);
   }
 
   .hero-title {
-    font-size: 3rem;
+    font-size: 2rem;
+    margin-bottom: 1rem;
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+  }
+
+  .hero-subtitle {
+    font-size: 0.9rem;
+    margin: 0 auto 2rem;
+    line-height: 1.5;
+    color: rgba(255, 255, 255, 0.8);
   }
 
   .hero-buttons {
     justify-content: center;
+    flex-direction: column;
+    gap: 0.75rem;
+    width: 100%;
+    max-width: 280px;
+    margin: 0 auto;
+  }
+
+  .hero-buttons .btn-primary,
+  .hero-buttons .btn-secondary {
+    width: 100%;
+    min-width: 0;
+    padding: 0.85rem 1rem;
+    min-height: 48px;
+    font-size: 0.9rem;
   }
 
   .hero-image-wrapper {
@@ -922,24 +1052,43 @@ body.nav-over-media .lang-label {
     inset: 0;
     width: 100%;
     height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    opacity: 1;
+    z-index: 1;
   }
 
   .hero-img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    filter: brightness(0.5);
-    mask-image: radial-gradient(circle at center, black 20%, transparent 90%);
-    -webkit-mask-image: radial-gradient(circle at center, black 20%, transparent 90%);
+    object-position: center 15%; /* Keep face visible at the top */
+    mask-image: none;
+    -webkit-mask-image: none;
+    filter: brightness(0.7) contrast(1.1);
+  }
+
+  .hero-signature {
+    display: none; /* Hide signature on mobile to save space */
   }
 
   .hero-pillars {
     grid-template-columns: 1fr;
-    gap: 2rem;
-    padding: 2rem;
+    gap: 1.25rem;
+    padding: 1.5rem;
+    background: var(--clr-espresso);
+  }
+
+  .pillar {
+    padding: 0;
+    gap: 1rem;
+  }
+
+  .pillar-icon {
+    font-size: 1.25rem;
+  }
+
+  .pillar-text strong {
+    font-size: 0.75rem;
+  }
+
+  .pillar-text span {
+    font-size: 0.8rem;
   }
 }
 
