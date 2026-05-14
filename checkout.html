@@ -46,11 +46,12 @@
 
   <section class="section-padding container checkout-flow-root" style="padding-top: 120px;" id="main-content"
     tabindex="-1">
-    <h1 class="display reveal-up" style="font-size: 2.5rem; margin-bottom: 1rem;" data-en="Checkout"
-      data-am="ክፍያ">Checkout</h1>
+    <h1 class="display reveal-up" style="font-size: 2.5rem; margin-bottom: 1rem;" data-en="Checkout" data-am="ክፍያ">
+      Checkout</h1>
     <div id="checkout-cart-alert" class="checkout-cart-alert" hidden role="alert">
       <p data-en="Your basket is empty. Add spices from the shop before you continue."
-        data-am="ቅርጫትዎ ባዶ ነው። ከመቀጠልዎ በፊት ቅመሞችን ከሱቁ ይጨምሩ።">Your basket is empty. Add spices from the shop before you continue.</p>
+        data-am="ቅርጫትዎ ባዶ ነው። ከመቀጠልዎ በፊት ቅመሞችን ከሱቁ ይጨምሩ።">Your basket is empty. Add spices from the shop before you
+        continue.</p>
       <a href="shop.html" class="btn-secondary btn-magnetic checkout-cart-alert-btn" data-en="Browse spices"
         data-am="ቅመሞችን ይመልከቱ">Browse spices</a>
     </div>
@@ -111,10 +112,17 @@
                     </div>
                   </div>
                 </div>
-                <p class="payment-instruction" data-en="Please send the total amount to the Telebirr number above, then upload a screenshot of your transaction below for verification." data-am="እባክዎን ጠቅላላውን መጠን ከላይ ወዳለው የቴሌብር ቁጥር ይላኩ፣ ከዚያ ለማረጋገጫ የክፍያውን ስክሪንሻት ከታች ያክሉ።">Please send the total amount to the Telebirr number above, then upload a screenshot of your transaction below for verification.</p>
-                <div class="payment-total-amount" style="margin-top: 1.5rem; padding: 1.5rem; background: var(--clr-espresso); color: white; border-radius: 12px; text-align: center; border: 2px solid var(--clr-gold);">
-                  <div style="font-size: 0.9rem; opacity: 0.8; margin-bottom: 0.5rem;" data-en="Amount Due" data-am="የሚከፈል መጠን">Amount Due</div>
-                  <div style="font-size: 2rem; font-weight: 800; font-family: var(--font-display);" id="manual-total-display">0.00 ETB</div>
+                <p class="payment-instruction"
+                  data-en="Please send the total amount to the Telebirr number above, then upload a screenshot of your transaction below for verification."
+                  data-am="እባክዎን ጠቅላላውን መጠን ከላይ ወዳለው የቴሌብር ቁጥር ይላኩ፣ ከዚያ ለማረጋገጫ የክፍያውን ስክሪንሻት ከታች ያክሉ።">Please send the
+                  total amount to the Telebirr number above, then upload a screenshot of your transaction below for
+                  verification.</p>
+                <div class="payment-total-amount"
+                  style="margin-top: 1.5rem; padding: 1.5rem; background: var(--clr-espresso); color: white; border-radius: 12px; text-align: center; border: 2px solid var(--clr-gold);">
+                  <div style="font-size: 0.9rem; opacity: 0.8; margin-bottom: 0.5rem;" data-en="Amount Due"
+                    data-am="የሚከፈል መጠን">Amount Due</div>
+                  <div style="font-size: 2rem; font-weight: 800; font-family: var(--font-display);"
+                    id="manual-total-display">0.00 ETB</div>
                 </div>
                 <input type="hidden" name="payment_method" value="telebirr" data-payment-mode="manual">
               </div>
@@ -139,12 +147,17 @@
             <section id="payment-proof-panel" class="payment-section payment-proof-panel">
               <div class="payment-panel">
                 <div class="upload-field">
-                  <span class="upload-field-label" data-en="Transaction Screenshot" data-am="የክፍያ ስክሪንሻት">Transaction Screenshot</span>
+                  <span class="upload-field-label" data-en="Transaction Screenshot" data-am="የክፍያ ስክሪንሻት">Transaction
+                    Screenshot</span>
                   <div class="upload-field-shell">
                     <input type="file" id="payment-proof" accept="image/*" required>
                     <div class="upload-placeholder">
-                      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg>
-                      <span id="payment-proof-name" class="upload-field-name" data-en="Select or drop screenshot" data-am="ስክሪንሻቱን ይምረጡ ወይም እዚህ ይጣሉ">Select or drop screenshot</span>
+                      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12" />
+                      </svg>
+                      <span id="payment-proof-name" class="upload-field-name" data-en="Select or drop screenshot"
+                        data-am="ስክሪንሻቱን ይምረጡ ወይም እዚህ ይጣሉ">Select or drop screenshot</span>
                     </div>
                   </div>
                 </div>
@@ -152,8 +165,11 @@
             </section>
 
             <div class="checkout-actions">
-              <button type="button" class="btn-secondary" data-checkout-back="0" data-en="Back" data-am="ተመለስ">Back</button>
-              <button type="button" class="btn-primary btn-magnetic checkout-action-primary" data-manual-submit data-en="Submit Order for Verification" data-am="ለማረጋገጫ ትዕዛዙን ይላኩ">Submit Order for Verification</button>
+              <button type="button" class="btn-secondary" data-checkout-back="0" data-en="Back"
+                data-am="ተመለስ">Back</button>
+              <button type="button" class="btn-primary btn-magnetic checkout-action-primary" data-manual-submit
+                data-en="Submit Order for Verification" data-am="ለማረጋገጫ ትዕዛዙን ይላኩ">Submit Order for
+                Verification</button>
             </div>
           </div>
         </div>
@@ -172,26 +188,35 @@
             </div>
 
             <!-- Receipt Section integrated into success panel -->
-            <div id="success-receipt-container" class="status-section receipt-card" style="border-top: 1px solid var(--clr-gold-light); padding-top: 2.5rem; text-align: left; margin-top: 3rem;">
+            <div id="success-receipt-container" class="status-section receipt-card"
+              style="border-top: 1px solid var(--clr-gold-light); padding-top: 2.5rem; text-align: left; margin-top: 3rem;">
               <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 1.5rem;">
                 <h3 class="display" data-en="Order Receipt" data-am="የትዕዛዝ ደረሰኝ">Order Receipt</h3>
                 <span id="receipt-date" style="font-size: 0.9rem; color: #888;"></span>
               </div>
-              
-              <div class="receipt-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 2rem; margin-bottom: 2rem;">
+
+              <div class="receipt-grid"
+                style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 2rem; margin-bottom: 2rem;">
                 <div>
-                  <h4 style="font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--clr-gold); margin-bottom: 0.5rem;" data-en="Deliver To" data-am="ለዚህ ሰው ይላካል">Deliver To</h4>
+                  <h4
+                    style="font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--clr-gold); margin-bottom: 0.5rem;"
+                    data-en="Deliver To" data-am="ለዚህ ሰው ይላካል">Deliver To</h4>
                   <div id="receipt-shipping-info" style="line-height: 1.6; color: #555;"></div>
                 </div>
                 <div>
-                  <h4 style="font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--clr-gold); margin-bottom: 0.5rem;" data-en="Payment Method" data-am="የክፍያ ዘዴ">Payment Method</h4>
+                  <h4
+                    style="font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--clr-gold); margin-bottom: 0.5rem;"
+                    data-en="Payment Method" data-am="የክፍያ ዘዴ">Payment Method</h4>
                   <div style="line-height: 1.6; color: #555;">Telebirr (Manual)</div>
                 </div>
               </div>
 
-              <div id="success-summary-items" class="checkout-summary-items" style="margin-bottom: 1.5rem; background: var(--clr-parchment); padding: 1.5rem; border-radius: 12px;"></div>
-              
-              <div class="summary-line summary-total" style="border-top: 2px solid var(--clr-espresso); padding-top: 1.5rem; font-size: 1.5rem;">
+              <div id="success-summary-items" class="checkout-summary-items"
+                style="margin-bottom: 1.5rem; background: var(--clr-parchment); padding: 1.5rem; border-radius: 12px;">
+              </div>
+
+              <div class="summary-line summary-total"
+                style="border-top: 2px solid var(--clr-espresso); padding-top: 1.5rem; font-size: 1.5rem;">
                 <span data-en="Total Amount Paid" data-am="ጠቅላላ የተከፈለ መጠን">Total Amount Paid</span>
                 <strong id="success-total-display" style="color: var(--clr-berbere);">0.00 ETB</strong>
               </div>
@@ -235,11 +260,25 @@
         </a>
         <p class="footer-description"
           data-en="Bringing authentic Ethiopian spices from our heritage to your table. Experience the rich flavors and traditions passed down through generations."
-          data-am="እውነተኛ የኢትዮጵያ ቅመሞችን ከቅርሳችን ወደ ማዕድዎ እናመጣለን። በትውልድ የተላለፉ ጣዕሞችን እና ባህሎችን ይሞክሩ።">Bringing authentic Ethiopian spices from our heritage to your table. Experience the rich flavors and traditions passed down through generations.</p>
+          data-am="እውነተኛ የኢትዮጵያ ቅመሞችን ከቅርሳችን ወደ ማዕድዎ እናመጣለን። በትውልድ የተላለፉ ጣዕሞችን እና ባህሎችን ይሞክሩ።">Bringing authentic
+          Ethiopian spices from our heritage to your table. Experience the rich flavors and traditions passed down
+          through generations.</p>
         <div class="footer-social">
-          <a href="#" class="social-link" aria-label="Facebook">f</a>
-          <a href="#" class="social-link" aria-label="Instagram">i</a>
-          <a href="#" class="social-link" aria-label="X">x</a>
+          <a href="#" class="social-link" aria-label="Facebook"><svg xmlns="http://www.w3.org/2000/svg" width="24"
+              height="24" viewBox="0 0 24 24" fill="currentColor">
+              <path
+                d="M24 12.073C24 5.405 18.627 0 12 0S0 5.405 0 12.073c0 6.019 4.388 11.009 10.125 11.927v-8.437H7.078v-3.49h3.047V9.413c0-3.017 1.792-4.687 4.533-4.687 1.312 0 2.686.235 2.686.235v2.963h-1.514c-1.491 0-1.956.926-1.956 1.875v2.25h3.328l-.532 3.49h-2.796V24C19.612 23.082 24 18.092 24 12.073z" />
+            </svg></a>
+          <a href="#" class="social-link" aria-label="Instagram">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+              <path
+                d="M7.75 2C4.574 2 2 4.574 2 7.75v8.5C2 19.426 4.574 22 7.75 22h8.5C19.426 22 22 19.426 22 16.25v-8.5C22 4.574 19.426 2 16.25 2h-8.5zm0 1.5h8.5A4.24 4.24 0 0 1 20.5 7.75v8.5a4.24 4.24 0 0 1-4.25 4.25h-8.5A4.24 4.24 0 0 1 3.5 16.25v-8.5A4.24 4.24 0 0 1 7.75 3.5zm9 1.25a1 1 0 1 0 0 2 1 1 0 0 0 0-2zM12 7a5 5 0 1 0 0 10 5 5 0 0 0 0-10zm0 1.5A3.5 3.5 0 1 1 8.5 12 3.5 3.5 0 0 1 12 8.5z" />
+            </svg></a>
+          <a href="#" class="social-link" aria-label="X"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+              viewBox="0 0 24 24" fill="currentColor">
+              <path
+                d="M18.901 1.153h3.68l-8.04 9.19L24 22.847h-7.406l-5.8-7.584-6.638 7.584H.474l8.6-9.83L0 1.153h7.594l5.243 6.932L18.901 1.153zm-1.292 19.488h2.04L6.486 3.24H4.298L17.609 20.641z" />
+            </svg></a>
         </div>
       </div>
 
@@ -256,7 +295,8 @@
       <div class="footer-cta">
         <h3 data-en="Join Our Table" data-am="ማዕዳችንን ይቀላቀሉ">Join Our Table</h3>
         <p data-en="Subscribe for exclusive recipes, new blends, and stories from Ethiopia."
-          data-am="ለልዩ የምግብ አዘገጃጀቶች፣ አዲስ ቅልቅሎች እና ከኢትዮጵያ ለሚመጡ ታሪኮች ይመዝገቡ።">Subscribe for exclusive recipes, new blends, and stories from Ethiopia.</p>
+          data-am="ለልዩ የምግብ አዘገጃጀቶች፣ አዲስ ቅልቅሎች እና ከኢትዮጵያ ለሚመጡ ታሪኮች ይመዝገቡ።">Subscribe for exclusive recipes, new blends,
+          and stories from Ethiopia.</p>
         <div class="footer-newsletter">
           <form class="footer-newsletter-form" novalidate>
             <input type="email" placeholder="Your email" data-en-placeholder="Your email" data-am-placeholder="ኢሜይልዎ"

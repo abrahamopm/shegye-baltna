@@ -206,5 +206,42 @@
         "mimeType": "image/jpeg"
       }
     }
+  },
+  {
+    "id": "order-1778692777202-ee6d57ca",
+    "createdAt": "2026-05-13T17:19:37.232Z",
+    "status": "pending",
+    "user": {
+      "name": "Naomi Mesfin",
+      "email": "kalmulmath@gmail.com",
+      "phone": "0975136484",
+      "address": "Ayat"
+    },
+    "items": [
+      {
+        "id": "Shiro",
+        "name": "Shiro",
+        "price": 120,
+        "qty": 1,
+        "total": 120
+      }
+    ],
+    "totals": {
+      "subtotal": 120,
+      "shipping": 10,
+      "tax": 3,
+      "total": 133
+    },
+    "payment": {
+      "status": "pending",
+      "proof": {
+        "fieldName": "paymentProof",
+        "originalName": "image_2026-05-10_20-15-33.png",
+        "storedName": "1778692777220-f6187a-image_2026-05-10_20-15-33.png",
+        "relativePath": "data/uploads/order-1778692777202-ee6d57ca/1778692777220-f6187a-image_2026-05-10_20-15-33.png",
+        "size": 33342,
+        "mimeType": "image/png"
+      }
+    }
   }
 ]
