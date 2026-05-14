@@ -999,44 +999,37 @@ body.nav-over-media .lang-label {
   }
 
   .hero-content {
-    padding: 20px 1.5rem 30px;
+    padding: 20px 1.5rem 40px;
     text-align: center;
     margin: 0 auto;
     z-index: 10;
     width: 100%;
-    background: linear-gradient(to top, rgba(26, 14, 8, 0.97) 0%, rgba(26, 14, 8, 0.85) 40%, rgba(26, 14, 8, 0.3) 70%, transparent 85%);
+    background: linear-gradient(to top, rgba(26, 14, 8, 0.8) 0%, rgba(26, 14, 8, 0.2) 50%, transparent 100%);
     border-radius: 0;
     position: relative;
   }
 
   .hero-tagline {
-    font-size: 0.75rem;
-    margin-bottom: 0.75rem;
-    color: var(--clr-gold-light);
+    display: none;
   }
 
   .hero-title {
-    font-size: 1.85rem;
-    margin-bottom: 1rem;
-    line-height: 1.2;
-    letter-spacing: -0.01em;
+    display: block;
+    font-size: 2.5rem;
+    margin-bottom: 2rem;
+    line-height: 1.1;
+    color: var(--clr-parchment);
+    text-transform: uppercase;
+    font-family: var(--font-display);
+    animation: fadeInUp 1s ease forwards;
   }
 
   .hero-subtitle {
-    font-size: 0.9rem;
-    margin: 0 auto 1.5rem;
-    line-height: 1.5;
-    color: rgba(255, 255, 255, 0.8);
+    display: none;
   }
 
   .hero-buttons {
-    justify-content: center;
-    flex-direction: column;
-    gap: 0.6rem;
-    width: 100%;
-    max-width: 280px;
-    margin: 0 auto;
-    margin-bottom: 0;
+    display: none;
   }
 
   .hero-buttons .btn-primary,
@@ -1061,7 +1054,7 @@ body.nav-over-media .lang-label {
     object-position: center 10%; /* Push face higher to clear the gradient overlay */
     mask-image: none;
     -webkit-mask-image: none;
-    filter: brightness(0.7) contrast(1.1);
+    filter: brightness(0.9) contrast(1.05);
   }
 
   .hero-signature {
